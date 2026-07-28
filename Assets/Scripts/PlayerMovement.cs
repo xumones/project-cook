@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float walkSpeed = 5f;
-    [SerializeField] private float sprintSpeed = 8f;
+    [SerializeField] private float walkSpeed = 2f;
+    [SerializeField] private float sprintSpeed = 3f;
     [SerializeField] private float gravity = -9.81f;
 
     [Header("References")]
@@ -77,21 +77,17 @@ public class PlayerMovement : MonoBehaviour
         {
             moveDir = (transform.forward * input.y) + (transform.right * input.x);
         }
-        moveDir.y = 0f; // ล็อคไม่ให้เอียงลอยขึ้นหรือจมดิน
-
-        // 5. สั่งเคลื่อนที่ในแกน XZ
-        if (moveDir.sqrMagnitude > 0.001f)
-        {
-            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
-        }
-
-        // 6. คำนวณแรงโน้มถ่วง (Gravity)
+        // 5. คำนวณแรงโน้มถ่วง (Gravity)
         if (controller.isGrounded && velocity.y < 0)
         {
             velocity.y = -2f; // แรงกดพื้นเล็กน้อยเพื่อความเสถียร
         }
-
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+
+        // 6. รวมการเคลื่อนที่แกน XZ และแกน Y เข้าด้วยกัน แล้วสั่ง Move เพียงครั้งเดียวในแต่ละเฟรม
+        Vector3 horizontalMove = moveDir.sqrMagnitude > 0.001f ? moveDir.normalized * currentSpeed : Vector3.zero;
+        Vector3 finalVelocity = horizontalMove + new Vector3(0, velocity.y, 0);
+
+        controller.Move(finalVelocity * Time.deltaTime);
     }
 }

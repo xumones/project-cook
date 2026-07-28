@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -347,6 +348,25 @@ MonoBehaviour:
   orientation: {fileID: 822594284}
   body: {fileID: 1044259513}
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a77a6ffcd24a107479e8d5f16a39c4d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeadBob
+  walkBobSpeed: 13
+  walkBobAmount: 0.015
+  sprintBobSpeed: 16
+  sprintBobAmount: 0.03
+  resetSpeed: 6
+  controller: {fileID: 1597820349}
+  cameraTransform: {fileID: 330585546}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   walkSpeed: 2
-  sprintSpeed: 4
+  sprintSpeed: 3
   gravity: -9.81
   orientation: {fileID: 822594284}
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -818,8 +838,8 @@ CharacterController:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 250390960}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1408087636}
+  - {fileID: 250390960}
   - {fileID: 1597820347}
