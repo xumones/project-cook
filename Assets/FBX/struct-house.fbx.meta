@@ -1,0 +1,271 @@
+fileFormatVersion: 2
+guid: b1dd1ef434f43a64281010019834929b
+ModelImporter:
+  serializedVersion: 24300
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: corner-frame
+    second: {fileID: 2100000, guid: b0c2f0c6bb7bcd64c915e61df58dad60, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: corner-plank
+    second: {fileID: 2100000, guid: e7d37b674fde0584686f1fa8f950f0ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: floor-part
+    second: {fileID: 2100000, guid: a6b519a595254614486b0eff4465774e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: green-roof-base
+    second: {fileID: 2100000, guid: afe3a53b09c7f7a44b5e67af2bef5747, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: green-roof-vertical
+    second: {fileID: 2100000, guid: 8b36c506944cf144884bc8a21f91bea8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: green-struc-hor
+    second: {fileID: 2100000, guid: b6e5592cede2e4446b7f4e7d7c8e668b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: green-struc-ver
+    second: {fileID: 2100000, guid: 396dc6181046edb40bd5d4f17bd21ac9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: roof-part
+    second: {fileID: 2100000, guid: c30093384c0a75b4ea1a330bd27febff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: room-pillar
+    second: {fileID: 2100000, guid: f63d688667286e14c8d4fcf5c5a925ce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: room-roof-horizontal
+    second: {fileID: 2100000, guid: 1a6fcd7ebe0814943a07315304e23d1a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: room-roof-vertical
+    second: {fileID: 2100000, guid: 27259bb50892ab94cb186b442173b687, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall-1-part
+    second: {fileID: 2100000, guid: e980b0b326e1f1847881f83c59898d40, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall-2-part
+    second: {fileID: 2100000, guid: 59439d0db98456248a353a62d7897afd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall-3-part
+    second: {fileID: 2100000, guid: 0c1fbb8753401e04582fe1eac1bfa12d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall-4-part
+    second: {fileID: 2100000, guid: 511fdee4536df204e805cc5f13b0c500, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall-5-part
+    second: {fileID: 2100000, guid: e25edd316cace574ab37053ea3738c1a, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: corner-frame
+    second: {fileID: 2800000, guid: ae97143b9cabe354988e99a3e2a9e6a7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: corner-plank
+    second: {fileID: 2800000, guid: 81a6eb207fd62594d9eb581da23d324a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-roof-base
+    second: {fileID: 2800000, guid: ce916f272061a9446ad417282004f8c9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-roof-vertical
+    second: {fileID: 2800000, guid: 64231b845a6ba8b4c804a0497db177d1, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-struc-hor
+    second: {fileID: 2800000, guid: 329c1eeb5fcfeb2449fe2ea37e3154c7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-struct-ver
+    second: {fileID: 2800000, guid: 49e9ceec043285f47a914da0f40868e9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-floor
+    second: {fileID: 2800000, guid: 901746e20d0720047b179a7efa513521, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-pillar
+    second: {fileID: 2800000, guid: 6ef3ae0d6145c60498127cb287df473c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-roof
+    second: {fileID: 2800000, guid: 28ca8acc36274d643bfa460276eecc61, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-roof-horizontal
+    second: {fileID: 2800000, guid: d540c74461c4f8745ae48d26818c2fd8, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-roof-vertical
+    second: {fileID: 2800000, guid: 2cb1bba3832bc7541bc8b4b14669e222, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-wall-1
+    second: {fileID: 2800000, guid: b944b1aae71bad543a145ee6b83a4b01, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-wall-2
+    second: {fileID: 2800000, guid: b28b5c915a5a49046923dac669f0a58d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-wall-3
+    second: {fileID: 2800000, guid: 19fe5d23ec407d64b85c8ad06ace5e47, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-wall-4
+    second: {fileID: 2800000, guid: 11622fc128bccb94c9810d274cd19316, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: room-wall-5
+    second: {fileID: 2800000, guid: edbb74d69c9e669488dd4dc1279fe3d8, type: 3}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
