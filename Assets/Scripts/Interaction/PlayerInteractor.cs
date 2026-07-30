@@ -1,0 +1,97 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace ProjectCook.Interaction
+{
+    /// <summary>
+    /// สคริปต์จัดการ Raycast ตลอดเวลา (Continuous) และตรวจจับการกดปุ่มปฏิสัมพันธ์ของผู้เล่น
+    /// </summary>
+    public class PlayerInteractor : MonoBehaviour
+    {
+        [Header("Raycast Settings")]
+        [SerializeField] private Transform cameraTransform;
+        [SerializeField] private float maxInteractionDistance = 2.5f; // ระยะเอื้อมมือของผู้เล่น (เมตร)
+        
+        [Tooltip("ให้เลือกเฉพาะ Layer 'Interactable' ที่เราสร้างขึ้นใน Unity")]
+        [SerializeField] private LayerMask interactableLayerMask; // LayerMask กรองเฉพาะวัตถุที่กดได้
+
+        [Header("Input Settings")]
+        [SerializeField] private InputActionReference interactAction; // อ้างอิง Action จาก New Input System
+
+        private IInteractable currentTarget; // วัตถุที่ผู้เล่นกำลังเอาเป้าเล็งอยู่นะปัจจุบัน
+
+        /// <summary>
+        /// Property สำหรับให้ระบบ UI หรือระบบอื่นแอบเข้ามาเช็คว่าตอนนี้ผู้เล่นกำลังมองอะไรอยู่
+        /// </summary>
+        public IInteractable CurrentTarget => currentTarget;
+
+        private void OnEnable()
+        {
+            interactAction?.action?.Enable();
+        }
+
+        private void OnDisable()
+        {
+            interactAction?.action?.Disable();
+        }
+
+        private void Start()
+        {
+            // แจ้งเตือนใน Console หากลืมตั้งค่า LayerMask ใน Inspector
+            if (interactableLayerMask.value == 0)
+            {
+                Debug.LogWarning("[PlayerInteractor] ยังไม่ได้เลือก Interactable Layer Mask ใน Inspector! (กรุณาเลือก Layer 'Interactable')", this);
+            }
+        }
+
+        private void Update()
+        {
+            // 1. ยิง Raycast ตรวจจับวัตถุตรงหน้าทุกเฟรม
+            PerformRaycastDetection();
+
+            // 2. ถ้ามีวัตถุที่มองอยู่ และผู้เล่นกดปุ่ม E ให้เรียกคำสั่ง Interact()
+            if (WasInteractPressed() && currentTarget != null)
+            {
+                currentTarget.Interact(this);
+            }
+        }
+
+        private void PerformRaycastDetection()
+        {
+            Transform rayOrigin = cameraTransform != null ? cameraTransform : transform;
+            Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
+
+            // ยิง Raycast ออกไปทุกเฟรม โดยกรองเฉพาะ Layer 'Interactable'
+            if (Physics.Raycast(ray, out RaycastHit hit, maxInteractionDistance, interactableLayerMask))
+            {
+                // ตรวจหา Component ที่ implement IInteractable จากวัตถุที่ชน หรือ Parent ของมัน
+                IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
+                if (interactable != null)
+                {
+                    currentTarget = interactable;
+                    return;
+                }
+            }
+
+            // ถ้าไม่ได้เล็งวัตถุใดๆ ให้ล้างค่าเป้าหมายเป็น null
+            currentTarget = null;
+        }
+
+        private bool WasInteractPressed()
+        {
+            if (interactAction?.action != null)
+            {
+                return interactAction.action.WasPressedThisFrame();
+            }
+            return Input.GetKeyDown(KeyCode.E);
+        }
+
+        // แสดงเส้น Raycast ใน Scene View (เปลี่ยนเป็นสีแดงถ้าเล็งโดนวัตถุ / สีเขียวถ้าเล็งที่ว่าง)
+        private void OnDrawGizmosSelected()
+        {
+            Transform rayOrigin = cameraTransform != null ? cameraTransform : transform;
+            Gizmos.color = currentTarget != null ? Color.red : Color.green;
+            Gizmos.DrawRay(rayOrigin.position, rayOrigin.forward * maxInteractionDistance);
+        }
+    }
+}
