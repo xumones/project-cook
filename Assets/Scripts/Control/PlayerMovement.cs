@@ -26,6 +26,22 @@ namespace ProjectCook.Control
             controller = GetComponent<CharacterController>();
         }
 
+        private void Start()
+        {
+            // ล็อกและซ่อนเคอร์เซอร์เมาส์กลางหน้าจอสำหรับเกมมุมมอง FPS
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+
         private void OnEnable()
         {
             moveAction?.action?.Enable();
@@ -57,16 +73,11 @@ namespace ProjectCook.Control
             // 3. เลือกความเร็วระหว่าง เดิน (walkSpeed) หรือ วิ่ง (sprintSpeed)
             float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
 
-            // 4. คำนวณทิศทางการเคลื่อนที่ตามทิศของ orientation (หรือทิศผู้เล่น)
-            Vector3 moveDir = Vector3.zero;
-            if (orientation != null)
-            {
-                moveDir = (orientation.forward * input.y) + (orientation.right * input.x);
-            }
-            else
-            {
-                moveDir = (transform.forward * input.y) + (transform.right * input.x);
-            }
+            // 4. คำนวณทิศทางการเคลื่อนที่บนระนาบ XZ ตามทิศของ orientation หรือ transform (เพื่อไม่ให้การก้ม-เงยกล้องกระทบความเร็วเคลื่อนที่)
+            Transform refTransform = orientation != null ? orientation : transform;
+            Vector3 forward = Vector3.ProjectOnPlane(refTransform.forward, Vector3.up).normalized;
+            Vector3 right = Vector3.ProjectOnPlane(refTransform.right, Vector3.up).normalized;
+            Vector3 moveDir = (forward * input.y) + (right * input.x);
             // 5. คำนวณแรงโน้มถ่วง (Gravity)
             if (controller.isGrounded && velocity.y < 0)
             {

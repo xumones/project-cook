@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace ProjectCook.CameraControl
 {
+    /// <summary>
+    /// สคริปต์จัดการขยับตำแหน่ง localPosition ของ Head Anchor ด้วยคลื่น Sin/Cos ตามการเคลื่อนที่ของผู้เล่น
+    /// เพื่อให้ CinemachineCamera ลอยตามตำแหน่ง head anchor
+    /// </summary>
     public class HeadBob : MonoBehaviour
     {
         [Header("Bobbing Settings")]
@@ -13,23 +17,31 @@ namespace ProjectCook.CameraControl
 
         [Header("References")]
         [SerializeField] private CharacterController controller; // อ้างอิง CharacterController เพื่อเช็คความเร็วและสถานะติดพื้น
-        [SerializeField] private Transform cameraTransform;     // Transform ของ Main Camera ที่ต้องการให้ไหว
+        [SerializeField] private Transform headTransform;       // Transform ของ Head Anchor ที่ต้องการให้ขยับไหว
 
         private float timer = 0f;
-        private Vector3 defaultCamPos;
+        private Vector3 defaultHeadPos;
 
         private void Start()
         {
-            if (cameraTransform != null)
+            if (controller == null)
             {
-                // บันทึกตำแหน่งเดิมของกล้องไว้เป็นจุดอ้างอิง
-                defaultCamPos = cameraTransform.localPosition;
+                controller = GetComponentInParent<CharacterController>();
             }
+
+            // หากไม่ได้ระบุ หรือดันระบุไปที่ Main Camera (ซึ่งโดน CinemachineBrain เขียนทับทุกเฟรม) ให้ใช้ transform ของตัวเอง (Head)
+            if (headTransform == null || (Camera.main != null && headTransform == Camera.main.transform))
+            {
+                headTransform = transform;
+            }
+
+            // บันทึกตำแหน่งเดิมของ Head ไว้เป็นจุดอ้างอิง
+            defaultHeadPos = headTransform.localPosition;
         }
 
         private void Update()
         {
-            if (controller == null || cameraTransform == null) return;
+            if (controller == null || headTransform == null) return;
 
             // 1. คำนวณความเร็วเคลื่อนที่บนระนาบพื้น (ไม่คิดแกน Y ที่เป็นแรงโน้มถ่วง)
             Vector3 horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
@@ -43,20 +55,19 @@ namespace ProjectCook.CameraControl
                 float currentBobSpeed = isSprinting ? sprintBobSpeed : walkBobSpeed;
                 float currentBobAmount = isSprinting ? sprintBobAmount : walkBobAmount;
 
-                // เดินหน้าเวลาสะสมตามความเร็ว
                 timer += Time.deltaTime * currentBobSpeed;
 
                 // คำนวณตำแหน่งใหม่ด้วย Sin และ Cos
-                float newX = defaultCamPos.x + Mathf.Cos(timer / 2f) * currentBobAmount;
-                float newY = defaultCamPos.y + Mathf.Sin(timer) * currentBobAmount;
+                float newX = defaultHeadPos.x + Mathf.Cos(timer / 2f) * currentBobAmount;
+                float newY = defaultHeadPos.y + Mathf.Sin(timer) * currentBobAmount;
 
-                cameraTransform.localPosition = new Vector3(newX, newY, defaultCamPos.z);
+                headTransform.localPosition = new Vector3(newX, newY, defaultHeadPos.z);
             }
             else
             {
-                // 3. เมื่อหยุดเดินหรืออยู่กลางอากาศ ค่อยๆ ปรับกล้องคืนสู่ตำแหน่งปกติ (Smooth Reset)
+                // 3. เมื่อหยุดเดินหรืออยู่กลางอากาศ ค่อยๆ ปรับคืนสู่ตำแหน่งปกติ (Smooth Reset)
                 timer = 0f;
-                cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, defaultCamPos, Time.deltaTime * resetSpeed);
+                headTransform.localPosition = Vector3.Lerp(headTransform.localPosition, defaultHeadPos, Time.deltaTime * resetSpeed);
             }
         }
     }
