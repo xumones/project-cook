@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ProjectCook.CameraControl;
 
 namespace ProjectCook.Control
 {
@@ -20,6 +21,23 @@ namespace ProjectCook.Control
 
         private CharacterController controller;
         private Vector3 velocity;
+        private bool isControlActive = true;
+
+        public bool IsControlActive => isControlActive;
+
+        public void SetControlActive(bool active)
+        {
+            isControlActive = active;
+            if (!active)
+            {
+                velocity = Vector3.zero;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
 
         private void Awake()
         {
@@ -31,6 +49,24 @@ namespace ProjectCook.Control
             // ล็อกและซ่อนเคอร์เซอร์เมาส์กลางหน้าจอสำหรับเกมมุมมอง FPS
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            if (CameraManager.Instance != null)
+            {
+                CameraManager.Instance.OnCameraStateChanged += HandleCameraStateChanged;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (CameraManager.Instance != null)
+            {
+                CameraManager.Instance.OnCameraStateChanged -= HandleCameraStateChanged;
+            }
+        }
+
+        private void HandleCameraStateChanged(CameraState state)
+        {
+            SetControlActive(state == CameraState.FirstPerson);
         }
 
         private void OnApplicationFocus(bool hasFocus)
@@ -56,6 +92,8 @@ namespace ProjectCook.Control
 
         private void Update()
         {
+            if (!isControlActive) return;
+
             // 1. อ่านค่า Input การเดิน (Vector2: WASD / Left Stick)
             Vector2 input = Vector2.zero;
             if (moveAction?.action != null)
