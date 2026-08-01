@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 45541947}
   - component: {fileID: 45541946}
+  - component: {fileID: 45541948}
   m_Layer: 6
   m_Name: panStation
   m_TagString: Untagged
@@ -150,6 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.PanStation
   stationCamera: {fileID: 1699777268}
   exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  panController: {fileID: 45541948}
 --- !u!4 &45541947
 Transform:
   m_ObjectHideFlags: 0
@@ -167,6 +169,27 @@ Transform:
   - {fileID: 547679862}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &45541948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45541945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f04411b1f644c4387ea15f3e6e2f2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.PanController
+  panTransform: {fileID: 1705050640}
+  moveSpeed: 1
+  smoothSpeed: 10
+  moveBounds: {x: 0.075, y: 0.075}
+  maxTiltAngle: 15
+  tiltSmoothSpeed: 10
+  autoCenterRotationOnRelease: 1
+  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  referenceTransform: {fileID: 1699777270}
 --- !u!134 &217057929
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -1036,7 +1059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 0
+    m_Value: 1
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -1265,7 +1288,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 0
+    Value: 30
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1282,13 +1305,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699777267}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.010999859, y: 0.48300004, z: -0.55800015}
+  m_LocalRotation: {x: 0.25881904, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: -0.005, y: 0.432, z: -0.522}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 547679862}
-  m_LocalEulerAnglesHint: {x: 0, y: 50.648, z: 0}
+  m_LocalEulerAnglesHint: {x: -2.818, y: 0, z: 0}
 --- !u!114 &1699777271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1391,7 +1414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.CameraControl.CameraManager
   playerCamera: {fileID: 1563954945}
-  activePriority: 15
+  activePriority: 1
   inactivePriority: 0
 --- !u!4 &1961203565
 Transform:

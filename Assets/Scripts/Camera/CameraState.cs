@@ -1,8 +1,5 @@
 namespace ProjectCook.CameraControl
 {
-    /// <summary>
-    /// สภาวะของกล้องในเกม
-    /// </summary>
     public enum CameraState
     {
         FirstPerson, // มุมมองเดินปกติในเกม

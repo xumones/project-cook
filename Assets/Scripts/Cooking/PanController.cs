@@ -1,0 +1,252 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace ProjectCook.Cooking
+{
+    /// <summary>
+    /// สคริปต์จัดการการเคลื่อนที่และการเอียงกระทะบนเตาในโหมดทำอาหาร (Hybrid: WASD Position + Dynamic Tilting)
+    /// </summary>
+    public class PanController : MonoBehaviour
+    {
+        [Header("Pan References")]
+        [Tooltip("Transform ของตัวกระทะ (หากไม่ใส่จะใช้ Transform ของ GameObject นี้)")]
+        [SerializeField] private Transform panTransform;
+
+        [Header("Movement Settings")]
+        [Tooltip("ความเร็วในการเคลื่อนที่สไลด์ของกระทะ")]
+        [SerializeField] private float moveSpeed = 1.5f;
+
+        [Tooltip("ความนุ่มนวลในการตอบสนองของการเคลื่อนที่สไลด์")]
+        [SerializeField] private float smoothSpeed = 15f;
+
+        [Tooltip("ขอบเขตการเคลื่อนที่สูงสุดจากจุดเริ่มต้นในแนว X และ Z (เมตร)")]
+        [SerializeField] private Vector2 moveBounds = new Vector2(0.3f, 0.3f);
+
+        [Header("Tilt Settings")]
+        [Tooltip("มุมเอียงสูงสุดของกระทะในแต่ละทิศทาง (องศา)")]
+        [SerializeField] private float maxTiltAngle = 12f;
+
+        [Tooltip("ความนุ่มนวลในการตอบสนองของการเอียงกระทะ")]
+        [SerializeField] private float tiltSmoothSpeed = 12f;
+
+        [Tooltip("คืนค่ามุมเอียงเป็น 0 องศาเมื่อปล่อยปุ่ม WASD")]
+        [SerializeField] private bool autoCenterRotationOnRelease = true;
+
+        [Header("Input Settings")]
+        [Tooltip("Action จาก New Input System สำหรับอ่านค่า Vector2 (WASD)")]
+        [SerializeField] private InputActionReference moveAction;
+
+        [Header("Reference Transform Settings")]
+        [Tooltip("Transform สำหรับอ้างอิงทิศทาง (เช่น กล้อง stationCamera) หากไม่ใส่จะอ้างอิงจาก Camera.main หรือเตา")]
+        [SerializeField] private Transform referenceTransform;
+
+        private Vector3 initialLocalPosition;
+        private Quaternion initialLocalRotation;
+
+        private Vector3 targetLocalPosition;
+        private Quaternion targetLocalRotation;
+
+        private bool isControllerActive = false;
+        private bool isResetting = false;
+
+        public bool IsControllerActive => isControllerActive;
+
+        private void Awake()
+        {
+            if (panTransform == null)
+            {
+                panTransform = transform;
+            }
+
+            initialLocalPosition = panTransform.localPosition;
+            initialLocalRotation = panTransform.localRotation;
+
+            targetLocalPosition = initialLocalPosition;
+            targetLocalRotation = initialLocalRotation;
+        }
+
+        private void OnEnable()
+        {
+            moveAction?.action?.Enable();
+        }
+
+        private void OnDisable()
+        {
+            moveAction?.action?.Disable();
+        }
+
+        /// <summary>
+        /// กำหนด Transform อ้างอิงทิศทางการเคลื่อนที่ (เช่น กล้องทำอาหาร)
+        /// </summary>
+        public void SetReferenceTransform(Transform refTrans)
+        {
+            referenceTransform = refTrans;
+        }
+
+        /// <summary>
+        /// เปิด/ปิด การใช้งานระบบควบคุมกระทะ
+        /// </summary>
+        public void SetControllerActive(bool active)
+        {
+            isControllerActive = active;
+            if (!active)
+            {
+                ResetPanPosition();
+            }
+            else
+            {
+                isResetting = false;
+            }
+        }
+
+        /// <summary>
+        /// รีเซ็ตตำแหน่งและมุมเอียงของกระทะให้สไลด์และหมุนกลับสู่จุดเริ่มต้นบนเตาอย่างนุ่มนวล
+        /// </summary>
+        public void ResetPanPosition()
+        {
+            targetLocalPosition = initialLocalPosition;
+            targetLocalRotation = initialLocalRotation;
+            isResetting = true;
+        }
+
+        private void Update()
+        {
+            if (panTransform == null) return;
+
+            if (isControllerActive)
+            {
+                Vector2 input = ReadMoveInput();
+
+                if (input.sqrMagnitude > 0.001f)
+                {
+                    // 1. หา Transform ที่ใช้อ้างอิงทิศทาง (กล้องทำอาหาร หรือ Camera.main)
+                    Transform refTrans = referenceTransform != null
+                        ? referenceTransform
+                        : (Camera.main != null ? Camera.main.transform : (panTransform.parent != null ? panTransform.parent : transform));
+
+                    Vector3 forward = Vector3.forward;
+                    Vector3 right = Vector3.right;
+
+                    if (refTrans != null)
+                    {
+                        forward = Vector3.ProjectOnPlane(refTrans.forward, Vector3.up).normalized;
+                        right = Vector3.ProjectOnPlane(refTrans.right, Vector3.up).normalized;
+                    }
+
+                    // 2. คำนวณทิศทางการสไลด์ตำแหน่งแบบ Camera-Relative
+                    Vector3 worldMoveDir = (forward * input.y) + (right * input.x);
+
+                    Vector3 localMoveDir = panTransform.parent != null
+                        ? panTransform.parent.InverseTransformDirection(worldMoveDir)
+                        : worldMoveDir;
+
+                    Vector3 moveDelta = localMoveDir * (moveSpeed * Time.deltaTime);
+                    targetLocalPosition += moveDelta;
+
+                    // จำกัดขอบเขตการสไลด์ (Clamp)
+                    targetLocalPosition.x = Mathf.Clamp(
+                        targetLocalPosition.x,
+                        initialLocalPosition.x - moveBounds.x,
+                        initialLocalPosition.x + moveBounds.x
+                    );
+                    targetLocalPosition.z = Mathf.Clamp(
+                        targetLocalPosition.z,
+                        initialLocalPosition.z - moveBounds.y,
+                        initialLocalPosition.z + moveBounds.y
+                    );
+
+                    // 3. คำนวณการเอียงกระทะแบบ Camera-Relative (Tilt: Pitch & Roll)
+                    // W (y > 0) -> เอียงลงทิศทาง forward ของกล้อง (หมุนรอบแกน right ของกล้อง)
+                    // S (y < 0) -> เอียงลงทิศทาง -forward ของกล้อง
+                    // A (x < 0) -> เอียงลงทิศทาง -right ของกล้อง (หมุนรอบแกน forward ของกล้อง)
+                    // D (x > 0) -> เอียงลงทิศทาง right ของกล้อง
+                    Quaternion tiltWorldRot = Quaternion.AngleAxis(input.y * maxTiltAngle, right) *
+                                              Quaternion.AngleAxis(-input.x * maxTiltAngle, forward);
+
+                    Transform parentTrans = panTransform.parent;
+                    Quaternion initialWorldRot = parentTrans != null ? parentTrans.rotation * initialLocalRotation : initialLocalRotation;
+                    Quaternion targetWorldRot = tiltWorldRot * initialWorldRot;
+
+                    targetLocalRotation = parentTrans != null
+                        ? Quaternion.Inverse(parentTrans.rotation) * targetWorldRot
+                        : targetWorldRot;
+                }
+                else if (autoCenterRotationOnRelease)
+                {
+                    // ปล่อยปุ่ม WASD -> คืนค่าหมุนราบ 0 องศา
+                    targetLocalRotation = initialLocalRotation;
+                }
+
+                // เลื่อนตำแหน่งกระทะอย่างนุ่มนวล
+                panTransform.localPosition = Vector3.Lerp(
+                    panTransform.localPosition,
+                    targetLocalPosition,
+                    Time.deltaTime * smoothSpeed
+                );
+
+                // หมุนเอียงองศากระทะอย่างนุ่มนวล
+                panTransform.localRotation = Quaternion.Slerp(
+                    panTransform.localRotation,
+                    targetLocalRotation,
+                    Time.deltaTime * tiltSmoothSpeed
+                );
+            }
+            else if (isResetting)
+            {
+                // สไลด์ตำแหน่งและหมุนคืนค่าตั้งต้นแบบนุ่มนวลเมื่อออกจากสถานี
+                panTransform.localPosition = Vector3.Lerp(
+                    panTransform.localPosition,
+                    initialLocalPosition,
+                    Time.deltaTime * smoothSpeed
+                );
+
+                panTransform.localRotation = Quaternion.Slerp(
+                    panTransform.localRotation,
+                    initialLocalRotation,
+                    Time.deltaTime * tiltSmoothSpeed
+                );
+
+                bool posReached = Vector3.SqrMagnitude(panTransform.localPosition - initialLocalPosition) < 0.00001f;
+                bool rotReached = Quaternion.Angle(panTransform.localRotation, initialLocalRotation) < 0.1f;
+
+                if (posReached && rotReached)
+                {
+                    panTransform.localPosition = initialLocalPosition;
+                    panTransform.localRotation = initialLocalRotation;
+                    isResetting = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// อ่านค่า Input จาก New Input System หรือ Keyboard Fallback
+        /// </summary>
+        private Vector2 ReadMoveInput()
+        {
+            if (moveAction?.action != null)
+            {
+                Vector2 val = moveAction.action.ReadValue<Vector2>();
+                if (val.sqrMagnitude > 0.001f)
+                {
+                    return val;
+                }
+            }
+
+            // Fallback อ่านค่าจาก Keyboard โดยตรง
+            if (Keyboard.current != null)
+            {
+                float x = 0f;
+                float y = 0f;
+
+                if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y += 1f;
+                if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y -= 1f;
+                if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x -= 1f;
+                if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x += 1f;
+
+                return new Vector2(x, y).normalized;
+            }
+
+            return Vector2.zero;
+        }
+    }
+}
