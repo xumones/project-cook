@@ -4,7 +4,9 @@ using Unity.Cinemachine;
 
 namespace ProjectCook.CameraControl
 {
+    /// <summary>
     /// Singleton สำหรับควบคุม State กลางของกล้องทั้งเกม และส่ง Event แจ้งระบบอื่นๆ
+    /// </summary>
     public class CameraManager : MonoBehaviour
     {
         public static CameraManager Instance { get; private set; }
@@ -45,7 +47,9 @@ namespace ProjectCook.CameraControl
             }
         }
 
+        /// <summary>
         /// สลับไปที่โหมดทำอาหาร พร้อมสลับกล้อง Cinemachine ไปยังสถานีทำอาหารนั้นๆ
+        /// </summary>
         public void SwitchToCooking(CinemachineCamera stationCamera)
         {
             if (stationCamera == null) return;
@@ -74,7 +78,7 @@ namespace ProjectCook.CameraControl
             if (panTilt != null)
             {
                 panTilt.PanAxis.Value = 0f;
-                panTilt.TiltAxis.Value = 30f;
+                panTilt.TiltAxis.Value = 40f;
             }
 
             // 3. สลับ Priority กล้อง
@@ -88,7 +92,9 @@ namespace ProjectCook.CameraControl
             OnCameraStateChanged?.Invoke(currentState);
         }
 
+        /// <summary>
         /// สลับกลับสู่โหมดมุมมองผู้เล่นปกติ (First Person)
+        /// </summary>
         public void SwitchToFirstPerson()
         {
             // 4. คืนค่ามุมมองเดิมของผู้เล่น + เปิด Input กล้องผู้เล่นกลับมาทำงาน

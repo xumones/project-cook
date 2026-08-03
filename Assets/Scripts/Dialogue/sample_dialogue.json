@@ -1,0 +1,52 @@
+{
+  "dialogID": "npc_test",
+  "defaultSpeakerName": "NPC#1",
+  "startNodeID": "start",
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerNameOverride": "",
+      "dialogueText": "this is #1 test sentence",
+      "audioEvent": "",
+      "nextNodeID": "ask_menu",
+      "choices": []
+    },
+    {
+      "nodeID": "ask_menu",
+      "speakerNameOverride": "",
+      "dialogueText": "Question for choice sentence #1",
+      "audioEvent": "",
+      "nextNodeID": "",
+      "choices": [
+        {
+          "choiceText": "this is first answer (function)",
+          "nextNodeID": "end_shop",
+          "actionID": "OPEN_SHOP",
+          "conditionFlag": ""
+        },
+        {
+          "choiceText": "this is second answer (exit)",
+          "nextNodeID": "end_close",
+          "actionID": "CLOSE",
+          "conditionFlag": ""
+        }
+      ]
+    },
+    {
+      "nodeID": "end_shop",
+      "speakerNameOverride": "System",
+      "dialogueText": "start function",
+      "audioEvent": "",
+      "nextNodeID": "",
+      "choices": []
+    },
+    {
+      "nodeID": "end_close",
+      "speakerNameOverride": "",
+      "dialogueText": "end of sentence",
+      "audioEvent": "",
+      "nextNodeID": "",
+      "choices": []
+    }
+  ]
+}

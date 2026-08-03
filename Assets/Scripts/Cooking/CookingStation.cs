@@ -6,8 +6,10 @@ using Unity.Cinemachine;
 
 namespace ProjectCook.Cooking
 {
+    /// <summary>
     /// Abstract Base Class สำหรับสถานีทำอาหารทุกประเภทในเกม (กระทะ, หม้อ, เตาอบ ฯลฯ)
     /// จัดการการเข้า/ออกจากสถานีทำอาหารและสั่งเปลี่ยน State กล้องผ่าน CameraManager (New Input System)
+    /// </summary>
     public abstract class CookingStation : MonoBehaviour, IInteractable
     {
         [Header("Camera Settings")]

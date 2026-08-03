@@ -12,7 +12,7 @@ namespace ProjectCook.Interaction
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private float maxInteractionDistance = 2.5f; // ระยะเอื้อมมือของผู้เล่น (เมตร)
         
-        [Tooltip("ให้เลือกเฉพาะ Layer 'Interactable' ที่เราสร้างขึ้นใน Unity")]
+        [Tooltip("Interactable Layer")]
         [SerializeField] private LayerMask interactableLayerMask; // LayerMask กรองเฉพาะวัตถุที่กดได้
 
         [Header("Input Settings")]
@@ -37,11 +37,7 @@ namespace ProjectCook.Interaction
 
         private void Start()
         {
-            // แจ้งเตือนใน Console หากลืมตั้งค่า LayerMask ใน Inspector
-            if (interactableLayerMask.value == 0)
-            {
-                Debug.LogWarning("[PlayerInteractor] ยังไม่ได้เลือก Interactable Layer Mask ใน Inspector! (กรุณาเลือก Layer 'Interactable')", this);
-            }
+
         }
 
         private void Update()
@@ -79,11 +75,15 @@ namespace ProjectCook.Interaction
 
         private bool WasInteractPressed()
         {
-            if (interactAction?.action != null)
+            if (interactAction?.action != null && interactAction.action.enabled)
             {
-                return interactAction.action.WasPressedThisFrame();
+                if (interactAction.action.WasPressedThisFrame()) return true;
             }
-            return Input.GetKeyDown(KeyCode.E);
+            if (Keyboard.current != null)
+            {
+                return Keyboard.current.eKey.wasPressedThisFrame;
+            }
+            return false;
         }
 
         // แสดงเส้น Raycast ใน Scene View (เปลี่ยนเป็นสีแดงถ้าเล็งโดนวัตถุ / สีเขียวถ้าเล็งที่ว่าง)
