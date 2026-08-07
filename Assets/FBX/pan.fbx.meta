@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3977bccf2b7ddff4dbcd83c2d4bfe8eb
+guid: f2650efa8e1f24346ae387b9bb2c96c5
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
@@ -13,7 +13,7 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: obj-pan
-    second: {fileID: 2800000, guid: 95c3cb17bdde504469341df566b18262, type: 3}
+    second: {fileID: 2800000, guid: 184de0b485f81fb42b8283fc7e4d910c, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
