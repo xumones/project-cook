@@ -17,6 +17,21 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: door
+    second: {fileID: 2100000, guid: 56f78ab2964d2cf49ba2542eaf4c48df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door-knob
+    second: {fileID: 2100000, guid: a172f3d950bdc8c4aab3ed91dcac2f42, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: doorFrame
+    second: {fileID: 2100000, guid: b29bf958ec73e914395dba4e8852d814, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: floor-part
     second: {fileID: 2100000, guid: 25baa109c2e62c844a4dfcbcca9af85f, type: 2}
   - first:
@@ -133,107 +148,137 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: corner-frame
-    second: {fileID: 2800000, guid: ceed3c3a5abcb5849b08b1b9b75a7b7d, type: 3}
+    second: {fileID: 2800000, guid: ba9a8c3d1c1a7ff4cac22add9924d03e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: corner-plank
-    second: {fileID: 2800000, guid: 6acdcd525a2f1024898d7b98cfc92d20, type: 3}
+    second: {fileID: 2800000, guid: 64de1ea107eeb8a4eb146b41a6baad91, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: door
+    second: {fileID: 2800000, guid: e48a96ff7ff0a6d499173f648e15f2bb, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: door-knob
+    second: {fileID: 2800000, guid: 273596b89db4b584b964bb85c78d074f, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: doorFrame
+    second: {fileID: 2800000, guid: b3c39102942812a4cb885520d6567bec, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: fold-door
-    second: {fileID: 2800000, guid: d4143d58a45a98c4c8a2267079780cbe, type: 3}
+    second: {fileID: 2800000, guid: c84e057590d898a4a85835ce074fe133, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: folddoor-rail
-    second: {fileID: 2800000, guid: 11ce3240b6b82f84e86e7a7924397dbf, type: 3}
+    second: {fileID: 2800000, guid: fc870ab02f6cb124e84c8a1833219dff, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-catwalk
+    second: {fileID: 2800000, guid: 28d0fa305d2365a40934611c832f44cc, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-catwalk-fence
+    second: {fileID: 2800000, guid: 45c281bf83adb724a9a39532d5ade043, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: green-floor
-    second: {fileID: 2800000, guid: 5d6094457000a0b478a6f19423edae19, type: 3}
+    second: {fileID: 2800000, guid: f9401c01c32983c4098a4595d0ef395d, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: green-floor-frame
-    second: {fileID: 2800000, guid: e249dbb539ab4fd48b99e650033fef47, type: 3}
+    second: {fileID: 2800000, guid: 98caf73c87252c74480799f84342245e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: green-roof-base
-    second: {fileID: 2800000, guid: 2bf458315cdf69443b0e1a61582bd175, type: 3}
+    second: {fileID: 2800000, guid: 225b2b0e076e4ec4ca9ee36af965340c, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: green-roof-vertical
-    second: {fileID: 2800000, guid: ca7012e1e724e564f8bc0125b1cf0418, type: 3}
+    second: {fileID: 2800000, guid: d76e59c9e63df60459c486e9fd1c6028, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: green-stair
+    second: {fileID: 2800000, guid: 6d3fc47c9a203164dae6e46bbb84d8a9, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: green-struc-hor
-    second: {fileID: 2800000, guid: 27325e307104aea439eff2095d0bdb2c, type: 3}
+    second: {fileID: 2800000, guid: d6c0df6fd14091e4a98625775915b808, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: green-struct-ver
-    second: {fileID: 2800000, guid: a9a3d4380b4d6ce4f86660bb588bf377, type: 3}
+    second: {fileID: 2800000, guid: 2f7cb4f4ce81d9c4ea2f3b777aa52a78, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-floor
-    second: {fileID: 2800000, guid: e7be2bbc5679fd34888cacbd6da8fa19, type: 3}
+    second: {fileID: 2800000, guid: e57e968ca2b272b4fb4fa1b7233bac2e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-pillar
-    second: {fileID: 2800000, guid: f75f7740c016ef54dad0c3179d692761, type: 3}
+    second: {fileID: 2800000, guid: c8bfba7a74587ae408aa6c3dd5506882, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-roof
-    second: {fileID: 2800000, guid: e97bfa66ee2b1884997458d956ba48b3, type: 3}
+    second: {fileID: 2800000, guid: a758909f2331d5c4fa108be37e342c32, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-roof-horizontal
-    second: {fileID: 2800000, guid: aa62c8e2d168ff34da6d9cb293297d42, type: 3}
+    second: {fileID: 2800000, guid: 78e29bda0b5751d419a78ee7fd828249, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-roof-vertical
-    second: {fileID: 2800000, guid: cec3e84a18d172746974cad2accd331a, type: 3}
+    second: {fileID: 2800000, guid: 00fb805ca7b03bc4b841f07a78dc5024, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-wall-1
-    second: {fileID: 2800000, guid: b7c0dfaacadc819499fbffac44e36178, type: 3}
+    second: {fileID: 2800000, guid: ead6d71bced26024da782c0e59867891, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-wall-2
-    second: {fileID: 2800000, guid: f0ad0651672613849864fddb70a5c7c7, type: 3}
+    second: {fileID: 2800000, guid: c45b936544aab694aaad358ebe472f48, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-wall-3
-    second: {fileID: 2800000, guid: e177965ea8aa2e645a50f3a175a42f89, type: 3}
+    second: {fileID: 2800000, guid: b7b464d11e677f640b5d889b657327c5, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-wall-4
-    second: {fileID: 2800000, guid: 79056605f695bb443ac29272da1ee5f2, type: 3}
+    second: {fileID: 2800000, guid: 74a1e87abb328254dadb9677f607d33b, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: room-wall-5
-    second: {fileID: 2800000, guid: 3e1e9203f1dc1704caf64d495b77a85c, type: 3}
+    second: {fileID: 2800000, guid: acf5fea22925ec54591625a0d9a78732, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: wall-6-part
-    second: {fileID: 2800000, guid: b26db522da57c3f4ea7d9080b9f7032c, type: 3}
+    second: {fileID: 2800000, guid: 771eb9ac10eae4f49908b50871ca8ee8, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

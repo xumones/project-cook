@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace ProjectCook.Cooking
 {
     /// <summary>
-    /// สคริปต์จัดการการเคลื่อนที่และการเอียงกระทะบนเตาในโหมดทำอาหาร (Hybrid: WASD Position + Dynamic Tilting)
+    /// สคริปต์จัดการการเคลื่อนที่และการเอียงกระทะบนเตาในโหมดทำอาหาร (Hybrid: WASD Position + Dynamic Tilting via Kinematic Physics)
     /// </summary>
     public class PanController : MonoBehaviour
     {
@@ -21,6 +21,10 @@ namespace ProjectCook.Cooking
 
         [Tooltip("ขอบเขตการเคลื่อนที่สูงสุดจากจุดเริ่มต้นในแนว X และ Z (เมตร)")]
         [SerializeField] private Vector2 moveBounds = new Vector2(0.3f, 0.3f);
+
+        [Header("Height Settings")]
+        [Tooltip("ระยะยกความสูงเริ่มต้นของกระทะเมื่อเริ่มใช้งาน (เมตร)")]
+        [SerializeField] private float startHeightOffset = 0.05f;
 
         [Header("Tilt Settings")]
         [Tooltip("มุมเอียงสูงสุดของกระทะในแต่ละทิศทาง (องศา)")]
@@ -40,6 +44,12 @@ namespace ProjectCook.Cooking
         [Tooltip("Transform สำหรับอ้างอิงทิศทาง (เช่น กล้อง stationCamera) หากไม่ใส่จะอ้างอิงจาก Camera.main หรือเตา")]
         [SerializeField] private Transform referenceTransform;
 
+        [Header("Food Carrier Settings")]
+        [Tooltip("สคริปต์จัดการฟิสิกส์อาหารในกระทะ (หากไม่ใส่จะค้นหาใน GameObject นี้หรือ Child)")]
+        [SerializeField] private PanFoodCarrier foodCarrier;
+
+        private Rigidbody panRigidbody;
+
         private Vector3 initialLocalPosition;
         private Quaternion initialLocalRotation;
 
@@ -50,6 +60,7 @@ namespace ProjectCook.Cooking
         private bool isResetting = false;
 
         public bool IsControllerActive => isControllerActive;
+        public PanFoodCarrier FoodCarrier => foodCarrier;
 
         private void Awake()
         {
@@ -57,6 +68,21 @@ namespace ProjectCook.Cooking
             {
                 panTransform = transform;
             }
+
+            if (foodCarrier == null)
+            {
+                foodCarrier = panTransform.GetComponentInChildren<PanFoodCarrier>();
+            }
+
+            panRigidbody = panTransform.GetComponent<Rigidbody>();
+            if (panRigidbody == null)
+            {
+                panRigidbody = panTransform.gameObject.AddComponent<Rigidbody>();
+            }
+
+            panRigidbody.isKinematic = true;
+            panRigidbody.useGravity = false;
+            panRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
             initialLocalPosition = panTransform.localPosition;
             initialLocalRotation = panTransform.localRotation;
@@ -96,6 +122,7 @@ namespace ProjectCook.Cooking
             else
             {
                 isResetting = false;
+                targetLocalPosition = initialLocalPosition + new Vector3(0f, startHeightOffset, 0f);
             }
         }
 
@@ -149,6 +176,7 @@ namespace ProjectCook.Cooking
                         initialLocalPosition.x - moveBounds.x,
                         initialLocalPosition.x + moveBounds.x
                     );
+                    targetLocalPosition.y = initialLocalPosition.y + startHeightOffset;
                     targetLocalPosition.z = Mathf.Clamp(
                         targetLocalPosition.z,
                         initialLocalPosition.z - moveBounds.y,
@@ -156,10 +184,6 @@ namespace ProjectCook.Cooking
                     );
 
                     // 3. คำนวณการเอียงกระทะแบบ Camera-Relative (Tilt: Pitch & Roll)
-                    // W (y > 0) -> เอียงลงทิศทาง forward ของกล้อง (หมุนรอบแกน right ของกล้อง)
-                    // S (y < 0) -> เอียงลงทิศทาง -forward ของกล้อง
-                    // A (x < 0) -> เอียงลงทิศทาง -right ของกล้อง (หมุนรอบแกน forward ของกล้อง)
-                    // D (x > 0) -> เอียงลงทิศทาง right ของกล้อง
                     Quaternion tiltWorldRot = Quaternion.AngleAxis(input.y * maxTiltAngle, right) *
                                               Quaternion.AngleAxis(-input.x * maxTiltAngle, forward);
 
@@ -176,45 +200,77 @@ namespace ProjectCook.Cooking
                     // ปล่อยปุ่ม WASD -> คืนค่าหมุนราบ 0 องศา
                     targetLocalRotation = initialLocalRotation;
                 }
+            }
+        }
 
-                // เลื่อนตำแหน่งกระทะอย่างนุ่มนวล
-                panTransform.localPosition = Vector3.Lerp(
+        private void FixedUpdate()
+        {
+            if (panTransform == null) return;
+
+            if (isControllerActive)
+            {
+                // เลื่อนตำแหน่งกระทะอย่างนุ่มนวลผ่านทางฟิสิกส์
+                Vector3 newLocalPos = Vector3.Lerp(
                     panTransform.localPosition,
                     targetLocalPosition,
-                    Time.deltaTime * smoothSpeed
+                    Time.fixedDeltaTime * smoothSpeed
                 );
 
-                // หมุนเอียงองศากระทะอย่างนุ่มนวล
-                panTransform.localRotation = Quaternion.Slerp(
+                // หมุนเอียงองศากระทะอย่างนุ่มนวลผ่านทางฟิสิกส์
+                Quaternion newLocalRot = Quaternion.Slerp(
                     panTransform.localRotation,
                     targetLocalRotation,
-                    Time.deltaTime * tiltSmoothSpeed
+                    Time.fixedDeltaTime * tiltSmoothSpeed
                 );
+
+                ApplyPhysicsTransform(newLocalPos, newLocalRot);
             }
             else if (isResetting)
             {
                 // สไลด์ตำแหน่งและหมุนคืนค่าตั้งต้นแบบนุ่มนวลเมื่อออกจากสถานี
-                panTransform.localPosition = Vector3.Lerp(
+                Vector3 newLocalPos = Vector3.Lerp(
                     panTransform.localPosition,
                     initialLocalPosition,
-                    Time.deltaTime * smoothSpeed
+                    Time.fixedDeltaTime * smoothSpeed
                 );
 
-                panTransform.localRotation = Quaternion.Slerp(
+                Quaternion newLocalRot = Quaternion.Slerp(
                     panTransform.localRotation,
                     initialLocalRotation,
-                    Time.deltaTime * tiltSmoothSpeed
+                    Time.fixedDeltaTime * tiltSmoothSpeed
                 );
+
+                ApplyPhysicsTransform(newLocalPos, newLocalRot);
 
                 bool posReached = Vector3.SqrMagnitude(panTransform.localPosition - initialLocalPosition) < 0.00001f;
                 bool rotReached = Quaternion.Angle(panTransform.localRotation, initialLocalRotation) < 0.1f;
 
                 if (posReached && rotReached)
                 {
-                    panTransform.localPosition = initialLocalPosition;
-                    panTransform.localRotation = initialLocalRotation;
+                    ApplyPhysicsTransform(initialLocalPosition, initialLocalRotation);
                     isResetting = false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// ใช้ MovePosition และ MoveRotation เพื่อย้ายกระทะผ่าน PhysX engine สำหรับ Kinematic Rigidbody
+        /// </summary>
+        private void ApplyPhysicsTransform(Vector3 localPos, Quaternion localRot)
+        {
+            Transform parentTrans = panTransform.parent;
+            Vector3 worldPos = parentTrans != null ? parentTrans.TransformPoint(localPos) : localPos;
+            Quaternion worldRot = parentTrans != null ? parentTrans.rotation * localRot : localRot;
+
+            if (panRigidbody != null && panRigidbody.isKinematic)
+            {
+                panRigidbody.MovePosition(worldPos);
+                panRigidbody.MoveRotation(worldRot);
+            }
+            else
+            {
+                panTransform.localPosition = localPos;
+                panTransform.localRotation = localRot;
             }
         }
 
