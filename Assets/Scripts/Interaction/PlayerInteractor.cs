@@ -19,6 +19,8 @@ namespace ProjectCook.Interaction
         [SerializeField] private InputActionReference interactAction; // อ้างอิง Action จาก New Input System
 
         private IInteractable currentTarget; // วัตถุที่ผู้เล่นกำลังเอาเป้าเล็งอยู่นะปัจจุบัน
+        private Collider lastHitCollider;
+        private IInteractable cachedInteractable;
 
         /// <summary>
         /// Property สำหรับให้ระบบ UI หรือระบบอื่นแอบเข้ามาเช็คว่าตอนนี้ผู้เล่นกำลังมองอะไรอยู่
@@ -60,16 +62,22 @@ namespace ProjectCook.Interaction
             // ยิง Raycast ออกไปทุกเฟรม โดยกรองเฉพาะ Layer 'Interactable'
             if (Physics.Raycast(ray, out RaycastHit hit, maxInteractionDistance, interactableLayerMask))
             {
-                // ตรวจหา Component ที่ implement IInteractable จากวัตถุที่ชน หรือ Parent ของมัน
-                IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
-                if (interactable != null)
+                // แคชค่าเพื่อไม่ต้องเรียก GetComponentInParent ค้นหา Hierarchy ทุกเฟรมถ้ายังเล็งโดน Collider ตัวเดิมอยู่
+                if (hit.collider == lastHitCollider)
                 {
-                    currentTarget = interactable;
+                    currentTarget = cachedInteractable;
                     return;
                 }
+
+                lastHitCollider = hit.collider;
+                cachedInteractable = hit.collider.GetComponentInParent<IInteractable>();
+                currentTarget = cachedInteractable;
+                return;
             }
 
             // ถ้าไม่ได้เล็งวัตถุใดๆ ให้ล้างค่าเป้าหมายเป็น null
+            lastHitCollider = null;
+            cachedInteractable = null;
             currentTarget = null;
         }
 
