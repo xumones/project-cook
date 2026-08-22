@@ -1,4 +1,4 @@
-Shader "ProjectCook/Cooking/TwoSidedCooking"
+Shader "ProjectCook/Cooking/CookingMaterial"
 {
     Properties
     {
@@ -29,8 +29,10 @@ Shader "ProjectCook/Cooking/TwoSidedCooking"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -100,29 +102,29 @@ Shader "ProjectCook/Cooking/TwoSidedCooking"
                 // 5. Apply burnt tint according to _TintIntensity
                 half3 finalAlbedo = lerp(baseAlbedoTex.rgb, baseAlbedoTex.rgb * burntTint, _TintIntensity);
 
-                // 6. Lighting Calculation
-                float3 normalWS = normalize(input.normalWS);
-                float4 shadowCoord = TransformWorldToShadowCoord(input.positionWS);
-                Light mainLight = GetMainLight(shadowCoord);
+                // 6. URP Standard PBR SurfaceData & InputData Setup
+                SurfaceData surfaceData;
+                ZERO_INITIALIZE(SurfaceData, surfaceData);
+                surfaceData.albedo = finalAlbedo;
+                surfaceData.alpha = baseAlbedoTex.a;
+                surfaceData.metallic = lerp(0.0, 0.15, _Smoothness);
+                surfaceData.specular = lerp(half3(0.04, 0.04, 0.04), half3(0.3, 0.3, 0.3), _Smoothness);
+                surfaceData.smoothness = _Smoothness;
+                surfaceData.normalTS = float3(0, 0, 1);
+                surfaceData.occlusion = 1.0;
 
-                // Shadow and Light Attenuation
-                half atten = mainLight.distanceAttenuation * mainLight.shadowAttenuation;
-                half NdotL = saturate(dot(normalWS, mainLight.direction));
-                half3 directDiffuse = finalAlbedo * mainLight.color * (NdotL * atten);
+                InputData inputData;
+                ZERO_INITIALIZE(InputData, inputData);
+                inputData.positionWS = input.positionWS;
+                inputData.normalWS = normalize(input.normalWS);
+                inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+                inputData.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+                inputData.bakedGI = SampleSH(inputData.normalWS);
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+                inputData.shadowMask = half4(1, 1, 1, 1);
 
-                // Ambient Light / Light Probes (Matches dark kitchen scene environment)
-                half3 ambient = finalAlbedo * SampleSH(normalWS);
-
-                // Specular Oil Glossiness
-                float3 viewDirWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
-                float3 halfDir = SafeNormalize(mainLight.direction + viewDirWS);
-                half NdotH = saturate(dot(normalWS, halfDir));
-                half specPower = lerp(10.0, 128.0, _Smoothness);
-                half specTerm = pow(NdotH, specPower) * _Smoothness;
-                half3 directSpecular = mainLight.color * (specTerm * NdotL * atten);
-
-                half3 finalColor = directDiffuse + ambient + directSpecular;
-                return half4(finalColor, baseAlbedoTex.a);
+                half4 finalColor = UniversalFragmentPBR(inputData, surfaceData);
+                return finalColor;
             }
             ENDHLSL
         }

@@ -13,16 +13,20 @@ namespace ProjectCook.Cooking
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int BaseMapId = Shader.PropertyToID("_BaseMap");
+        private static readonly int MainTexId = Shader.PropertyToID("_MainTex");
         private static readonly int CookedMapId = Shader.PropertyToID("_CookedMap");
         private static readonly int SideAProgressId = Shader.PropertyToID("_SideAProgress");
         private static readonly int SideBProgressId = Shader.PropertyToID("_SideBProgress");
         private static readonly int BurntColorId = Shader.PropertyToID("_BurntColor");
         private static readonly int TintIntensityId = Shader.PropertyToID("_TintIntensity");
+        private static readonly int SmoothnessId = Shader.PropertyToID("_Smoothness");
         private int customColorPropertyId;
 
         private Color lastAppliedColor;
         private float lastAppliedSideAProgress = -1f;
         private float lastAppliedSideBProgress = -1f;
+        private float lastAppliedSmoothness = -1f;
         private bool isColorInitialized = false;
 
         public void Init(Renderer renderer)
@@ -65,6 +69,7 @@ namespace ProjectCook.Cooking
             isColorInitialized = false;
             lastAppliedSideAProgress = -1f;
             lastAppliedSideBProgress = -1f;
+            lastAppliedSmoothness = -1f;
         }
 
         /// <summary>
@@ -76,31 +81,15 @@ namespace ProjectCook.Cooking
 
             Material targetMat = null;
 
-            if (data.IsTwoSidedCooking)
+            // ทั้งการทอดแยกด้าน (Two-Sided) และทอดรอบทิศทาง (Omni) ให้ยึด RawMaterial (ที่ใช้ Shader CookingMaterial) ไว้ก่อน
+            // เพื่อให้ Shader ทำการ Lerp Texture จากดิบ -> สุก ได้อย่างนุ่มนวล และสลับเป็น BurntMaterial เมื่อไหม้เท่านั้น
+            if (state == CookingState.Burnt && data.BurntMaterial != null)
             {
-                if (state == CookingState.Burnt && data.BurntMaterial != null)
-                {
-                    targetMat = data.BurntMaterial;
-                }
-                else if (data.RawMaterial != null)
-                {
-                    targetMat = data.RawMaterial;
-                }
+                targetMat = data.BurntMaterial;
             }
-            else
+            else if (data.RawMaterial != null)
             {
-                if (state == CookingState.Cooked && data.CookedMaterial != null)
-                {
-                    targetMat = data.CookedMaterial;
-                }
-                else if (state == CookingState.Burnt && data.BurntMaterial != null)
-                {
-                    targetMat = data.BurntMaterial;
-                }
-                else if (state == CookingState.Raw && data.RawMaterial != null)
-                {
-                    targetMat = data.RawMaterial;
-                }
+                targetMat = data.RawMaterial;
             }
 
             if (targetMat != null && meshRenderer.sharedMaterial != targetMat)
@@ -126,6 +115,35 @@ namespace ProjectCook.Cooking
                 normSideA = data.CookTime > 0 ? (sideACookTime / data.CookTime) : 0f;
                 normSideB = data.CookTime > 0 ? (sideBCookTime / data.CookTime) : 0f;
             }
+            else
+            {
+                float normOmni = data.CookTime > 0 ? (omniCookTime / data.CookTime) : 0f;
+                normSideA = normOmni;
+                normSideB = normOmni;
+            }
+
+            Material targetMat = data.CookingMaterial != null ? data.CookingMaterial : meshRenderer.sharedMaterial;
+
+            // คำนวณการเปลี่ยนผ่านของความเงาฉ่ำมัน (Smoothness) โดยอ่านค่าตั้งต้นจาก Material ให้อัตโนมัติ
+            float baseRawSmoothness = data.RawSmoothness;
+            if (targetMat != null && targetMat.HasProperty(SmoothnessId))
+            {
+                baseRawSmoothness = targetMat.GetFloat(SmoothnessId);
+            }
+
+            float effectiveTime = data.IsTwoSidedCooking ? (sideACookTime + sideBCookTime) * 0.5f : omniCookTime;
+            float currentSmoothness = baseRawSmoothness;
+
+            if (effectiveTime <= data.CookTime)
+            {
+                float cookRatio = data.CookTime > 0 ? Mathf.Clamp01(effectiveTime / data.CookTime) : 1f;
+                currentSmoothness = Mathf.Lerp(baseRawSmoothness, data.CookedSmoothness, cookRatio);
+            }
+            else
+            {
+                float burnRatio = data.BurnTime > 0 ? Mathf.Clamp01((effectiveTime - data.CookTime) / data.BurnTime) : 1f;
+                currentSmoothness = Mathf.Lerp(data.CookedSmoothness, data.BurntSmoothness, burnRatio);
+            }
 
             // Smart Dirty Check: ป้องกันการส่งค่าเข้า GPU ซ้ำ เมื่อค่าไม่มีการเปลี่ยนแปลงที่มีนัยสำคัญทางสายตา
             if (isColorInitialized)
@@ -136,10 +154,11 @@ namespace ProjectCook.Cooking
                                      (targetColor.a - lastAppliedColor.a) * (targetColor.a - lastAppliedColor.a);
 
                 bool isColorDirty = colorDiffSqr >= 0.000025f;
-                bool isSideADirty = data.IsTwoSidedCooking && Mathf.Abs(normSideA - lastAppliedSideAProgress) >= 0.005f;
-                bool isSideBDirty = data.IsTwoSidedCooking && Mathf.Abs(normSideB - lastAppliedSideBProgress) >= 0.005f;
+                bool isSideADirty = Mathf.Abs(normSideA - lastAppliedSideAProgress) >= 0.005f;
+                bool isSideBDirty = Mathf.Abs(normSideB - lastAppliedSideBProgress) >= 0.005f;
+                bool isSmoothnessDirty = Mathf.Abs(currentSmoothness - lastAppliedSmoothness) >= 0.005f;
 
-                if (!isColorDirty && !isSideADirty && !isSideBDirty)
+                if (!isColorDirty && !isSideADirty && !isSideBDirty && !isSmoothnessDirty)
                 {
                     return;
                 }
@@ -148,32 +167,51 @@ namespace ProjectCook.Cooking
             lastAppliedColor = targetColor;
             lastAppliedSideAProgress = normSideA;
             lastAppliedSideBProgress = normSideB;
+            lastAppliedSmoothness = currentSmoothness;
             isColorInitialized = true;
 
-            if (data.IsTwoSidedCooking)
+            propertyBlock.SetColor(BaseColorId, targetColor);
+            propertyBlock.SetColor(ColorId, targetColor);
+            if (customColorPropertyId != 0 && customColorPropertyId != BaseColorId && customColorPropertyId != ColorId)
             {
-                propertyBlock.SetColor(BaseColorId, Color.white);
-                propertyBlock.SetColor(ColorId, Color.white);
+                propertyBlock.SetColor(customColorPropertyId, targetColor);
+            }
 
-                if (data.CookedMaterial != null && data.CookedMaterial.mainTexture != null)
+            // แสกนดึงรูป Raw Albedo (_BaseMap) และ Cooked Albedo (_CookedMap) จาก CookingMaterial ให้อัตโนมัติ
+            if (data.CookingMaterial != null)
+            {
+                Texture rawTex = null;
+                if (data.CookingMaterial.HasProperty(BaseMapId))
                 {
-                    propertyBlock.SetTexture(CookedMapId, data.CookedMaterial.mainTexture);
+                    rawTex = data.CookingMaterial.GetTexture(BaseMapId);
+                }
+                else if (data.CookingMaterial.HasProperty(MainTexId))
+                {
+                    rawTex = data.CookingMaterial.mainTexture;
                 }
 
-                propertyBlock.SetFloat(SideAProgressId, normSideA);
-                propertyBlock.SetFloat(SideBProgressId, normSideB);
-                propertyBlock.SetColor(BurntColorId, data.BurntColor);
-                propertyBlock.SetFloat(TintIntensityId, data.TintIntensity);
-            }
-            else
-            {
-                propertyBlock.SetColor(BaseColorId, targetColor);
-                propertyBlock.SetColor(ColorId, targetColor);
-                if (customColorPropertyId != 0 && customColorPropertyId != BaseColorId && customColorPropertyId != ColorId)
+                if (rawTex != null)
                 {
-                    propertyBlock.SetColor(customColorPropertyId, targetColor);
+                    propertyBlock.SetTexture(BaseMapId, rawTex);
+                    propertyBlock.SetTexture(MainTexId, rawTex);
+                }
+
+                if (data.CookingMaterial.HasProperty(CookedMapId))
+                {
+                    Texture cookedTex = data.CookingMaterial.GetTexture(CookedMapId);
+                    if (cookedTex != null)
+                    {
+                        propertyBlock.SetTexture(CookedMapId, cookedTex);
+                    }
                 }
             }
+
+            propertyBlock.SetFloat(SideAProgressId, normSideA);
+            propertyBlock.SetFloat(SideBProgressId, normSideB);
+            propertyBlock.SetColor(BurntColorId, data.BurntColor);
+            propertyBlock.SetFloat(TintIntensityId, data.TintIntensity);
+
+            propertyBlock.SetFloat(SmoothnessId, currentSmoothness);
 
             meshRenderer.SetPropertyBlock(propertyBlock);
         }

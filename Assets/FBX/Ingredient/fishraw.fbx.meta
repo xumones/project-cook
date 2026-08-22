@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: b0c17378a50a5e44c95aefbf3301f8e0
+guid: b229e9fe65cd8fb4097b8525e01e8133
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rawfish
+    second: {fileID: 2100000, guid: 8d6c3b55724bb4948a0afda5c4369cea, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: rawfish
+    second: {fileID: 2800000, guid: 37c90018541c23442b40c492538f5ebf, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

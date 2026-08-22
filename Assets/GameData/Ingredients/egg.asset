@@ -18,12 +18,14 @@ MonoBehaviour:
   isTwoSidedCooking: 0
   cookTime: 40
   burnTime: 60
-  rawMaterial: {fileID: 2100000, guid: b4fbad9a5682c82489b21d95ad5d8cfd, type: 2}
-  cookedMaterial: {fileID: 2100000, guid: 24aa96d0c7329d348b32e6d00d214080, type: 2}
+  cookingMaterial: {fileID: 2100000, guid: cbbdad0401e39954cb201410b1e6c786, type: 2}
   burntMaterial: {fileID: 0}
-  tintIntensity: 0.5
-  burntColor: {r: 1, g: 1, b: 1, a: 1}
+  tintIntensity: 0.7
+  burntColor: {r: 0.60784316, g: 0.44705883, b: 0.28235295, a: 1}
   colorPropertyName: _Color
+  rawSmoothness: 0.59
+  cookedSmoothness: 0.39
+  burntSmoothness: 0.05
   sfxVolume: 1
   sizzlePitch: 1
   pitchRandomness: 0.05

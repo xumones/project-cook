@@ -35,13 +35,10 @@ namespace ProjectCook.Cooking
         [SerializeField] private float burnTime = 5f;
 
         [Header("Material References")]
-        [Tooltip("Material ของวัตถุดิบตอนสด/ดิบ (เช่น rawbacon.mat)")]
-        [SerializeField] private Material rawMaterial;
+        [Tooltip("Material ประจำตัววัตถุดิบที่ใช้ Shader CookingMaterial (กำหนดภาพดิบที่ Base Map และภาพสุกที่ Cooked Map)")]
+        [SerializeField] private Material cookingMaterial;
 
-        [Tooltip("Material ของวัตถุดิบตอนสุกพอดี (เช่น cookbacon.mat)")]
-        [SerializeField] private Material cookedMaterial;
-
-        [Tooltip("Material ของวัตถุดิบตอนไหม้ (Burnt Material)")]
+        [Tooltip("Material ของวัตถุดิบตอนไหม้ดำ (Burnt Material / Optional)")]
         [SerializeField] private Material burntMaterial;
 
         [Header("Visual Properties (Material Color)")]
@@ -54,6 +51,19 @@ namespace ProjectCook.Cooking
 
         [Tooltip("ชื่อ Shader Property สำหรับเปลี่ยนสี (เช่น _Color หรือ _BaseColor)")]
         [SerializeField] private string colorPropertyName = "_Color";
+
+        [Header("Visual Properties (Material Smoothness / Oil Glossiness)")]
+        [Tooltip("ความฉ่ำมันเงาสะท้อนแสง (Oil Glossiness) ตอนวัตถุดิบดิบ (0.0 ถึง 1.0)")]
+        [Range(0f, 1f)]
+        [SerializeField] private float rawSmoothness = 0.2f;
+
+        [Tooltip("ความฉ่ำมันเงาสะท้อนแสง (Oil Glossiness) ตอนวัตถุดิบสุกพอดี (0.0 ถึง 1.0)")]
+        [Range(0f, 1f)]
+        [SerializeField] private float cookedSmoothness = 0.85f;
+
+        [Tooltip("ความฉ่ำมันเงาสะท้อนแสง (Oil Glossiness) ตอนวัตถุดิบไหม้ดำ (0.0 ถึง 1.0)")]
+        [Range(0f, 1f)]
+        [SerializeField] private float burntSmoothness = 0.05f;
 
         [Header("Audio SFX Settings")]
         [Tooltip("ความดังของเสียง SFX ทั้งหมดประจำวัตถุดิบนี้ (0.0 ถึง 1.0)")]
@@ -84,12 +94,16 @@ namespace ProjectCook.Cooking
         public bool IsTwoSidedCooking => isTwoSidedCooking;
         public float CookTime => cookTime;
         public float BurnTime => burnTime;
-        public Material RawMaterial => rawMaterial;
-        public Material CookedMaterial => cookedMaterial;
+        public Material CookingMaterial => cookingMaterial;
+        public Material RawMaterial => cookingMaterial;
+        public Material CookedMaterial => null;
         public Material BurntMaterial => burntMaterial;
         public float TintIntensity => tintIntensity;
         public Color BurntColor => burntColor;
         public string ColorPropertyName => colorPropertyName;
+        public float RawSmoothness => rawSmoothness;
+        public float CookedSmoothness => cookedSmoothness;
+        public float BurntSmoothness => burntSmoothness;
         public float SFXVolume => sfxVolume;
         public float SizzlePitch => sizzlePitch;
         public float PitchRandomness => pitchRandomness;
