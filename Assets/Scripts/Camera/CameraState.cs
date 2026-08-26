@@ -1,4 +1,4 @@
-namespace ProjectCook.CameraControl
+namespace ProjectCook.CameraSystem
 {
     public enum CameraState
     {

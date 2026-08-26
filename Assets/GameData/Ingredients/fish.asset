@@ -16,15 +16,15 @@ MonoBehaviour:
   ingredientName: fish
   icon: {fileID: 0}
   isTwoSidedCooking: 1
-  cookTime: 30
-  burnTime: 45
+  cookTime: 45
+  burnTime: 65
   cookingMaterial: {fileID: 2100000, guid: 42ea0a65cc18ddc43bc282941fe58fef, type: 2}
   burntMaterial: {fileID: 0}
   tintIntensity: 0.5
   burntColor: {r: 0.35, g: 0.3, b: 0.3, a: 1}
   colorPropertyName: _Color
-  rawSmoothness: 0.2
-  cookedSmoothness: 0.85
+  rawSmoothness: 0.19
+  cookedSmoothness: 0.1
   burntSmoothness: 0.05
   sfxVolume: 1
   sizzlePitch: 1

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Unity.Cinemachine;
 
-namespace ProjectCook.CameraControl
+namespace ProjectCook.CameraSystem
 {
     /// <summary>
     /// Singleton สำหรับควบคุม State กลางของกล้องทั้งเกม และส่ง Event แจ้งระบบอื่นๆ

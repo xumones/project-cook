@@ -29,6 +29,12 @@ namespace ProjectCook.Cooking
         private float lastAppliedSmoothness = -1f;
         private bool isColorInitialized = false;
 
+        private Material cachedCookingMat;
+        private Texture cachedRawTex;
+        private Texture cachedCookedTex;
+        private float cachedBaseSmoothness = -1f;
+        private bool isMaterialCached = false;
+
         public void Init(Renderer renderer)
         {
             meshRenderer = renderer;
@@ -67,9 +73,61 @@ namespace ProjectCook.Cooking
         public void ResetAppliedStates()
         {
             isColorInitialized = false;
+            isMaterialCached = false;
             lastAppliedSideAProgress = -1f;
             lastAppliedSideBProgress = -1f;
             lastAppliedSmoothness = -1f;
+        }
+
+        private void CacheMaterialProperties(Material mat, IngredientDataSO data)
+        {
+            cachedCookingMat = mat;
+            cachedRawTex = null;
+            cachedCookedTex = null;
+            cachedBaseSmoothness = data != null ? data.RawSmoothness : 0.5f;
+
+            if (mat != null)
+            {
+                if (mat.HasProperty(BaseMapId))
+                {
+                    cachedRawTex = mat.GetTexture(BaseMapId);
+                }
+                else if (mat.HasProperty(MainTexId))
+                {
+                    cachedRawTex = mat.mainTexture;
+                }
+
+                if (mat.HasProperty(CookedMapId))
+                {
+                    cachedCookedTex = mat.GetTexture(CookedMapId);
+                }
+
+                if (mat.HasProperty(SmoothnessId))
+                {
+                    cachedBaseSmoothness = mat.GetFloat(SmoothnessId);
+                }
+            }
+            isMaterialCached = true;
+        }
+
+        /// <summary>
+        /// ส่ง Texture ที่แคชไว้เข้า MaterialPropertyBlock เพียงครั้งเดียวตอนเปลี่ยน Material
+        /// ค่าใน PropertyBlock จะคงอยู่ข้ามการเรียก SetPropertyBlock จึงไม่ต้องส่งซ้ำทุกครั้งที่ความสุกเปลี่ยน
+        /// </summary>
+        private void ApplyCachedTexturesToBlock()
+        {
+            if (propertyBlock == null) return;
+
+            if (cachedRawTex != null)
+            {
+                propertyBlock.SetTexture(BaseMapId, cachedRawTex);
+                propertyBlock.SetTexture(MainTexId, cachedRawTex);
+            }
+
+            if (cachedCookedTex != null)
+            {
+                propertyBlock.SetTexture(CookedMapId, cachedCookedTex);
+            }
         }
 
         /// <summary>
@@ -124,13 +182,18 @@ namespace ProjectCook.Cooking
 
             Material targetMat = data.CookingMaterial != null ? data.CookingMaterial : meshRenderer.sharedMaterial;
 
-            // คำนวณการเปลี่ยนผ่านของความเงาฉ่ำมัน (Smoothness) โดยอ่านค่าตั้งต้นจาก Material ให้อัตโนมัติ
-            float baseRawSmoothness = data.RawSmoothness;
-            if (targetMat != null && targetMat.HasProperty(SmoothnessId))
+            if (!isMaterialCached || cachedCookingMat != targetMat)
             {
-                baseRawSmoothness = targetMat.GetFloat(SmoothnessId);
+                CacheMaterialProperties(targetMat, data);
+
+                // Texture ไม่เปลี่ยนระหว่างทอด จึงส่งเข้า PropertyBlock เพียงครั้งเดียวตอนเปลี่ยน Material
+                ApplyCachedTexturesToBlock();
+
+                // บังคับให้รอบนี้ส่งค่าเข้า GPU เสมอ เพราะเพิ่งเปลี่ยน Material ใหม่
+                isColorInitialized = false;
             }
 
+            float baseRawSmoothness = cachedBaseSmoothness;
             float effectiveTime = data.IsTwoSidedCooking ? (sideACookTime + sideBCookTime) * 0.5f : omniCookTime;
             float currentSmoothness = baseRawSmoothness;
 
@@ -175,35 +238,6 @@ namespace ProjectCook.Cooking
             if (customColorPropertyId != 0 && customColorPropertyId != BaseColorId && customColorPropertyId != ColorId)
             {
                 propertyBlock.SetColor(customColorPropertyId, targetColor);
-            }
-
-            // แสกนดึงรูป Raw Albedo (_BaseMap) และ Cooked Albedo (_CookedMap) จาก CookingMaterial ให้อัตโนมัติ
-            if (data.CookingMaterial != null)
-            {
-                Texture rawTex = null;
-                if (data.CookingMaterial.HasProperty(BaseMapId))
-                {
-                    rawTex = data.CookingMaterial.GetTexture(BaseMapId);
-                }
-                else if (data.CookingMaterial.HasProperty(MainTexId))
-                {
-                    rawTex = data.CookingMaterial.mainTexture;
-                }
-
-                if (rawTex != null)
-                {
-                    propertyBlock.SetTexture(BaseMapId, rawTex);
-                    propertyBlock.SetTexture(MainTexId, rawTex);
-                }
-
-                if (data.CookingMaterial.HasProperty(CookedMapId))
-                {
-                    Texture cookedTex = data.CookingMaterial.GetTexture(CookedMapId);
-                    if (cookedTex != null)
-                    {
-                        propertyBlock.SetTexture(CookedMapId, cookedTex);
-                    }
-                }
             }
 
             propertyBlock.SetFloat(SideAProgressId, normSideA);

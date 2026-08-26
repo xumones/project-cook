@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ProjectCook.CameraControl;
+using ProjectCook.CameraSystem;
+using ProjectCook.Core;
 
 namespace ProjectCook.Control
 {
@@ -25,17 +26,18 @@ namespace ProjectCook.Control
 
         public bool IsControlActive => isControlActive;
 
+        /// <summary>
+        /// เปิด/ปิด การควบคุมการเคลื่อนที่ของผู้เล่น
+        /// หมายเหตุ: เมธอดนี้ไม่ยุ่งกับสถานะเคอร์เซอร์ เพราะการปิดการเดินไม่ได้แปลว่าต้องการตัวชี้เมาส์เสมอไป
+        /// (เช่น โหมดทำอาหารปิดการเดินแต่ยังต้องล็อกเคอร์เซอร์ไว้กลางจอเพื่อเล็งเป้า)
+        /// ระบบที่ต้องการตัวชี้เมาส์จริงๆ ต้องขอเองผ่าน CursorManager.RequestUnlock
+        /// </summary>
         public void SetControlActive(bool active)
         {
             isControlActive = active;
             if (!active)
             {
                 velocity = Vector3.zero;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
             }
         }
 
@@ -46,9 +48,8 @@ namespace ProjectCook.Control
 
         private void Start()
         {
-            // ล็อกและซ่อนเคอร์เซอร์เมาส์กลางหน้าจอสำหรับเกมมุมมอง FPS
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            // สร้าง CursorManager และบังคับสถานะเริ่มต้น (ล็อกเคอร์เซอร์กลางจอสำหรับมุมมอง FPS)
+            CursorManager.EnsureInitialized();
 
             if (CameraManager.Instance != null)
             {
@@ -67,15 +68,6 @@ namespace ProjectCook.Control
         private void HandleCameraStateChanged(CameraState state)
         {
             SetControlActive(state == CameraState.FirstPerson);
-        }
-
-        private void OnApplicationFocus(bool hasFocus)
-        {
-            if (hasFocus)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
         }
 
         private void OnEnable()

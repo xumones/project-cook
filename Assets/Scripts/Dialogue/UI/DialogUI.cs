@@ -86,24 +86,45 @@ namespace ProjectCook.Dialogue.UI
         }
 
         /// <summary>
-        /// กำหนดข้อความบทสนทนาแบบตั้งค่าโดยตรง
+        /// กำหนดข้อความบทสนทนาและแสดงผลเต็มบรรทัดทันที
         /// </summary>
         public void SetDialogueText(string text)
         {
             if (dialogueText != null)
             {
                 dialogueText.text = text;
+                dialogueText.maxVisibleCharacters = int.MaxValue;
             }
         }
 
         /// <summary>
-        /// ต่อเติมอักษรทีละตัวสำหรับ Typewriter effect
+        /// เตรียมข้อความสำหรับเอฟเฟกต์ Typewriter โดยใส่ข้อความเต็มไว้ก่อนแล้วซ่อนตัวอักษรทั้งหมด
+        /// วิธีนี้ทำให้ TMP คำนวณ Layout และสร้าง Mesh เพียงครั้งเดียวต่อบรรทัด
+        /// (แทนการต่อสตริงทีละตัวซึ่งบังคับให้ TMP สร้าง Mesh ใหม่ทุกตัวอักษรและสร้างขยะ GC จำนวนมาก)
         /// </summary>
-        public void AppendDialogueChar(char c)
+        /// <returns>จำนวนตัวอักษรที่มองเห็นได้จริง (ไม่นับแท็ก Rich Text)</returns>
+        public int PrepareTypewriterText(string text)
+        {
+            if (dialogueText == null) return 0;
+
+            dialogueText.text = text;
+            dialogueText.maxVisibleCharacters = 0;
+
+            // บังคับให้ TMP ประมวลผลข้อความทันที เพื่ออ่านจำนวนตัวอักษรจริงที่ไม่รวมแท็ก Rich Text
+            dialogueText.ForceMeshUpdate();
+
+            return dialogueText.textInfo.characterCount;
+        }
+
+        /// <summary>
+        /// กำหนดจำนวนตัวอักษรที่เปิดเผยให้เห็นสำหรับเอฟเฟกต์ Typewriter
+        /// TMP เพียงเปลี่ยนว่า Vertex ไหนถูกวาด ไม่มีการแปลงข้อความหรือสร้าง Mesh ใหม่ (Zero Allocation)
+        /// </summary>
+        public void SetVisibleCharacterCount(int count)
         {
             if (dialogueText != null)
             {
-                dialogueText.text += c;
+                dialogueText.maxVisibleCharacters = count;
             }
         }
 

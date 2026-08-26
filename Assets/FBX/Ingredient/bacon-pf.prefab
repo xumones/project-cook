@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6890444983550007625
+--- !u!1001 &5141805233313871680
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.3049293
+      value: 3.278
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2702636
+      value: 1.426
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.807
+      value: 3.729
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54,7 +54,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_Name
-      value: bacon-raw-pf
+      value: bacon-pf 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_TagString
@@ -66,35 +74,32 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6966462102825978778}
+      addedObject: {fileID: 4407508877935325462}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1465531052963534609}
+      addedObject: {fileID: 5449048911326569828}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6184378011422041907}
+      addedObject: {fileID: 4248574134998945379}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6434232176874673354}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4164455184603048474}
+      addedObject: {fileID: 5362828037698529731}
   m_SourcePrefab: {fileID: 100100000, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
---- !u!1 &6007431253422498840 stripped
+--- !u!1 &5447725316567452177 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
-  m_PrefabInstance: {fileID: 6890444983550007625}
+  m_PrefabInstance: {fileID: 5141805233313871680}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &6966462102825978778
+--- !u!54 &4407508877935325462
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6007431253422498840}
+  m_GameObject: {fileID: 5447725316567452177}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 10
+  m_LinearDamping: 5
   m_AngularDamping: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -112,14 +117,14 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!65 &1465531052963534609
+--- !u!65 &5449048911326569828
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6007431253422498840}
-  m_Material: {fileID: 0}
+  m_GameObject: {fileID: 5447725316567452177}
+  m_Material: {fileID: 13400000, guid: 7ddb64da6a756944fb097e8aebb468c5, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -133,43 +138,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.0779223, y: 0.35795736, z: 0.78322613}
   m_Center: {x: -0.09842628, y: 0.007691024, z: -0.00974242}
---- !u!114 &6184378011422041907
+--- !u!114 &4248574134998945379
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6007431253422498840}
+  m_GameObject: {fileID: 5447725316567452177}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
   data: {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
-  visualsComponent: {fileID: 6434232176874673354}
-  audioComponent: {fileID: 4164455184603048474}
---- !u!114 &6434232176874673354
+--- !u!114 &5362828037698529731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6007431253422498840}
+  m_GameObject: {fileID: 5447725316567452177}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &4164455184603048474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6007431253422498840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}

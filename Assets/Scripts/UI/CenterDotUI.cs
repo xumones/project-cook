@@ -69,7 +69,10 @@ namespace ProjectCook.UI
                     targetCamera = Camera.main.transform;
                     previousRotation = targetCamera.rotation;
                 }
-                return;
+                else
+                {
+                    return;
+                }
             }
 
             // 1. คำนวณความเร็วการหมุนกล้องในแต่ละเฟรม (Degrees per second)

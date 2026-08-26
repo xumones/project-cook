@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3937639129252277642
+--- !u!1001 &6908658006540384472
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.3058
+      value: 3.3099961
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.226
+      value: 1.2880013
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.756
+      value: 3.802365
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       propertyPath: m_LocalRotation.w
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       propertyPath: m_Name
-      value: egg-raw-pf
+      value: egg-pf 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       propertyPath: m_Layer
@@ -66,32 +66,29 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4274605272665190074}
+      addedObject: {fileID: 3776378824466180411}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6049429690464796517}
+      addedObject: {fileID: 6913225287178635733}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4158673200323520271}
+      addedObject: {fileID: 2394977844886280772}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6287038903658775833}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7517827964526380290}
+      addedObject: {fileID: 8314872173726923496}
   m_SourcePrefab: {fileID: 100100000, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
---- !u!1 &4207527796631638235 stripped
+--- !u!1 &5990088820357481865 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
-  m_PrefabInstance: {fileID: 3937639129252277642}
+  m_PrefabInstance: {fileID: 6908658006540384472}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &4274605272665190074
+--- !u!54 &3776378824466180411
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207527796631638235}
+  m_GameObject: {fileID: 5990088820357481865}
   serializedVersion: 5
   m_Mass: 2
   m_LinearDamping: 0
@@ -112,13 +109,13 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!65 &6049429690464796517
+--- !u!65 &6913225287178635733
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207527796631638235}
+  m_GameObject: {fileID: 5990088820357481865}
   m_Material: {fileID: 13400000, guid: 9fc6691e566dc7348813e3dbdd906356, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -133,43 +130,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.114821196, y: 0.01961875, z: 0.12907076}
   m_Center: {x: -0.003347993, y: 0.002408862, z: 0.00027489662}
---- !u!114 &4158673200323520271
+--- !u!114 &2394977844886280772
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207527796631638235}
+  m_GameObject: {fileID: 5990088820357481865}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
   data: {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
-  visualsComponent: {fileID: 6287038903658775833}
-  audioComponent: {fileID: 7517827964526380290}
---- !u!114 &6287038903658775833
+--- !u!114 &8314872173726923496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207527796631638235}
+  m_GameObject: {fileID: 5990088820357481865}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &7517827964526380290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4207527796631638235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}

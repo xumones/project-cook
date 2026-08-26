@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ProjectCook.CameraControl
+namespace ProjectCook.CameraSystem
 {
     /// <summary>
     /// สคริปต์จัดการขยับตำแหน่ง localPosition ของ Head Anchor ด้วยคลื่น Sin/Cos ตามการเคลื่อนที่ของผู้เล่น
@@ -39,7 +39,7 @@ namespace ProjectCook.CameraControl
             defaultHeadPos = headTransform.localPosition;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (controller == null || headTransform == null) return;
 

@@ -8,39 +8,9 @@ using ProjectCook.Dialogue.Conditions;
 namespace ProjectCook.NPC
 {
     /// <summary>
-    /// โครงสร้างเก็บข้อมูลบทสนทนาที่มีเงื่อนไข
-    /// </summary>
-    [System.Serializable]
-    public class ConditionalDialogEntry
-    {
-        public DialogData dialogData;
-        [Tooltip("ไฟล์บทสนทนาแบบ JSON (ใช้แทน dialogData ได้)")]
-        public TextAsset jsonFile;
-        public int priority = 0;
-        public List<DialogConditionSO> conditions = new List<DialogConditionSO>();
-
-        public bool AreConditionsMet()
-        {
-            if (conditions == null || conditions.Count == 0) return true;
-            foreach (var cond in conditions)
-            {
-                if (cond != null && !cond.IsMet()) return false;
-            }
-            return true;
-        }
-
-        public DialogData GetEffectiveDialogData()
-        {
-            if (dialogData != null) return dialogData;
-            if (jsonFile != null) return DialogParser.ParseTextAssetToDialogData(jsonFile);
-            return null;
-        }
-    }
-
-    /// <summary>
     /// คลาสหลักสำหรับ NPC ทุกตัวในเกม Implement IInteractable และ INPCActionHandler
     /// </summary>
-    public class NPC : MonoBehaviour, IInteractable, INPCActionHandler
+    public class NPCController : MonoBehaviour, IInteractable, INPCActionHandler
     {
         [Header("NPC Profile")]
         [SerializeField] private string npcID;
@@ -58,13 +28,16 @@ namespace ProjectCook.NPC
 
         [Header("Event Hooks")]
         [Tooltip("เหตุการณ์ที่เกิดเมื่อผู้เล่นกด Interact คุยกับ NPC")]
-        public UnityEvent<NPC> onInteract;
+        [SerializeField] private UnityEvent<NPCController> onInteract;
 
         [Tooltip("เหตุการณ์ที่เกิดเมื่อคุยจบทุกโหนด")]
-        public UnityEvent<NPC> onDialogComplete;
+        [SerializeField] private UnityEvent<NPCController> onDialogComplete;
 
         [Tooltip("เหตุการณ์ที่เกิดเมื่อมีการยิง Action ID จากตัวเลือกคำตอบ")]
-        public UnityEvent<string> onActionTriggered;
+        [SerializeField] private UnityEvent<string> onActionTriggered;
+
+        // แคชผลการแปลง JSON ของบทสนทนาเริ่มต้น (กันการสร้าง ScriptableObject ใหม่ทุกครั้งที่กดคุย)
+        private DialogData cachedDefaultJsonDialog;
 
         public string NPCID => npcID;
         public string NPCName => npcName;
@@ -100,25 +73,36 @@ namespace ProjectCook.NPC
         public DialogData GetValidDialog()
         {
             ConditionalDialogEntry bestMatch = null;
+            DialogData bestMatchData = null;
 
             foreach (var entry in conditionalDialogs)
             {
-                if (entry != null && entry.GetEffectiveDialogData() != null && entry.AreConditionsMet())
+                if (entry == null) continue;
+
+                // เรียก GetEffectiveDialogData เพียงครั้งเดียวต่อ entry แล้วเก็บผลไว้ใช้ต่อ
+                DialogData entryData = entry.GetEffectiveDialogData();
+                if (entryData == null) continue;
+                if (!entry.AreConditionsMet()) continue;
+
+                if (bestMatch == null || entry.priority > bestMatch.priority)
                 {
-                    if (bestMatch == null || entry.priority > bestMatch.priority)
-                    {
-                        bestMatch = entry;
-                    }
+                    bestMatch = entry;
+                    bestMatchData = entryData;
                 }
             }
 
-            if (bestMatch != null)
-            {
-                return bestMatch.GetEffectiveDialogData();
-            }
+            if (bestMatchData != null) return bestMatchData;
 
             if (defaultDialog != null) return defaultDialog;
-            if (defaultJsonDialog != null) return DialogParser.ParseTextAssetToDialogData(defaultJsonDialog);
+
+            if (defaultJsonDialog != null)
+            {
+                if (cachedDefaultJsonDialog == null)
+                {
+                    cachedDefaultJsonDialog = DialogParser.ParseTextAssetToDialogData(defaultJsonDialog);
+                }
+                return cachedDefaultJsonDialog;
+            }
 
             return null;
         }
@@ -129,8 +113,6 @@ namespace ProjectCook.NPC
         public void HandleAction(string actionID)
         {
             if (string.IsNullOrEmpty(actionID)) return;
-
-            Debug.Log($"[NPC] {npcName} ได้รับ Action ID: {actionID}");
 
             // ยิง Event กระจายสัญญาณคำสั่งไปให้ Component อื่นๆ รับไปทำงานต่อ
             onActionTriggered?.Invoke(actionID);

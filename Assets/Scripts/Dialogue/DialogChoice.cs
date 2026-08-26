@@ -28,7 +28,7 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// เช็คว่าเงื่อนไขทุกข้อของตัวเลือกนี้ผ่านหรือไม่
         /// </summary>
-        public bool AreConditionsMet()
+public bool AreConditionsMet()
         {
             // 1. เช็ค conditionFlag แบบง่าย (ถ้ามีระบุไว้)
             if (!string.IsNullOrEmpty(conditionFlag))
@@ -42,19 +42,8 @@ namespace ProjectCook.Dialogue
                 }
             }
 
-            // 2. เช็ค ScriptableObject conditions (ถ้ามีระบุไว้)
-            if (conditions != null && conditions.Count > 0)
-            {
-                foreach (var cond in conditions)
-                {
-                    if (cond != null && !cond.IsMet())
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            // 2. เช็ค ScriptableObject conditions (ถ้ามีระบุไว้) ผ่าน Utility กลาง
+            return DialogConditionUtility.AreAllMet(conditions);
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using ProjectCook.NPC;
 using ProjectCook.Control;
+using ProjectCook.Core;
 using ProjectCook.Dialogue.UI;
 
 namespace ProjectCook.Dialogue
@@ -24,14 +25,22 @@ namespace ProjectCook.Dialogue
         [Header("UI Reference")]
         [SerializeField] private DialogUI dialogUI;
 
-        private NPC.NPC currentNPC;
+        private NPCController currentNPC;
         private DialogData currentDialogData;
         private DialogNode currentNode;
         private Coroutine typingCoroutine;
 
+        // แคชตัวหน่วงเวลาของเอฟเฟกต์พิมพ์ เพื่อไม่ให้ Allocate ใหม่ทุกตัวอักษร
+        private WaitForSeconds cachedTypingDelay;
+        private float cachedTypingSpeed = -1f;
+
         private bool isDialogueActive = false;
         private bool isTyping = false;
         private bool isWaitingForChoice = false;
+
+        // เฟรมล่าสุดที่ผู้เล่นกดเลือกคำตอบบน UI
+        // ใช้กันคลิกเดียวถูกนับซ้ำเป็น "กดไปต่อ" ในเฟรมเดียวกัน เพราะ wasPressedThisFrame ยังเป็น true ทั้งเฟรม
+        private int lastChoiceSelectedFrame = -1;
 
         public bool IsDialogueActive => isDialogueActive;
         public bool IsTyping => isTyping;
@@ -62,6 +71,9 @@ namespace ProjectCook.Dialogue
         {
             if (!isDialogueActive || isWaitingForChoice) return;
 
+            // ข้ามเฟรมที่เพิ่งกดเลือกคำตอบไป เพื่อไม่ให้คลิกเดียวทั้งเลือกคำตอบและข้ามข้อความบรรทัดถัดไปรวดเดียว
+            if (Time.frameCount == lastChoiceSelectedFrame) return;
+
             // ตรวจสอบการกดปุ่มเปลี่ยนบรรทัด/ข้ามข้อความ
             if (WasAdvancePressed())
             {
@@ -72,7 +84,7 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// เริ่มต้นบทสนทนากับ NPC โดยใช้ไฟล์ JSON (TextAsset)
         /// </summary>
-        public void StartDialog(NPC.NPC npc, TextAsset jsonAsset)
+        public void StartDialog(NPCController npc, TextAsset jsonAsset)
         {
             if (jsonAsset == null) return;
             DialogData data = DialogParser.ParseTextAssetToDialogData(jsonAsset);
@@ -85,7 +97,7 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// เริ่มต้นบทสนทนากับ NPC
         /// </summary>
-        public void StartDialog(NPC.NPC npc, DialogData dialogData)
+        public void StartDialog(NPCController npc, DialogData dialogData)
         {
             if (npc == null || dialogData == null) return;
 
@@ -162,22 +174,34 @@ namespace ProjectCook.Dialogue
         {
             isTyping = true;
 
-            if (dialogUI != null)
-            {
-                dialogUI.SetDialogueText("");
-            }
+            // ใส่ข้อความเต็มลง TMP ครั้งเดียวแล้วค่อยๆ เปิดเผยทีละตัวอักษร
+            // ไม่มีการต่อสตริงและไม่มีการสร้าง Mesh ใหม่ระหว่างพิมพ์ (Zero Allocation)
+            int totalCharacters = dialogUI != null ? dialogUI.PrepareTypewriterText(fullText) : 0;
+            WaitForSeconds delay = GetTypingDelay();
 
-            foreach (char c in fullText.ToCharArray())
+            for (int i = 1; i <= totalCharacters; i++)
             {
-                if (dialogUI != null)
-                {
-                    dialogUI.AppendDialogueChar(c);
-                }
-                yield return new WaitForSeconds(typingSpeed);
+                dialogUI.SetVisibleCharacterCount(i);
+                yield return delay;
             }
 
             isTyping = false;
             OnTypingComplete();
+        }
+
+        /// <summary>
+        /// ดึงตัวหน่วงเวลาที่แคชไว้ (สร้างใหม่เฉพาะตอนค่า typingSpeed ถูกปรับเปลี่ยน)
+        /// เพื่อไม่ให้เกิดการ Allocate Object ใหม่ทุกตัวอักษรที่พิมพ์
+        /// </summary>
+        private WaitForSeconds GetTypingDelay()
+        {
+            if (cachedTypingDelay == null || !Mathf.Approximately(cachedTypingSpeed, typingSpeed))
+            {
+                cachedTypingSpeed = typingSpeed;
+                cachedTypingDelay = new WaitForSeconds(typingSpeed);
+            }
+
+            return cachedTypingDelay;
         }
 
         private void OnTypingComplete()
@@ -223,6 +247,7 @@ namespace ProjectCook.Dialogue
             if (choice == null) return;
 
             isWaitingForChoice = false;
+            lastChoiceSelectedFrame = Time.frameCount;
 
             if (dialogUI != null)
             {
@@ -328,10 +353,15 @@ namespace ProjectCook.Dialogue
                 player.SetControlActive(enableControl);
             }
 
-            if (!enableControl)
+            // ขอ/คืนสิทธิ์การใช้ตัวชี้เมาส์ผ่าน CursorManager แทนการสั่ง Cursor ตรงๆ
+            // เพื่อไม่ให้แย่งสถานะกับระบบอื่น (เช่น ระบบคีบวัตถุดิบในโหมดทำอาหาร)
+            if (enableControl)
             {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                CursorManager.ReleaseUnlock(this);
+            }
+            else
+            {
+                CursorManager.RequestUnlock(this);
             }
         }
 

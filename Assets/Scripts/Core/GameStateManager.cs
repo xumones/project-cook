@@ -43,7 +43,6 @@ namespace ProjectCook.Core
         {
             if (string.IsNullOrEmpty(key)) return;
             flags[key] = value;
-            Debug.Log($"[GameStateManager] SetFlag: {key} = {value}");
         }
 
         /// <summary>

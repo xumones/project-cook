@@ -12,28 +12,47 @@ namespace ProjectCook.Cooking
         [Tooltip("PanController สำหรับควบคุมการเคลื่อนที่ของกระทะ")]
         [SerializeField] private PanController panController;
 
+        [Tooltip("IngredientDragController สำหรับควบคุมการลากเคลื่อนย้ายวัตถุดิบอาหาร")]
+        [SerializeField] private IngredientDragController dragController;
+
         private void Awake()
         {
             if (panController == null)
             {
                 panController = GetComponentInChildren<PanController>();
             }
+
+            if (dragController == null)
+            {
+                dragController = GetComponentInChildren<IngredientDragController>();
+                if (dragController == null)
+                {
+                    dragController = Object.FindFirstObjectByType<IngredientDragController>();
+                }
+            }
         }
 
         public override void Interact(PlayerInteractor interactor)
         {
-            Debug.Log("[Change to PanStation mode]");
             EnterStation(interactor);
         }
 
         public override void EnterStation(PlayerInteractor interactor)
         {
             base.EnterStation(interactor);
+            Camera cam = stationCamera != null ? stationCamera.GetComponent<Camera>() : Camera.main;
+
             if (panController != null)
             {
-                Transform camTrans = stationCamera != null ? stationCamera.transform : (Camera.main != null ? Camera.main.transform : null);
+                Transform camTrans = cam != null ? cam.transform : null;
                 panController.SetReferenceTransform(camTrans);
                 panController.SetControllerActive(true);
+            }
+
+            if (dragController != null)
+            {
+                dragController.SetTargetCamera(cam);
+                dragController.SetControllerActive(true);
             }
         }
 
@@ -43,6 +62,12 @@ namespace ProjectCook.Cooking
             {
                 panController.SetControllerActive(false);
             }
+
+            if (dragController != null)
+            {
+                dragController.SetControllerActive(false);
+            }
+
             base.ExitStation();
         }
     }

@@ -5,11 +5,10 @@ namespace ProjectCook.Cooking
 {
     /// <summary>
     /// สคริปต์หลักควบคุมวัตถุดิบแต่ละชิ้นในฉาก (Runtime State & Main Facade Coordinator)
-    /// ประสานงานระหว่าง Logic เวลาความสุก, การแสดงผล (IngredientVisuals) และระบบเสียง (IngredientAudio)
+    /// ประสานงานระหว่าง Logic เวลาความสุกและการแสดงผล (IngredientVisuals)
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(IngredientVisuals))]
-    [RequireComponent(typeof(IngredientAudio))]
     public class IngredientInstance : MonoBehaviour
     {
         [Header("Data Reference")]
@@ -18,7 +17,6 @@ namespace ProjectCook.Cooking
 
         // Sub Component References (Auto-initialized)
         private IngredientVisuals visualsComponent;
-        private IngredientAudio audioComponent;
 
         /// <summary>
         /// Callback Event แจ้งเตือนเมื่อสถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)
@@ -66,7 +64,6 @@ namespace ProjectCook.Cooking
             EnsureSubComponents();
 
             visualsComponent.Init(GetComponent<Renderer>());
-            audioComponent.Init();
 
             visualsComponent.UpdateColorPropertyId(data);
             visualsComponent.ApplyInitialMaterial(data);
@@ -81,15 +78,6 @@ namespace ProjectCook.Cooking
                 if (visualsComponent == null)
                 {
                     visualsComponent = gameObject.AddComponent<IngredientVisuals>();
-                }
-            }
-
-            if (audioComponent == null)
-            {
-                audioComponent = GetComponent<IngredientAudio>();
-                if (audioComponent == null)
-                {
-                    audioComponent = gameObject.AddComponent<IngredientAudio>();
                 }
             }
         }
@@ -155,17 +143,6 @@ namespace ProjectCook.Cooking
         }
 
         /// <summary>
-        /// กำหนดสภาวะการจัดการเสียง Sizzle รวมโดยกระทะ (PanFoodCarrier)
-        /// </summary>
-        public void SetManagedByPanCarrier(bool managed)
-        {
-            if (audioComponent != null)
-            {
-                audioComponent.SetManagedByPanCarrier(managed);
-            }
-        }
-
-        /// <summary>
         /// รับความร้อนจากกระทะ/เตา และคำนวณการสะสมความสุก (พร้อมคำนวณทิศทางการพลิกด้าน)
         /// </summary>
         /// <param name="deltaHeatTime">ระยะเวลาได้รับความร้อน (วินาที)</param>
@@ -202,7 +179,6 @@ namespace ProjectCook.Cooking
             }
 
             isVisualsDirty = true;
-            audioComponent.UpdateSizzleAudio(true, currentCookingState, data);
 
             float currentProgress = CookProgress;
             if (Mathf.Abs(currentProgress - lastReportedCookProgress) >= 0.005f)
@@ -295,23 +271,11 @@ namespace ProjectCook.Cooking
             visualsComponent.UpdateMaterialForState(newState, data);
 
             OnStateChanged?.Invoke(currentCookingState);
-
-            if (currentCookingState == CookingState.Cooked)
-            {
-                audioComponent.PlayCookedSFX(data);
-            }
-            else if (currentCookingState == CookingState.Burnt)
-            {
-                audioComponent.UpdateSizzleAudio(false, currentCookingState, data);
-            }
         }
 
         /// <summary>
-        /// เล่นเสียงวัตถุดิบตกลงในกระทะ
+        /// สถานะว่าวัตถุดิบนี้กำลังถูกคีบจับอยู่หรือไม่
         /// </summary>
-        public void PlayDropSFX()
-        {
-            audioComponent.PlayDropSFX(data);
-        }
+        public bool IsGripped { get; set; } = false;
     }
 }

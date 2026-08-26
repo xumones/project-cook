@@ -39,7 +39,23 @@ namespace ProjectCook.Interaction
 
         private void Start()
         {
+            if (cameraTransform == null && Camera.main != null)
+            {
+                cameraTransform = Camera.main.transform;
+            }
 
+            if (interactableLayerMask.value == 0)
+            {
+                int defaultLayer = LayerMask.NameToLayer("Interactable");
+                if (defaultLayer != -1)
+                {
+                    interactableLayerMask = 1 << defaultLayer;
+                }
+                else
+                {
+                    interactableLayerMask = Physics.DefaultRaycastLayers;
+                }
+            }
         }
 
         private void Update()
@@ -56,7 +72,7 @@ namespace ProjectCook.Interaction
 
         private void PerformRaycastDetection()
         {
-            Transform rayOrigin = cameraTransform != null ? cameraTransform : transform;
+            Transform rayOrigin = cameraTransform != null ? cameraTransform : (Camera.main != null ? Camera.main.transform : transform);
             Ray ray = new Ray(rayOrigin.position, rayOrigin.forward);
 
             // ยิง Raycast ออกไปทุกเฟรม โดยกรองเฉพาะ Layer 'Interactable'

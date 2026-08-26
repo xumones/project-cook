@@ -24,7 +24,7 @@ MonoBehaviour:
   burntColor: {r: 1, g: 1, b: 1, a: 1}
   colorPropertyName: _Color
   rawSmoothness: 0.2
-  cookedSmoothness: 0.85
+  cookedSmoothness: 0
   burntSmoothness: 0.05
   sfxVolume: 1
   sizzlePitch: 1

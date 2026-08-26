@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7290078737892755344
+--- !u!1001 &3730060477541645913
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -114,183 +114,77 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1519480654821053926}
+      addedObject: {fileID: 6008299088584214710}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8630612944838617451}
+      addedObject: {fileID: 7121290659151402073}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3887686446511568260}
+      addedObject: {fileID: 872513111886723840}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7901780597599390329}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2816165671461639858}
+      addedObject: {fileID: 1301107033009672183}
     - targetCorrespondingSourceObject: {fileID: -7587331781129084689, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5780954337475943086}
+      addedObject: {fileID: 9214905825219705773}
     - targetCorrespondingSourceObject: {fileID: -7587331781129084689, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5616035725340573264}
+      addedObject: {fileID: 1019721795718677448}
     - targetCorrespondingSourceObject: {fileID: -7587331781129084689, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3923729800291519420}
+      addedObject: {fileID: 8932994742557469474}
     - targetCorrespondingSourceObject: {fileID: -7587331781129084689, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2311746654515802745}
-    - targetCorrespondingSourceObject: {fileID: -7587331781129084689, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2332187855977007011}
+      addedObject: {fileID: 1311589507839518072}
     - targetCorrespondingSourceObject: {fileID: -5029303803706761405, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1155915859927421080}
+      addedObject: {fileID: 1696401271569181642}
     - targetCorrespondingSourceObject: {fileID: -5029303803706761405, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6336511648165491404}
+      addedObject: {fileID: 5009642728209374982}
     - targetCorrespondingSourceObject: {fileID: -5029303803706761405, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6148007222522389468}
+      addedObject: {fileID: 2584430442369657537}
     - targetCorrespondingSourceObject: {fileID: -5029303803706761405, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7441015452735197975}
-    - targetCorrespondingSourceObject: {fileID: -5029303803706761405, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 698405993948093220}
+      addedObject: {fileID: 852531295011029793}
     - targetCorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2987277224889041414}
+      addedObject: {fileID: 171175550697979273}
     - targetCorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2636775669640872566}
+      addedObject: {fileID: 4732480690548113777}
     - targetCorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6605147446178970522}
+      addedObject: {fileID: 4755053861952871432}
     - targetCorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5454422088701133071}
-    - targetCorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2749307919225942025}
+      addedObject: {fileID: 7041807834154310693}
     - targetCorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7454389353889730043}
+      addedObject: {fileID: 1455361615810558040}
     - targetCorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6043277396841654253}
+      addedObject: {fileID: 8753173497773972924}
     - targetCorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7536313802079135557}
+      addedObject: {fileID: 560329848466570015}
     - targetCorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8320204195871201198}
-    - targetCorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1961871180301917596}
+      addedObject: {fileID: 8290689256842531220}
   m_SourcePrefab: {fileID: 100100000, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
---- !u!1 &3468182944705698242 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-  m_PrefabInstance: {fileID: 7290078737892755344}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &7454389353889730043
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468182944705698242}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.64580995, y: 0.115913205, z: 0.25529087}
-  m_Center: {x: -0.05077536, y: -0.005416266, z: -0.021887524}
---- !u!54 &6043277396841654253
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468182944705698242}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &7536313802079135557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468182944705698242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &8320204195871201198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468182944705698242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}
---- !u!114 &1961871180301917596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468182944705698242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
-  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
---- !u!1 &6854440332825745619 stripped
+--- !u!1 &718188813026746650 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5029303803706761405, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-  m_PrefabInstance: {fileID: 7290078737892755344}
+  m_PrefabInstance: {fileID: 3730060477541645913}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1155915859927421080
+--- !u!65 &1696401271569181642
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854440332825745619}
+  m_GameObject: {fileID: 718188813026746650}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -305,13 +199,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.53657436, y: 0.08411919, z: 0.18448196}
   m_Center: {x: -0.007272273, y: -0.007831872, z: 0.007940563}
---- !u!54 &6336511648165491404
+--- !u!54 &5009642728209374982
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854440332825745619}
+  m_GameObject: {fileID: 718188813026746650}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -332,238 +226,43 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6148007222522389468
+--- !u!114 &2584430442369657537
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854440332825745619}
+  m_GameObject: {fileID: 718188813026746650}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &7441015452735197975
+--- !u!114 &852531295011029793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854440332825745619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}
---- !u!114 &698405993948093220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6854440332825745619}
+  m_GameObject: {fileID: 718188813026746650}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
   data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
---- !u!1 &7110384100388334046 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-  m_PrefabInstance: {fileID: 7290078737892755344}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &2987277224889041414
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110384100388334046}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.5913523, y: 0.07978367, z: 0.19091356}
-  m_Center: {x: 0.020054815, y: 0.0019084531, z: -0.010885141}
---- !u!54 &2636775669640872566
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110384100388334046}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &6605147446178970522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110384100388334046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &5454422088701133071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110384100388334046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}
---- !u!114 &2749307919225942025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110384100388334046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
-  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
---- !u!1 &7632165600297810625 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-  m_PrefabInstance: {fileID: 7290078737892755344}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1519480654821053926
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7632165600297810625}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.37102467, y: 0.07711928, z: 0.15282784}
-  m_Center: {x: 0.014443084, y: -0.0033926868, z: -0.010526865}
---- !u!54 &8630612944838617451
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7632165600297810625}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &3887686446511568260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7632165600297810625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &7901780597599390329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7632165600297810625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}
---- !u!114 &2816165671461639858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7632165600297810625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
-  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
---- !u!1 &8331639575738656639 stripped
+--- !u!1 &2699828588740550326 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7587331781129084689, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
-  m_PrefabInstance: {fileID: 7290078737892755344}
+  m_PrefabInstance: {fileID: 3730060477541645913}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &5780954337475943086
+--- !u!65 &9214905825219705773
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8331639575738656639}
+  m_GameObject: {fileID: 2699828588740550326}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -578,13 +277,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.44428545, y: 0.07108301, z: 0.16971952}
   m_Center: {x: -0.0119756, y: 0.00070622185, z: 0.0014810486}
---- !u!54 &5616035725340573264
+--- !u!54 &1019721795718677448
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8331639575738656639}
+  m_GameObject: {fileID: 2699828588740550326}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -605,38 +304,259 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3923729800291519420
+--- !u!114 &8932994742557469474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8331639575738656639}
+  m_GameObject: {fileID: 2699828588740550326}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
---- !u!114 &2311746654515802745
+--- !u!114 &1311589507839518072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8331639575738656639}
+  m_GameObject: {fileID: 2699828588740550326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e787ee0c35973e84388cfb883aa808ee, type: 3}
+  m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientAudio
-  audioSource: {fileID: 0}
---- !u!114 &2332187855977007011
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
+  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+--- !u!1 &3766541370795577367 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 542304794774253134, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
+  m_PrefabInstance: {fileID: 3730060477541645913}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &171175550697979273
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3766541370795577367}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5913523, y: 0.07978367, z: 0.19091356}
+  m_Center: {x: 0.020054815, y: 0.0019084531, z: -0.010885141}
+--- !u!54 &4732480690548113777
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3766541370795577367}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4755053861952871432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8331639575738656639}
+  m_GameObject: {fileID: 3766541370795577367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
+--- !u!114 &7041807834154310693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3766541370795577367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
+  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+--- !u!1 &4540402395726398216 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
+  m_PrefabInstance: {fileID: 3730060477541645913}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6008299088584214710
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4540402395726398216}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.37102467, y: 0.07711928, z: 0.15282784}
+  m_Center: {x: 0.014443084, y: -0.0033926868, z: -0.010526865}
+--- !u!54 &7121290659151402073
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4540402395726398216}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &872513111886723840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4540402395726398216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
+--- !u!114 &1301107033009672183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4540402395726398216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
+  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+--- !u!1 &7406503574025166859 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6127985118884240978, guid: 1b195d65a121e0f41bc9898f4be4c78d, type: 3}
+  m_PrefabInstance: {fileID: 3730060477541645913}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1455361615810558040
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7406503574025166859}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.64580995, y: 0.115913205, z: 0.25529087}
+  m_Center: {x: -0.05077536, y: -0.005416266, z: -0.021887524}
+--- !u!54 &8753173497773972924
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7406503574025166859}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &560329848466570015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7406503574025166859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
+--- !u!114 &8290689256842531220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7406503574025166859}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}

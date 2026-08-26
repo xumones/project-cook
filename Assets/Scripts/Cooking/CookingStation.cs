@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ProjectCook.Interaction;
-using ProjectCook.CameraControl;
+using ProjectCook.CameraSystem;
 using Unity.Cinemachine;
 
 namespace ProjectCook.Cooking
