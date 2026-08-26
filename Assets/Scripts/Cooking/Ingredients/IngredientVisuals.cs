@@ -50,7 +50,19 @@ namespace ProjectCook.Cooking
             propertyBlock = new MaterialPropertyBlock();
         }
 
-        public void UpdateColorPropertyId(IngredientDataSO data)
+        /// <summary>
+        /// ตั้งค่าการแสดงผลใหม่ทั้งชุดตามข้อมูลวัตถุดิบที่ได้รับ
+        /// (รวมขั้นตอนที่เดิมต้องเรียกต่อกัน 4 บรรทัดไว้ในเมธอดเดียว เพื่อไม่ให้ผู้เรียกลืมขั้นตอนใดขั้นตอนหนึ่ง)
+        /// </summary>
+        public void Configure(IngredientDataSO data, float sideACookTime, float sideBCookTime, float omniCookTime)
+        {
+            UpdateColorPropertyId(data);
+            ApplyInitialMaterial(data);
+            ResetAppliedStates();
+            ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
+        }
+
+        private void UpdateColorPropertyId(IngredientDataSO data)
         {
             if (data != null && !string.IsNullOrEmpty(data.ColorPropertyName))
             {
@@ -62,7 +74,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        public void ApplyInitialMaterial(IngredientDataSO data)
+        private void ApplyInitialMaterial(IngredientDataSO data)
         {
             if (meshRenderer != null && data != null && data.RawMaterial != null)
             {
@@ -70,7 +82,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        public void ResetAppliedStates()
+        private void ResetAppliedStates()
         {
             isColorInitialized = false;
             isMaterialCached = false;

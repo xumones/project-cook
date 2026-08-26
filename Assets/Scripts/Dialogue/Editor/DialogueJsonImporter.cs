@@ -6,12 +6,12 @@ using UnityEngine;
 namespace ProjectCook.Dialogue.Editor
 {
     /// <summary>
-    /// Unity Editor Script สำหรับสร้าง ScriptableObject (DialogData) จากไฟล์ข้อความ JSON
+    /// Unity Editor Script สำหรับสร้าง ScriptableObject (DialogueDataSO) จากไฟล์ข้อความ JSON
     /// </summary>
-    public static class DialogJsonImporter
+    public static class DialogueJsonImporter
     {
-        [MenuItem("Assets/Create/ProjectCook/Dialogue/DialogData from Selected JSON", false, 10)]
-        public static void CreateDialogDataFromSelectedJson()
+        [MenuItem("Assets/Create/ProjectCook/Dialogue/DialogueDataSO from Selected JSON", false, 10)]
+        public static void CreateDialogueDataSOFromSelectedJson()
         {
             Object selectedObject = Selection.activeObject;
             if (selectedObject == null || !(selectedObject is TextAsset textAsset))
@@ -27,31 +27,31 @@ namespace ProjectCook.Dialogue.Editor
                 return;
             }
 
-            DialogData dialogData = DialogParser.ParseTextAssetToDialogData(textAsset);
-            if (dialogData == null)
+            DialogueDataSO DialogueDataSO = DialogueParser.ParseTextAsset(textAsset);
+            if (DialogueDataSO == null)
             {
                 EditorUtility.DisplayDialog("Import Dialogue JSON", "เกิดข้อผิดพลาดในการ Parse ไฟล์ JSON กรุณาเช็คโครงสร้างไฟล์", "ตกลง");
                 return;
             }
 
             string dirPath = Path.GetDirectoryName(assetPath);
-            string assetName = string.IsNullOrEmpty(dialogData.dialogID) ? textAsset.name : dialogData.dialogID;
+            string assetName = string.IsNullOrEmpty(DialogueDataSO.dialogID) ? textAsset.name : DialogueDataSO.dialogID;
             string targetPath = Path.Combine(dirPath, $"{assetName}_Data.asset");
             targetPath = AssetDatabase.GenerateUniqueAssetPath(targetPath);
 
-            AssetDatabase.CreateAsset(dialogData, targetPath);
+            AssetDatabase.CreateAsset(DialogueDataSO, targetPath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
             EditorUtility.FocusProjectWindow();
-            Selection.activeObject = dialogData;
+            Selection.activeObject = DialogueDataSO;
 
-            Debug.Log($"[DialogJsonImporter] สร้าง DialogData Asset สำเร็จที่: {targetPath}");
+            Debug.Log($"[DialogueJsonImporter] สร้าง DialogueDataSO Asset สำเร็จที่: {targetPath}");
         }
 
         // ตรวจสอบว่าเมนูนี้กดเปิดใช้งานได้เฉพาะเมื่อเลือก TextAsset
-        [MenuItem("Assets/Create/ProjectCook/Dialogue/DialogData from Selected JSON", true)]
-        public static bool ValidateCreateDialogDataFromSelectedJson()
+        [MenuItem("Assets/Create/ProjectCook/Dialogue/DialogueDataSO from Selected JSON", true)]
+        public static bool ValidateCreateDialogueDataSOFromSelectedJson()
         {
             Object selectedObject = Selection.activeObject;
             return selectedObject != null && selectedObject is TextAsset;

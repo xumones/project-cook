@@ -8,7 +8,7 @@ namespace ProjectCook.Dialogue
     /// Data structure สำหรับเก็บข้อมูลตัวเลือกคำตอบ 1 ข้อ (Multiple Choice Option)
     /// </summary>
     [System.Serializable]
-    public class DialogChoice
+    public class DialogueChoice
     {
         [Tooltip("ข้อความที่จะแสดงบนปุ่มตัวเลือก")]
         public string choiceText;
@@ -23,7 +23,7 @@ namespace ProjectCook.Dialogue
         public string conditionFlag;
 
         [Tooltip("รายการเงื่อนไขที่จะให้ตัวเลือกนี้โชว์บน UI (ทุกข้อต้องผ่านทั้งหมด)")]
-        public List<DialogConditionSO> conditions = new List<DialogConditionSO>();
+        public List<DialogueConditionSO> conditions = new List<DialogueConditionSO>();
 
         /// <summary>
         /// เช็คว่าเงื่อนไขทุกข้อของตัวเลือกนี้ผ่านหรือไม่
@@ -43,7 +43,7 @@ public bool AreConditionsMet()
             }
 
             // 2. เช็ค ScriptableObject conditions (ถ้ามีระบุไว้) ผ่าน Utility กลาง
-            return DialogConditionUtility.AreAllMet(conditions);
+            return DialogueConditionUtility.AreAllMet(conditions);
         }
     }
 }

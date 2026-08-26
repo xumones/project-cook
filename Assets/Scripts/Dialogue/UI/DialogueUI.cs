@@ -9,7 +9,7 @@ namespace ProjectCook.Dialogue.UI
     /// <summary>
     /// สคริปต์ควบคุมหน้าต่าง Canvas UI สำหรับแสดงผลบทสนทนาและปุ่มตัวเลือกคำตอบแบบ Dynamic
     /// </summary>
-    public class DialogUI : MonoBehaviour
+    public class DialogueUI : MonoBehaviour
     {
         [Header("UI Panels")]
         [SerializeField] private GameObject dialoguePanel;
@@ -131,7 +131,7 @@ namespace ProjectCook.Dialogue.UI
         /// <summary>
         /// แสดงผลปุ่มตัวเลือกคำตอบแบบ Dynamic
         /// </summary>
-        public void DisplayChoices(List<DialogChoice> choices, Action<DialogChoice> onChoiceSelected)
+        public void DisplayChoices(List<DialogueChoice> choices, Action<DialogueChoice> onChoiceSelected)
         {
             HideChoices();
 
@@ -147,7 +147,7 @@ namespace ProjectCook.Dialogue.UI
 
             for (int i = 0; i < choices.Count; i++)
             {
-                DialogChoice choice = choices[i];
+                DialogueChoice choice = choices[i];
                 GameObject btnObj = GetChoiceButtonFromPool(i);
 
                 btnObj.SetActive(true);

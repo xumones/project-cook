@@ -6,10 +6,10 @@ namespace ProjectCook.Dialogue
     /// <summary>
     /// ScriptableObject สำหรับจัดเก็บชุดบทสนทนาทั้งหมด (Dialogue Tree Container)
     /// </summary>
-    [CreateAssetMenu(fileName = "NewDialogData", menuName = "Dialogue/Dialog Data")]
-    public class DialogData : ScriptableObject
+    [CreateAssetMenu(fileName = "NewDialogueData", menuName = "ProjectCook/Dialogue/Dialogue Data")]
+    public class DialogueDataSO : ScriptableObject
     {
-        [Header("Dialog Information")]
+        [Header("Dialogue Information")]
         [Tooltip("ID ประจำชุดบทสนทนานี้")]
         public string dialogID;
 
@@ -21,9 +21,9 @@ namespace ProjectCook.Dialogue
 
         [Header("Nodes Collection")]
         [Tooltip("รายการโหนดบทสนทนาทั้งหมดใน Tree นี้")]
-        public List<DialogNode> nodes = new List<DialogNode>();
+        public List<DialogueNode> nodes = new List<DialogueNode>();
 
-        private Dictionary<string, DialogNode> nodeCache;
+        private Dictionary<string, DialogueNode> nodeCache;
 
         private void OnEnable()
         {
@@ -37,7 +37,7 @@ namespace ProjectCook.Dialogue
         {
             if (nodeCache == null)
             {
-                nodeCache = new Dictionary<string, DialogNode>();
+                nodeCache = new Dictionary<string, DialogueNode>();
             }
             else
             {
@@ -56,7 +56,7 @@ namespace ProjectCook.Dialogue
                 }
                 else
                 {
-                    Debug.LogWarning($"[DialogData] พบ nodeID ซ้ำกัน: '{node.nodeID}' ใน DialogData: '{dialogID}'", this);
+                    Debug.LogWarning($"[DialogueDataSO] พบ nodeID ซ้ำกัน: '{node.nodeID}' ใน DialogueDataSO: '{dialogID}'", this);
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// ค้นหาโหนดตาม nodeID
         /// </summary>
-        public DialogNode GetNode(string nodeID)
+        public DialogueNode GetNode(string nodeID)
         {
             if (string.IsNullOrEmpty(nodeID)) return null;
 
@@ -73,7 +73,7 @@ namespace ProjectCook.Dialogue
                 BuildNodeCache();
             }
 
-            if (nodeCache.TryGetValue(nodeID, out DialogNode cachedNode))
+            if (nodeCache.TryGetValue(nodeID, out DialogueNode cachedNode))
             {
                 return cachedNode;
             }
@@ -84,9 +84,9 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// ดึงโหนดเริ่มต้น
         /// </summary>
-        public DialogNode GetStartNode()
+        public DialogueNode GetStartNode()
         {
-            DialogNode node = GetNode(startNodeID);
+            DialogueNode node = GetNode(startNodeID);
             if (node == null && nodes.Count > 0)
             {
                 node = nodes[0]; // fallback ใช้โหนดแรกสุดถ้าหา startNodeID ไม่เจอ
@@ -103,34 +103,34 @@ namespace ProjectCook.Dialogue
 
             try
             {
-                DialogDataDTO dto = JsonUtility.FromJson<DialogDataDTO>(jsonText);
+                DialogueDataDTO dto = JsonUtility.FromJson<DialogueDataDTO>(jsonText);
                 if (dto != null)
                 {
                     this.dialogID = dto.dialogID;
                     this.defaultSpeakerName = dto.defaultSpeakerName;
                     this.startNodeID = dto.startNodeID;
-                    this.nodes = dto.nodes != null ? dto.nodes : new List<DialogNode>();
+                    this.nodes = dto.nodes != null ? dto.nodes : new List<DialogueNode>();
                     BuildNodeCache();
                     return true;
                 }
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"[DialogData] เกิดข้อผิดพลาดในการ Parse JSON: {ex.Message}", this);
+                Debug.LogError($"[DialogueDataSO] เกิดข้อผิดพลาดในการ Parse JSON: {ex.Message}", this);
             }
             return false;
         }
     }
 
     /// <summary>
-    /// Data Transfer Object สำหรับช่วยให้ Unity JsonUtility สามารถ Deserialize JSON ข้อความมาใส่ใน DialogData ได้ตรงๆ
+    /// Data Transfer Object สำหรับช่วยให้ Unity JsonUtility สามารถ Deserialize JSON ข้อความมาใส่ใน DialogueDataSO ได้ตรงๆ
     /// </summary>
     [System.Serializable]
-    public class DialogDataDTO
+    public class DialogueDataDTO
     {
         public string dialogID;
         public string defaultSpeakerName;
         public string startNodeID = "start";
-        public List<DialogNode> nodes = new List<DialogNode>();
+        public List<DialogueNode> nodes = new List<DialogueNode>();
     }
 }

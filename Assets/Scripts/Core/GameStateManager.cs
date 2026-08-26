@@ -16,25 +16,10 @@ namespace ProjectCook.Core
     /// <summary>
     /// Singleton Manager สำหรับจัดเก็บข้อมูลสถานะความคืบหน้าของเกม (Game Flags & Progress)
     /// </summary>
-    public class GameStateManager : MonoBehaviour
+    public class GameStateManager : PersistentSingleton<GameStateManager>
     {
-        public static GameStateManager Instance { get; private set; }
-
         // Dictionary เก็บค่า Flag ของเกม ( Key = string, Value = int )
         private Dictionary<string, int> flags = new Dictionary<string, int>();
-
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
 
         /// <summary>
         /// ตั้งค่าหรืออัปเดตค่า Flag

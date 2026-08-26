@@ -1,16 +1,15 @@
 using System;
 using UnityEngine;
 using Unity.Cinemachine;
+using ProjectCook.Core;
 
 namespace ProjectCook.CameraSystem
 {
     /// <summary>
     /// Singleton สำหรับควบคุม State กลางของกล้องทั้งเกม และส่ง Event แจ้งระบบอื่นๆ
     /// </summary>
-    public class CameraManager : MonoBehaviour
+    public class CameraManager : SceneSingleton<CameraManager>
     {
-        public static CameraManager Instance { get; private set; }
-
         [Header("Default Player Camera")]
         [Tooltip("Cinemachine Virtual Camera")]
         [SerializeField] private CinemachineCamera playerCamera;
@@ -28,16 +27,6 @@ namespace ProjectCook.CameraSystem
 
         public CameraState CurrentState => currentState;
         public event Action<CameraState> OnCameraStateChanged;
-
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-        }
 
         private void Start()
         {
@@ -81,6 +70,14 @@ namespace ProjectCook.CameraSystem
                 panTilt.TiltAxis.Value = 40f;
             }
 
+            // เปิด Input ของกล้องสถานีเฉพาะตอนกำลังใช้งานอยู่เท่านั้น ป้องกันไม่ให้มันรับ mouse look
+            // แล้วหมุนตามผู้เล่นอยู่เงียบๆ ตลอดเวลาทั้งที่ยังไม่ได้เข้าสถานีนี้เลย
+            var stationInput = activeStationCamera.GetComponent<CinemachineInputAxisController>();
+            if (stationInput != null)
+            {
+                stationInput.enabled = true;
+            }
+
             // 3. สลับ Priority กล้อง
             activeStationCamera.Priority = activePriority;
             if (playerCamera != null)
@@ -118,6 +115,12 @@ namespace ProjectCook.CameraSystem
 
             if (activeStationCamera != null)
             {
+                var stationInput = activeStationCamera.GetComponent<CinemachineInputAxisController>();
+                if (stationInput != null)
+                {
+                    stationInput.enabled = false;
+                }
+
                 activeStationCamera.Priority = inactivePriority;
                 activeStationCamera = null;
             }

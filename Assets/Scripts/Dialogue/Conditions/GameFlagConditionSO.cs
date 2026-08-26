@@ -6,8 +6,8 @@ namespace ProjectCook.Dialogue.Conditions
     /// <summary>
     /// ScriptableObject สำหรับตรวจสอบเงื่อนไขความก้าวหน้าในเกมจาก GameStateManager
     /// </summary>
-    [CreateAssetMenu(fileName = "NewGameFlagCondition", menuName = "Dialogue/Conditions/Game Flag Condition")]
-    public class GameFlagConditionSO : DialogConditionSO
+    [CreateAssetMenu(fileName = "NewGameFlagCondition", menuName = "ProjectCook/Dialogue/Conditions/Game Flag Condition")]
+    public class GameFlagConditionSO : DialogueConditionSO
     {
         [Tooltip("ชื่อ Flag Key ในเกมที่ต้องการตรวจสอบ (เช่น 'cooked_steak', 'player_gold', 'talked_to_bob')")]
         [SerializeField] private string flagKey;

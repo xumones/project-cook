@@ -14,43 +14,16 @@ namespace ProjectCook.Core
     /// ทำให้เกิดบั๊กเมาส์ถูกล็อกกลับระหว่างเปิดหน้าต่างบทสนทนาจนกดตัวเลือกไม่ได้
     /// </summary>
     [DisallowMultipleComponent]
-    public class CursorManager : MonoBehaviour
+    public class CursorManager : PersistentSingleton<CursorManager>
     {
-        private static CursorManager instance;
-        private static bool isQuitting = false;
-
         // เก็บรายชื่อระบบที่กำลังขอให้ปลดล็อกเคอร์เซอร์อยู่
         // ใช้ HashSet แทนตัวนับเลข เพื่อกันบั๊กนับเกิน/นับขาดกรณีระบบเดิมเรียกซ้ำหรือลืมคืนสิทธิ์
         private readonly HashSet<Object> unlockRequesters = new HashSet<Object>();
 
         /// <summary>
-        /// ดึง Instance โดยสร้าง GameObject ให้อัตโนมัติหากยังไม่มีใน Scene (ไม่ต้องวางเองใน Hierarchy)
-        /// </summary>
-        public static CursorManager Instance
-        {
-            get
-            {
-                if (isQuitting) return null;
-
-                if (instance == null)
-                {
-                    instance = FindFirstObjectByType<CursorManager>();
-
-                    if (instance == null)
-                    {
-                        GameObject managerObject = new GameObject("[CursorManager]");
-                        instance = managerObject.AddComponent<CursorManager>();
-                    }
-                }
-
-                return instance;
-            }
-        }
-
-        /// <summary>
         /// สถานะปัจจุบันว่าเคอร์เซอร์ถูกปลดล็อกให้ใช้งานอยู่หรือไม่
         /// </summary>
-        public static bool IsUnlocked => instance != null && instance.unlockRequesters.Count > 0;
+        public static bool IsUnlocked => HasInstance && Instance.unlockRequesters.Count > 0;
 
         /// <summary>
         /// เรียกให้แน่ใจว่า CursorManager ถูกสร้างและบังคับใช้สถานะเริ่มต้นแล้ว
@@ -99,20 +72,12 @@ namespace ProjectCook.Core
             }
         }
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (instance != null && instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
+            base.Awake();
 
-            instance = this;
-
-            if (transform.parent == null)
-            {
-                DontDestroyOnLoad(gameObject);
-            }
+            // หากเป็น Instance ซ้ำ base จะสั่งทำลายทิ้งไปแล้ว จึงไม่ต้องบังคับสถานะต่อ
+            if (Instance != this) return;
 
             ApplyState();
         }
@@ -143,17 +108,5 @@ namespace ProjectCook.Core
             }
         }
 
-        private void OnApplicationQuit()
-        {
-            isQuitting = true;
-        }
-
-        private void OnDestroy()
-        {
-            if (instance == this)
-            {
-                instance = null;
-            }
-        }
     }
 }

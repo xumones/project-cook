@@ -64,10 +64,7 @@ namespace ProjectCook.Cooking
             EnsureSubComponents();
 
             visualsComponent.Init(GetComponent<Renderer>());
-
-            visualsComponent.UpdateColorPropertyId(data);
-            visualsComponent.ApplyInitialMaterial(data);
-            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
+            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
         }
 
         private void EnsureSubComponents()
@@ -82,13 +79,18 @@ namespace ProjectCook.Cooking
             }
         }
 
-        private void Update()
+        /// <summary>
+        /// อัปเดตการแสดงผลหากมีการเปลี่ยนแปลง ถูกเรียกจากภาชนะที่วัตถุดิบชิ้นนี้อยู่
+        ///
+        /// เดิมทีทำงานใน Update() ของตัวเอง แต่ย้ายมาให้ภาชนะเป็นคนสั่งในลูปที่วนรายการอยู่แล้ว
+        /// เพื่อตัด Overhead ของการเรียก Update() แยกต่อวัตถุดิบทุกชิ้นออกไป
+        /// </summary>
+        public void TickVisuals()
         {
-            if (isVisualsDirty)
-            {
-                isVisualsDirty = false;
-                visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
-            }
+            if (!isVisualsDirty) return;
+
+            isVisualsDirty = false;
+            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
         }
 
         private void OnEnable()
@@ -119,10 +121,7 @@ namespace ProjectCook.Cooking
 
         private void HandleDataSOChanged()
         {
-            visualsComponent.UpdateColorPropertyId(data);
-            visualsComponent.ApplyInitialMaterial(data);
-            visualsComponent.ResetAppliedStates();
-            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
+            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
             OnDataChanged?.Invoke(data);
         }
 
@@ -135,10 +134,7 @@ namespace ProjectCook.Cooking
             data = newData;
             SubscribeToDataEvents();
 
-            visualsComponent.UpdateColorPropertyId(data);
-            visualsComponent.ApplyInitialMaterial(data);
-            visualsComponent.ResetAppliedStates();
-            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
+            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
             OnDataChanged?.Invoke(data);
         }
 

@@ -1,13 +1,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ProjectCook.Cooking;
 
-namespace ProjectCook.Cooking
+namespace ProjectCook.Interaction
 {
     /// <summary>
     /// สคริปต์ควบคุมการจับ คีบ/ยก และลากเคลื่อนย้ายอาหารด้วยระบบแรงฟิสิกส์ (Physics Velocity-Driven Dragging)
     /// ช่วยให้อาหารเคลื่อนที่ตามเมาส์โดยไม่ทะลุขอบกระทะและวัตถุอื่นในฉาก (PhysX Collision-Safe)
+    ///
+    /// อยู่ในโฟลเดอร์ Interaction เพราะเป็นเครื่องมือของผู้เล่นสำหรับหยิบจับวัตถุ
+    /// ไม่ได้ผูกกับสถานีทำอาหารชนิดใดชนิดหนึ่ง สถานีใดก็นำไปใช้เป็นโมดูลได้
     /// </summary>
-    public class IngredientDragController : MonoBehaviour
+    public class IngredientDragController : MonoBehaviour, IStationModule
     {
         [Header("Layer Settings")]
         [Tooltip("LayerMask สำหรับตรวจจับชิ้นวัตถุดิบอาหาร")]
@@ -75,6 +79,23 @@ namespace ProjectCook.Cooking
         public void SetTargetCamera(Camera cam)
         {
             targetCamera = cam;
+        }
+
+        /// <summary>
+        /// เข้าใช้งานสถานี: ใช้กล้องประจำสถานีเป็นระนาบอ้างอิงแล้วเริ่มรับอินพุต (IStationModule)
+        /// </summary>
+        public void OnStationEnter(Camera stationCamera)
+        {
+            SetTargetCamera(stationCamera);
+            SetControllerActive(true);
+        }
+
+        /// <summary>
+        /// ออกจากสถานี: หยุดรับอินพุตและปล่อยวัตถุดิบที่คีบค้างอยู่ (IStationModule)
+        /// </summary>
+        public void OnStationExit()
+        {
+            SetControllerActive(false);
         }
 
         private Camera GetEffectiveCamera()

@@ -1,12 +1,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ProjectCook.Interaction;
 
 namespace ProjectCook.Cooking
 {
     /// <summary>
-    /// สคริปต์จัดการการเคลื่อนที่และการเอียงกระทะบนเตาในโหมดทำอาหาร (Hybrid: WASD Position + Dynamic Tilting via Kinematic Physics)
+    /// โมดูลรับอินพุตเพื่อเคลื่อนที่และเอียงกระทะบนเตาในโหมดทำอาหาร
+    /// (Hybrid: WASD Position + Dynamic Tilting via Kinematic Physics)
+    ///
+    /// รับผิดชอบเฉพาะ "อินพุต → ทรานส์ฟอร์มของกระทะ" เท่านั้น
+    /// ส่วนแรงฟิสิกส์ที่กระทำต่ออาหารในกระทะถูกแยกไปอยู่ที่ ContainerContentPhysics แล้ว
     /// </summary>
-    public class PanController : MonoBehaviour
+    public class PanController : MonoBehaviour, IStationModule
     {
         [Header("Pan References")]
         [Tooltip("Transform ของตัวกระทะ (หากไม่ใส่จะใช้ Transform ของ GameObject นี้)")]
@@ -36,19 +41,6 @@ namespace ProjectCook.Cooking
         [Tooltip("คืนค่ามุมเอียงเป็น 0 องศาเมื่อปล่อยปุ่ม WASD")]
         [SerializeField] private bool autoCenterRotationOnRelease = true;
 
-        [Header("Food Physics Settings")]
-        [Tooltip("ตัวคูณแรงเหวี่ยง (Inertia Force) เมื่อสไลด์กระทะ WASD")]
-        [SerializeField] private float momentumMultiplier = 5f;
-
-        [Tooltip("ตัวคูณแรงสไลด์ตามความเอียงของกระทะ (Slope Gravity Assist)")]
-        [SerializeField] private float slopeForceMultiplier = 8f;
-
-        [Tooltip("ตัวคูณแรงหมุน/พลิกตัวของวัตถุ (Rolling Torque)")]
-        [SerializeField] private float rollTorqueMultiplier = 3f;
-
-        [Tooltip("แรงดึงประคองเข้าหาก้นกระทะเบาๆ ป้องกันอาหารกระเด็นหลุดกระทะง่ายเกินไป")]
-        [SerializeField] private float bowlAttractionForce = 2f;
-
         [Header("Input Settings")]
         [Tooltip("Action จาก New Input System สำหรับอ่านค่า Vector2 (WASD)")]
         [SerializeField] private InputActionReference moveAction;
@@ -56,10 +48,6 @@ namespace ProjectCook.Cooking
         [Header("Reference Transform Settings")]
         [Tooltip("Transform สำหรับอ้างอิงทิศทาง (เช่น กล้อง stationCamera) หากไม่ใส่จะอ้างอิงจาก Camera.main หรือเตา")]
         [SerializeField] private Transform referenceTransform;
-
-        [Header("Food Carrier Settings")]
-        [Tooltip("สคริปต์จัดการภาชนะและฟิสิกส์อาหารในกระทะ (หากไม่ใส่จะค้นหาใน GameObject นี้หรือ Child)")]
-        [SerializeField] private PanFoodContainer foodContainer;
 
         private Rigidbody panRigidbody;
         private Camera cachedMainCamera;
@@ -69,13 +57,11 @@ namespace ProjectCook.Cooking
 
         private Vector3 targetLocalPosition;
         private Quaternion targetLocalRotation;
-        private Vector3 previousPanPosition;
 
         private bool isControllerActive = false;
         private bool isResetting = false;
 
         public bool IsControllerActive => isControllerActive;
-        public PanFoodContainer FoodContainer => foodContainer;
 
         private Camera GetMainCamera()
         {
@@ -88,11 +74,6 @@ namespace ProjectCook.Cooking
             if (panTransform == null)
             {
                 panTransform = transform;
-            }
-
-            if (foodContainer == null)
-            {
-                foodContainer = panTransform.GetComponentInChildren<PanFoodContainer>();
             }
 
             panRigidbody = panTransform.GetComponent<Rigidbody>();
@@ -110,7 +91,23 @@ namespace ProjectCook.Cooking
 
             targetLocalPosition = initialLocalPosition;
             targetLocalRotation = initialLocalRotation;
-            previousPanPosition = panTransform.position;
+        }
+
+        /// <summary>
+        /// เข้าใช้งานสถานี: อ้างอิงทิศทางจากกล้องประจำสถานีแล้วเริ่มรับอินพุต (IStationModule)
+        /// </summary>
+        public void OnStationEnter(Camera stationCamera)
+        {
+            referenceTransform = stationCamera != null ? stationCamera.transform : null;
+            SetControllerActive(true);
+        }
+
+        /// <summary>
+        /// ออกจากสถานี: หยุดรับอินพุตและสไลด์กระทะกลับตำแหน่งเริ่มต้น (IStationModule)
+        /// </summary>
+        public void OnStationExit()
+        {
+            SetControllerActive(false);
         }
 
         private void OnEnable()
@@ -272,58 +269,6 @@ namespace ProjectCook.Cooking
                 {
                     ApplyPhysicsTransform(initialLocalPosition, initialLocalRotation);
                     isResetting = false;
-                }
-            }
-
-            // คำนวณและส่งแรงฟิสิกส์สไลด์/เหวี่ยงใส่อาหารที่อยู่ในกระทะ
-            ApplyFoodCarrierPhysics();
-        }
-
-        /// <summary>
-        /// คำนวณความเร็วกระทะ และส่งแรงฟิสิกส์ดันอาหารให้สไลด์และกลิ้งตามการเคลื่อนที่และการเอียงของกระทะ
-        /// </summary>
-        private void ApplyFoodCarrierPhysics()
-        {
-            if (foodContainer == null || panTransform == null) return;
-
-            var items = foodContainer.GetContainedFoodItems();
-            if (items == null || items.Count == 0) return;
-
-            Vector3 panDeltaPos = panTransform.position - previousPanPosition;
-            Vector3 panVelocity = panDeltaPos / Time.fixedDeltaTime;
-            previousPanPosition = panTransform.position;
-
-            Vector3 panUp = panTransform.up;
-            Vector3 panCenter = panTransform.position;
-            Vector3 slopeDirection = Vector3.ProjectOnPlane(Physics.gravity, panUp);
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                var item = items[i];
-                if (item == null || item.Rigidbody == null || item.Rigidbody.isKinematic) continue;
-
-                // หากถูกคีบจับอยู่ ให้ข้ามแรงลากเคลื่อนย้ายฟิสิกส์ของกระทะ (เพื่อไม่ให้แย่งแรงกับ IngredientDragController)
-                if (item.Ingredient != null && item.Ingredient.IsGripped) continue;
-
-                // --- 1. Physics Movement Logic (Batching Forces) ---
-                Vector3 inertiaForce = -panVelocity * momentumMultiplier;
-                Vector3 slopeForce = slopeDirection * slopeForceMultiplier;
-                Vector3 toCenterDir = (panCenter - item.Rigidbody.position);
-                toCenterDir.y = 0f;
-                Vector3 attractionForce = toCenterDir * bowlAttractionForce;
-
-                Vector3 combinedForce = inertiaForce + slopeForce + attractionForce;
-                if (combinedForce.sqrMagnitude > 0.0001f)
-                {
-                    item.Rigidbody.AddForce(combinedForce, ForceMode.Acceleration);
-                }
-
-                // แรงหมุนตัว/กลิ้งของวัตถุดิบ (Rolling & Tumbling Torque)
-                Vector3 foodVel = item.Rigidbody.linearVelocity;
-                if (foodVel.sqrMagnitude > 0.01f)
-                {
-                    Vector3 rollAxis = Vector3.Cross(panUp, foodVel.normalized);
-                    item.Rigidbody.AddTorque(rollAxis * (foodVel.magnitude * rollTorqueMultiplier), ForceMode.Acceleration);
                 }
             }
         }

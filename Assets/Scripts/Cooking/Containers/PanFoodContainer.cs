@@ -5,9 +5,9 @@ namespace ProjectCook.Cooking
 {
     /// <summary>
     /// สคริปต์จัดการการทอดอาหารในกระทะ (Pan Food Container System)
-    /// สืบทอดจาก BaseFoodContainer เพิ่มเติมส่วนตรวจจับพื้นผิวกระทะ 3 ซม. และทอดอาหารแบบ 2 ด้าน
+    /// สืบทอดจาก HeatingFoodContainer เพิ่มเติมส่วนตรวจจับพื้นผิวกระทะ 3 ซม. และทอดอาหารแบบ 2 ด้าน
     /// </summary>
-    public class PanFoodContainer : BaseFoodContainer
+    public class PanFoodContainer : HeatingFoodContainer
     {
         [Header("Pan Specific References")]
         [Tooltip("Transform ของกระทะ (หากไม่ใส่จะอ้างอิงจาก Transform ตัวเองหรือ Parent)")]
@@ -39,7 +39,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        public override bool IsFoodItemActiveInStation(FoodItemData item)
+        public override bool IsItemBeingProcessed(FoodItemData item)
         {
             if (item != null && item.Ingredient != null && item.Ingredient.IsGripped)
             {

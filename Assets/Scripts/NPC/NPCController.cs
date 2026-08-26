@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using ProjectCook.Interaction;
 using ProjectCook.Dialogue;
 using ProjectCook.Dialogue.Conditions;
@@ -18,26 +19,30 @@ namespace ProjectCook.NPC
 
         [Header("Dialogues")]
         [Tooltip("บทสนทนาเริ่มต้น กรณีไม่มีเงื่อนไขใดๆ ผ่านเลย")]
-        [SerializeField] private DialogData defaultDialog;
+        [FormerlySerializedAs("defaultDialog")]
+        [SerializeField] private DialogueDataSO defaultDialogue;
 
-        [Tooltip("ไฟล์บทสนทนาเริ่มต้นแบบ JSON (ใช้แทน defaultDialog กรณีใช้ระบบ Data-Driven)")]
-        [SerializeField] private TextAsset defaultJsonDialog;
+        [Tooltip("ไฟล์บทสนทนาเริ่มต้นแบบ JSON (ใช้แทน defaultDialogue กรณีใช้ระบบ Data-Driven)")]
+        [FormerlySerializedAs("defaultJsonDialog")]
+        [SerializeField] private TextAsset defaultJsonDialogue;
 
         [Tooltip("รายการบทสนทนาแบบมีเงื่อนไข (จะเลือกอันที่ Priority สูงสุดและเงื่อนไขผ่าน)")]
-        [SerializeField] private List<ConditionalDialogEntry> conditionalDialogs = new List<ConditionalDialogEntry>();
+        [FormerlySerializedAs("conditionalDialogs")]
+        [SerializeField] private List<ConditionalDialogueEntry> conditionalDialogues = new List<ConditionalDialogueEntry>();
 
         [Header("Event Hooks")]
         [Tooltip("เหตุการณ์ที่เกิดเมื่อผู้เล่นกด Interact คุยกับ NPC")]
         [SerializeField] private UnityEvent<NPCController> onInteract;
 
         [Tooltip("เหตุการณ์ที่เกิดเมื่อคุยจบทุกโหนด")]
-        [SerializeField] private UnityEvent<NPCController> onDialogComplete;
+        [FormerlySerializedAs("onDialogComplete")]
+        [SerializeField] private UnityEvent<NPCController> onDialogueComplete;
 
         [Tooltip("เหตุการณ์ที่เกิดเมื่อมีการยิง Action ID จากตัวเลือกคำตอบ")]
         [SerializeField] private UnityEvent<string> onActionTriggered;
 
         // แคชผลการแปลง JSON ของบทสนทนาเริ่มต้น (กันการสร้าง ScriptableObject ใหม่ทุกครั้งที่กดคุย)
-        private DialogData cachedDefaultJsonDialog;
+        private DialogueDataSO cachedDefaultJsonDialogue;
 
         public string NPCID => npcID;
         public string NPCName => npcName;
@@ -49,16 +54,16 @@ namespace ProjectCook.NPC
         {
             onInteract?.Invoke(this);
 
-            DialogData dialogToPlay = GetValidDialog();
-            if (dialogToPlay != null)
+            DialogueDataSO dialogueToPlay = GetValidDialogue();
+            if (dialogueToPlay != null)
             {
-                if (DialogManager.Instance != null)
+                if (DialogueManager.Instance != null)
                 {
-                    DialogManager.Instance.StartDialog(this, dialogToPlay);
+                    DialogueManager.Instance.StartDialogue(this, dialogueToPlay);
                 }
                 else
                 {
-                    Debug.LogWarning($"[NPC] DialogManager ไม่ถูกติดตั้งใน Scene! ไม่สามารถเริ่มคุยกับ {npcName} ได้", this);
+                    Debug.LogWarning($"[NPC] DialogueManager ไม่ถูกติดตั้งใน Scene! ไม่สามารถเริ่มคุยกับ {npcName} ได้", this);
                 }
             }
             else
@@ -70,17 +75,17 @@ namespace ProjectCook.NPC
         /// <summary>
         /// ค้นหาบทสนทนาที่ผ่านเงื่อนไขและมีความสำคัญสูงสุด
         /// </summary>
-        public DialogData GetValidDialog()
+        public DialogueDataSO GetValidDialogue()
         {
-            ConditionalDialogEntry bestMatch = null;
-            DialogData bestMatchData = null;
+            ConditionalDialogueEntry bestMatch = null;
+            DialogueDataSO bestMatchData = null;
 
-            foreach (var entry in conditionalDialogs)
+            foreach (var entry in conditionalDialogues)
             {
                 if (entry == null) continue;
 
-                // เรียก GetEffectiveDialogData เพียงครั้งเดียวต่อ entry แล้วเก็บผลไว้ใช้ต่อ
-                DialogData entryData = entry.GetEffectiveDialogData();
+                // เรียก GetEffectiveDialogue เพียงครั้งเดียวต่อ entry แล้วเก็บผลไว้ใช้ต่อ
+                DialogueDataSO entryData = entry.GetEffectiveDialogue();
                 if (entryData == null) continue;
                 if (!entry.AreConditionsMet()) continue;
 
@@ -93,15 +98,15 @@ namespace ProjectCook.NPC
 
             if (bestMatchData != null) return bestMatchData;
 
-            if (defaultDialog != null) return defaultDialog;
+            if (defaultDialogue != null) return defaultDialogue;
 
-            if (defaultJsonDialog != null)
+            if (defaultJsonDialogue != null)
             {
-                if (cachedDefaultJsonDialog == null)
+                if (cachedDefaultJsonDialogue == null)
                 {
-                    cachedDefaultJsonDialog = DialogParser.ParseTextAssetToDialogData(defaultJsonDialog);
+                    cachedDefaultJsonDialogue = DialogueParser.ParseTextAsset(defaultJsonDialogue);
                 }
-                return cachedDefaultJsonDialog;
+                return cachedDefaultJsonDialogue;
             }
 
             return null;
@@ -129,11 +134,11 @@ namespace ProjectCook.NPC
         }
 
         /// <summary>
-        /// ถูกเรียกจาก DialogManager เมื่อเล่นบทสนทนาจบลง
+        /// ถูกเรียกจาก DialogueManager เมื่อเล่นบทสนทนาจบลง
         /// </summary>
-        public void OnDialogEnded()
+        public void OnDialogueEnded()
         {
-            onDialogComplete?.Invoke(this);
+            onDialogueComplete?.Invoke(this);
         }
     }
 }

@@ -26,9 +26,9 @@ MonoBehaviour:
   rawSmoothness: 0
   cookedSmoothness: 0.25
   burntSmoothness: 0.05
-  sfxVolume: 0.2
+  sfxVolume: 0.1
   sizzlePitch: 1
   pitchRandomness: 0.05
   dropSFX: {fileID: 0}
-  sizzleSFX: {fileID: 8300000, guid: 0fe67d688fc60ed499f11cb1ecddcf6d, type: 3}
+  sizzleSFX: {fileID: 8300000, guid: 31cd05c3dd049ea42af3d2721807ed09, type: 3}
   cookedDoneSFX: {fileID: 0}

@@ -416,6 +416,7 @@ GameObject:
   - component: {fileID: 45541946}
   - component: {fileID: 45541948}
   - component: {fileID: 45541949}
+  - component: {fileID: 45541950}
   m_Layer: 6
   m_Name: panStation
   m_TagString: Station
@@ -437,8 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.PanStation
   stationCamera: {fileID: 1699777268}
   exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  panController: {fileID: 45541948}
-  dragController: {fileID: 45541949}
+  externalModules: []
 --- !u!4 &45541947
 Transform:
   m_ObjectHideFlags: 0
@@ -476,13 +476,8 @@ MonoBehaviour:
   maxTiltAngle: 15
   tiltSmoothSpeed: 15
   autoCenterRotationOnRelease: 1
-  momentumMultiplier: 3
-  slopeForceMultiplier: 2
-  rollTorqueMultiplier: 3
-  bowlAttractionForce: 2
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   referenceTransform: {fileID: 1699777270}
-  foodContainer: {fileID: 0}
 --- !u!114 &45541949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +505,24 @@ MonoBehaviour:
   minGripDistance: 0.2
   maxGripDistance: 0.7
   targetCamera: {fileID: 330585545}
+--- !u!114 &45541950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45541945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c787c9a609e45584c944154040ea3937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.ContainerAudioController
+  foodContainer: {fileID: 683146237}
+  sfxAudioSource: {fileID: 0}
+  fadeInSpeed: 1
+  fadeOutSpeed: 1
+  checkInterval: 0.5
+  maxConcurrentVoices: 2
 --- !u!4 &63939259 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b5a73accce9ab044dbc40457aa1609a2, type: 3}
@@ -2235,7 +2248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Dialogue.DialogManager
   typingSpeed: 0.03
   advanceAction: {fileID: 0}
-  dialogUI: {fileID: 347662168}
+  dialogueUI: {fileID: 347662168}
 --- !u!4 &501898310
 Transform:
   m_ObjectHideFlags: 0
@@ -2407,13 +2420,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
   npcID: NPC#1
   npcName: name:1
-  defaultDialog: {fileID: 0}
-  defaultJsonDialog: {fileID: 4900000, guid: 992a31dfae084854dbebd01797ddf653, type: 3}
-  conditionalDialogs: []
+  defaultDialogue: {fileID: 0}
+  defaultJsonDialogue: {fileID: 4900000, guid: 992a31dfae084854dbebd01797ddf653, type: 3}
+  conditionalDialogues: []
   onInteract:
     m_PersistentCalls:
       m_Calls: []
-  onDialogComplete:
+  onDialogueComplete:
     m_PersistentCalls:
       m_Calls: []
   onActionTriggered:
@@ -2625,6 +2638,24 @@ MonoBehaviour:
   isHeating: 1
   heatRateMultiplier: 1
   panTransform: {fileID: 683146226}
+--- !u!114 &683146240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683146225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b2c63c18269de049bcfdc4afeb3ce70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.ContainerCarrier
+  containerTransform: {fileID: 0}
+  foodContainer: {fileID: 0}
+  momentumMultiplier: 3
+  slopeForceMultiplier: 2
+  rollTorqueMultiplier: 3
+  bowlAttractionForce: 2
 --- !u!1 &684294752
 GameObject:
   m_ObjectHideFlags: 0
@@ -5383,6 +5414,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f2650efa8e1f24346ae387b9bb2c96c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 683146237}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f2650efa8e1f24346ae387b9bb2c96c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 683146240}
   m_SourcePrefab: {fileID: 100100000, guid: f2650efa8e1f24346ae387b9bb2c96c5, type: 3}
 --- !u!1001 &1519304866
 PrefabInstance:
@@ -6364,7 +6398,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699777267}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89875cdc57c54474a8a74efd9b2a3b5d, type: 3}
   m_Name: 
@@ -8809,6 +8843,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4407508877935325462, guid: 7a4674662135fee4ab5fbd208fdcd876, type: 3}
+      propertyPath: m_Mass
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4407508877935325462, guid: 7a4674662135fee4ab5fbd208fdcd876, type: 3}
+      propertyPath: m_LinearDamping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4670767053783142571, guid: 7a4674662135fee4ab5fbd208fdcd876, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.278
@@ -8923,6 +8965,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3776378824466180411, guid: 9e6388f35bbfbe54eb064cc7c9cb8b27, type: 3}
+      propertyPath: m_LinearDamping
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5990088820357481865, guid: 9e6388f35bbfbe54eb064cc7c9cb8b27, type: 3}
       propertyPath: m_Name
       value: egg-pf

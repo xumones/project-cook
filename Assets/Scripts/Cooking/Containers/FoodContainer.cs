@@ -8,7 +8,7 @@ namespace ProjectCook.Cooking
     /// Abstract Class แม่สำหรับอุปกรณ์ทำอาหาร/ภาชนะเก็บวัตถุดิบ (Base Food Container System)
     /// ควบคุมการติดตามวัตถุดิบในภาชนะ, การคัดกรองวัตถุดิบ, ระบบความร้อนพื้นฐาน และระบบเสียงศูนย์กลางแบบ Coroutine
     /// </summary>
-    public abstract class BaseFoodContainer : MonoBehaviour
+    public abstract class FoodContainer : MonoBehaviour
     {
         [Header("Filtering Settings")]
         [Tooltip("เปิดใช้งานการกรองเฉพาะวัตถุที่มี Tag ที่กำหนด (หากปิดจะรับ Rigidbody ทุกชิ้นที่เป็นอาหาร)")]
@@ -16,13 +16,6 @@ namespace ProjectCook.Cooking
 
         [Tooltip("Tag ของวัตถุดิบอาหาร เช่น 'Food' หรือ 'Ingredient'")]
         [SerializeField] protected string foodTag = "Food";
-
-        [Header("Cooking Heat Settings")]
-        [Tooltip("เปิดใช้งานการแผ่ความร้อนทอด/ต้มใส่อาหารในภาชนะ")]
-        [SerializeField] protected bool isHeating = true;
-
-        [Tooltip("ตัวคูณความเร็วการสะสมความร้อน")]
-        [SerializeField] protected float heatRateMultiplier = 1.0f;
 
         /// <summary>
         /// Callback Event แจ้งเตือนเมื่อมีวัตถุดิบวางลงในภาชนะ
@@ -48,12 +41,10 @@ namespace ProjectCook.Cooking
 
         protected readonly List<FoodItemData> foodItems = new List<FoodItemData>();
 
-        public bool IsHeating => isHeating;
-
-        public void SetHeatingActive(bool active)
-        {
-            isHeating = active;
-        }
+        /// <summary>
+        /// ภาชนะนี้กำลังแผ่ความร้อนอยู่หรือไม่ (ภาชนะที่ไม่มีความร้อน เช่น จานเสิร์ฟ จะเป็น false เสมอ)
+        /// </summary>
+        public virtual bool IsHeating => false;
 
         public IReadOnlyList<FoodItemData> GetContainedFoodItems() => foodItems;
 
@@ -156,7 +147,7 @@ namespace ProjectCook.Cooking
         {
             if (foodItems.Count == 0) return;
 
-            // วนรอบเดียวแบบย้อนกลับ ทำทั้งการล้างรายการที่หมดอายุและการส่งความร้อนในคราวเดียว
+            // วนรอบเดียวแบบย้อนกลับ ทำทั้งการล้างรายการที่หมดอายุและการประมวลผลวัตถุดิบในคราวเดียว
             for (int i = foodItems.Count - 1; i >= 0; i--)
             {
                 FoodItemData item = foodItems[i];
@@ -169,22 +160,26 @@ namespace ProjectCook.Cooking
 
                 if (item.Ingredient == null) continue;
 
-                if (isHeating && !item.Ingredient.IsBurnt)
-                {
-                    ApplyHeatToItem(item);
-                }
+                ProcessItem(item);
+
+                // สั่งอัปเดตการแสดงผลจากตรงนี้แทนการให้วัตถุดิบแต่ละชิ้นมี Update() ของตัวเอง
+                // ลดจำนวนการเรียก Update() ของ Unity ลงเหลือศูนย์เมื่อมีวัตถุดิบหลายชิ้นพร้อมกัน
+                item.Ingredient.TickVisuals();
             }
         }
 
         /// <summary>
-        /// Abstract Method ที่ Class ลูกทุกตัวต้องเขียนสเปกและเงื่อนไขการส่งผ่านความร้อนของตัวเอง
+        /// Hook สำหรับให้ภาชนะแต่ละชนิดประมวลผลวัตถุดิบตามความสามารถของตัวเอง
+        /// (ภาชนะที่ให้ความร้อนจะ Override เพื่อทอด/ต้ม ส่วนจานเสิร์ฟไม่ต้องทำอะไร)
         /// </summary>
-        protected abstract void ApplyHeatToItem(FoodItemData item);
+        protected virtual void ProcessItem(FoodItemData item)
+        {
+        }
 
         /// <summary>
         /// Hook สำหรับการตรวจสอบว่าวัตถุดิบกำลังอยู่ในสภาวะทอด/ต้มจริงในภาชนะหรือไม่
         /// </summary>
-        public virtual bool IsFoodItemActiveInStation(FoodItemData item)
+        public virtual bool IsItemBeingProcessed(FoodItemData item)
         {
             return true;
         }

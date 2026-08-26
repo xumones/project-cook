@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using ProjectCook.NPC;
 using ProjectCook.Control;
 using ProjectCook.Core;
@@ -12,10 +13,8 @@ namespace ProjectCook.Dialogue
     /// <summary>
     /// Singleton Manager สำหรับควบคุมวงจรการทำงานของบทสนทนาทั้งหมด
     /// </summary>
-    public class DialogManager : MonoBehaviour
+    public class DialogueManager : SceneSingleton<DialogueManager>
     {
-        public static DialogManager Instance { get; private set; }
-
         [Header("Settings")]
         [SerializeField] private float typingSpeed = 0.03f; // ความเร็วการพิมพ์ตัวอักษร (วินาที/ตัว)
 
@@ -23,11 +22,12 @@ namespace ProjectCook.Dialogue
         [SerializeField] private InputActionReference advanceAction; // ปุ่มกดไปต่อ (เช่น E/Space/Click)
 
         [Header("UI Reference")]
-        [SerializeField] private DialogUI dialogUI;
+        [FormerlySerializedAs("dialogUI")]
+        [SerializeField] private DialogueUI dialogueUI;
 
         private NPCController currentNPC;
-        private DialogData currentDialogData;
-        private DialogNode currentNode;
+        private DialogueDataSO currentDialogueData;
+        private DialogueNode currentNode;
         private Coroutine typingCoroutine;
 
         // แคชตัวหน่วงเวลาของเอฟเฟกต์พิมพ์ เพื่อไม่ให้ Allocate ใหม่ทุกตัวอักษร
@@ -44,18 +44,6 @@ namespace ProjectCook.Dialogue
 
         public bool IsDialogueActive => isDialogueActive;
         public bool IsTyping => isTyping;
-
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
 
         private void OnEnable()
         {
@@ -84,76 +72,76 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// เริ่มต้นบทสนทนากับ NPC โดยใช้ไฟล์ JSON (TextAsset)
         /// </summary>
-        public void StartDialog(NPCController npc, TextAsset jsonAsset)
+        public void StartDialogue(NPCController npc, TextAsset jsonAsset)
         {
             if (jsonAsset == null) return;
-            DialogData data = DialogParser.ParseTextAssetToDialogData(jsonAsset);
+            DialogueDataSO data = DialogueParser.ParseTextAsset(jsonAsset);
             if (data != null)
             {
-                StartDialog(npc, data);
+                StartDialogue(npc, data);
             }
         }
 
         /// <summary>
         /// เริ่มต้นบทสนทนากับ NPC
         /// </summary>
-        public void StartDialog(NPCController npc, DialogData dialogData)
+        public void StartDialogue(NPCController npc, DialogueDataSO dialogueData)
         {
-            if (npc == null || dialogData == null) return;
+            if (npc == null || dialogueData == null) return;
 
             currentNPC = npc;
-            currentDialogData = dialogData;
+            currentDialogueData = dialogueData;
             isDialogueActive = true;
 
             // 1. หยุดการเคลื่อนที่ของผู้เล่นและปลดล็อกเคอร์เซอร์เมาส์
             SetPlayerControl(false);
 
             // 2. แสดงผล UI หน้าต่างบทสนทนา
-            if (dialogUI != null)
+            if (dialogueUI != null)
             {
-                dialogUI.ShowUI();
+                dialogueUI.ShowUI();
             }
 
             // 3. เริ่มโหนดแรกสุด
-            DialogNode startNode = currentDialogData.GetStartNode();
+            DialogueNode startNode = currentDialogueData.GetStartNode();
             if (startNode != null)
             {
                 DisplayNode(startNode);
             }
             else
             {
-                Debug.LogWarning($"[DialogManager] ไม่พบโหนดเริ่มต้นใน DialogData: {dialogData.name}");
-                EndDialog();
+                Debug.LogWarning($"[DialogueManager] ไม่พบโหนดเริ่มต้นใน DialogueDataSO: {dialogueData.name}");
+                EndDialogue();
             }
         }
 
         /// <summary>
         /// แสดงผลโหนดบทสนทนา
         /// </summary>
-        public void DisplayNode(DialogNode node)
+        public void DisplayNode(DialogueNode node)
         {
             if (node == null)
             {
-                EndDialog();
+                EndDialogue();
                 return;
             }
 
             currentNode = node;
             isWaitingForChoice = false;
 
-            if (dialogUI != null)
+            if (dialogueUI != null)
             {
-                dialogUI.HideChoices();
+                dialogueUI.HideChoices();
             }
 
             // กำหนดชื่อผู้พูด
             string speakerName = !string.IsNullOrEmpty(node.speakerNameOverride)
                 ? node.speakerNameOverride
-                : (currentNPC != null ? currentNPC.NPCName : currentDialogData.defaultSpeakerName);
+                : (currentNPC != null ? currentNPC.NPCName : currentDialogueData.defaultSpeakerName);
 
-            if (dialogUI != null)
+            if (dialogueUI != null)
             {
-                dialogUI.SetSpeakerInfo(speakerName, node.speakerAvatar);
+                dialogueUI.SetSpeakerInfo(speakerName, node.speakerAvatar);
             }
 
             // เล่นเสียงพากย์ถ้ามี
@@ -176,12 +164,12 @@ namespace ProjectCook.Dialogue
 
             // ใส่ข้อความเต็มลง TMP ครั้งเดียวแล้วค่อยๆ เปิดเผยทีละตัวอักษร
             // ไม่มีการต่อสตริงและไม่มีการสร้าง Mesh ใหม่ระหว่างพิมพ์ (Zero Allocation)
-            int totalCharacters = dialogUI != null ? dialogUI.PrepareTypewriterText(fullText) : 0;
+            int totalCharacters = dialogueUI != null ? dialogueUI.PrepareTypewriterText(fullText) : 0;
             WaitForSeconds delay = GetTypingDelay();
 
             for (int i = 1; i <= totalCharacters; i++)
             {
-                dialogUI.SetVisibleCharacterCount(i);
+                dialogueUI.SetVisibleCharacterCount(i);
                 yield return delay;
             }
 
@@ -215,10 +203,10 @@ namespace ProjectCook.Dialogue
 
         private void ShowChoicesForCurrentNode()
         {
-            if (currentNode == null || dialogUI == null) return;
+            if (currentNode == null || dialogueUI == null) return;
 
             // คัดกรองเฉพาะตัวเลือกที่ผ่านเงื่อนไข
-            List<DialogChoice> validChoices = new List<DialogChoice>();
+            List<DialogueChoice> validChoices = new List<DialogueChoice>();
             foreach (var choice in currentNode.choices)
             {
                 if (choice != null && choice.AreConditionsMet())
@@ -230,7 +218,7 @@ namespace ProjectCook.Dialogue
             if (validChoices.Count > 0)
             {
                 isWaitingForChoice = true;
-                dialogUI.DisplayChoices(validChoices, SelectChoice);
+                dialogueUI.DisplayChoices(validChoices, SelectChoice);
             }
             else
             {
@@ -242,16 +230,16 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// ถูกเรียกเมื่อผู้เล่นคลิกเลือกตัวเลือกคำตอบบน UI
         /// </summary>
-        public void SelectChoice(DialogChoice choice)
+        public void SelectChoice(DialogueChoice choice)
         {
             if (choice == null) return;
 
             isWaitingForChoice = false;
             lastChoiceSelectedFrame = Time.frameCount;
 
-            if (dialogUI != null)
+            if (dialogueUI != null)
             {
-                dialogUI.HideChoices();
+                dialogueUI.HideChoices();
             }
 
             // 1. ถ้าระบุ actionID ให้ส่งยิง Action ไปยัง NPC
@@ -266,12 +254,12 @@ namespace ProjectCook.Dialogue
             // 2. ขยับไปยังโหนดถัดไป หรือจบการคุย
             if (!string.IsNullOrEmpty(choice.nextNodeID))
             {
-                DialogNode nextNode = currentDialogData.GetNode(choice.nextNodeID);
+                DialogueNode nextNode = currentDialogueData.GetNode(choice.nextNodeID);
                 DisplayNode(nextNode);
             }
             else
             {
-                EndDialog();
+                EndDialogue();
             }
         }
 
@@ -286,9 +274,9 @@ namespace ProjectCook.Dialogue
                 }
                 isTyping = false;
 
-                if (dialogUI != null && currentNode != null)
+                if (dialogueUI != null && currentNode != null)
                 {
-                    dialogUI.SetDialogueText(currentNode.dialogueText);
+                    dialogueUI.SetDialogueText(currentNode.dialogueText);
                 }
 
                 OnTypingComplete();
@@ -304,19 +292,19 @@ namespace ProjectCook.Dialogue
         {
             if (currentNode != null && !string.IsNullOrEmpty(currentNode.nextNodeID))
             {
-                DialogNode nextNode = currentDialogData.GetNode(currentNode.nextNodeID);
+                DialogueNode nextNode = currentDialogueData.GetNode(currentNode.nextNodeID);
                 DisplayNode(nextNode);
             }
             else
             {
-                EndDialog();
+                EndDialogue();
             }
         }
 
         /// <summary>
         /// จบการคุยบทสนทนา
         /// </summary>
-        public void EndDialog()
+        public void EndDialogue()
         {
             isDialogueActive = false;
             isTyping = false;
@@ -327,9 +315,9 @@ namespace ProjectCook.Dialogue
                 StopCoroutine(typingCoroutine);
             }
 
-            if (dialogUI != null)
+            if (dialogueUI != null)
             {
-                dialogUI.HideUI();
+                dialogueUI.HideUI();
             }
 
             // คืนค่าการเคลื่อนที่และล็อกเคอร์เซอร์กลับให้ผู้เล่น
@@ -337,11 +325,11 @@ namespace ProjectCook.Dialogue
 
             if (currentNPC != null)
             {
-                currentNPC.OnDialogEnded();
+                currentNPC.OnDialogueEnded();
                 currentNPC = null;
             }
 
-            currentDialogData = null;
+            currentDialogueData = null;
             currentNode = null;
         }
 

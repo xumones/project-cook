@@ -7,7 +7,7 @@ namespace ProjectCook.Dialogue
     /// Data structure สำหรับเก็บข้อมูลโหนดบทสนทนา 1 โหนดใน Dialogue Tree
     /// </summary>
     [System.Serializable]
-    public class DialogNode
+    public class DialogueNode
     {
         [Tooltip("ID ประจำโหนด (เช่น 'start', 'ask_menu', 'node_01')")]
         public string nodeID;
@@ -32,7 +32,7 @@ namespace ProjectCook.Dialogue
         public string nextNodeID;
 
         [Tooltip("รายการตัวเลือกคำตอบ (ถ้ามีหลายข้อ หน้าต่างตัวเลือกจะเด้งขึ้นมาแทนการผ่านบรรทัดอัตโนมัติ)")]
-        public List<DialogChoice> choices = new List<DialogChoice>();
+        public List<DialogueChoice> choices = new List<DialogueChoice>();
 
         /// <summary>
         /// เช็คว่าโหนดนี้มีตัวเลือกคำตอบหรือไม่
