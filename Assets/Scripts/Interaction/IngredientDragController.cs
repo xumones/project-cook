@@ -8,18 +8,24 @@ namespace ProjectCook.Interaction
     /// สคริปต์ควบคุมการจับ คีบ/ยก และลากเคลื่อนย้ายอาหารด้วยระบบแรงฟิสิกส์ (Physics Velocity-Driven Dragging)
     /// ช่วยให้อาหารเคลื่อนที่ตามเมาส์โดยไม่ทะลุขอบกระทะและวัตถุอื่นในฉาก (PhysX Collision-Safe)
     ///
-    /// อยู่ในโฟลเดอร์ Interaction เพราะเป็นเครื่องมือของผู้เล่นสำหรับหยิบจับวัตถุ
-    /// ไม่ได้ผูกกับสถานีทำอาหารชนิดใดชนิดหนึ่ง สถานีใดก็นำไปใช้เป็นโมดูลได้
+    /// เป็นระบบ Global ทำงานตลอดเวลา ไม่ผูกกับการเข้า/ออกสถานีทำอาหารสถานีใดสถานีหนึ่งอีกต่อไป
+    /// (คีบวัตถุดิบที่ไหนก็ได้ในเกม ไม่ว่าจะอยู่ในหรือนอกสถานี) แยกแยะวัตถุดิบด้วย Layer + Tag "Food"
+    /// เพื่อไม่ให้ไปชนกับระบบลาก/ถือวัตถุชนิดอื่นในอนาคต จึงควรแปะไว้บน Player เพียงตัวเดียว
+    /// เหมือน PlayerInteractor ไม่ใช่แปะซ้ำในแต่ละสถานีอีกต่อไป
     /// </summary>
-    public class IngredientDragController : MonoBehaviour, IStationModule
+    public class IngredientDragController : MonoBehaviour
     {
-        [Header("Layer Settings")]
+        [Header("Layer & Tag Settings")]
         [Tooltip("LayerMask สำหรับตรวจจับชิ้นวัตถุดิบอาหาร")]
         [SerializeField] private LayerMask ingredientLayerMask;
 
+        [Tooltip("Tag ที่วัตถุดิบทุกชิ้นต้องมี ใช้เป็นตัวกรองซ้ำอีกชั้นนอกเหนือจาก Layer กันชนกับระบบลาก/ถือวัตถุอื่นในอนาคต")]
+        [SerializeField] private string ingredientTag = "Food";
+
         [Header("Drag Settings")]
-        [Tooltip("ระยะยิง Raycast เล็งวัตถุดิบสูงสุด (เมตร)")]
-        [SerializeField] private float maxRaycastDistance = 10f;
+        [Tooltip("ระยะยิง Raycast เล็งวัตถุดิบสูงสุด (เมตร) ปรับให้เป็นระยะเอื้อมมือทั่วไปเพราะตอนนี้ใช้ได้ทั้งเกม ไม่ใช่แค่มุมกล้องสถานีระยะประชิดอีกต่อไป")]
+        [Range(0.5f, 8f)]
+        [SerializeField] private float maxRaycastDistance = 3f;
 
         [Tooltip("ตัวคูณความเร็วในการลากเคลื่อนย้ายฟิสิกส์ตามเมาส์")]
         [SerializeField] private float dragForceMultiplier = 25f;
@@ -49,20 +55,15 @@ namespace ProjectCook.Interaction
         [Range(0.01f, 2.0f)]
         [SerializeField] private float scrollSensitivity = 0.5f;
 
-        [Tooltip("ระยะใกล้สุดจากกล้อง (เมตร)")]
-        [Range(0.1f, 2.0f)]
-        [SerializeField] private float minGripDistance = 0.2f;
+        [Tooltip("ระยะใกล้สุดจากกล้อง (เมตร) ค่าเริ่มต้นปรับสำหรับระยะเอื้อมมือแบบเดินอิสระ ควร Test แล้วปรับอีกทีตามความเหมาะสม")]
+        [Range(0.1f, 3.0f)]
+        [SerializeField] private float minGripDistance = 0.4f;
 
-        [Tooltip("ระยะไกลสุดจากกล้อง (เมตร)")]
-        [Range(0.1f, 2.0f)]
-        [SerializeField] private float maxGripDistance = 0.8f;
-
-        [Header("Camera Reference")]
-        [Tooltip("กล้องอ้างอิงระนาบการมองเห็น (หากไม่ใส่จะใช้ Camera.main)")]
-        [SerializeField] private Camera targetCamera;
+        [Tooltip("ระยะไกลสุดจากกล้อง (เมตร) ค่าเริ่มต้นปรับสำหรับระยะเอื้อมมือแบบเดินอิสระ ควร Test แล้วปรับอีกทีตามความเหมาะสม")]
+        [Range(0.1f, 3.0f)]
+        [SerializeField] private float maxGripDistance = 1.2f;
 
         private static readonly RaycastHit[] raycastHitBuffer = new RaycastHit[16];
-        private bool isControllerActive = false;
         private IngredientInstance currentGrippedIngredient = null;
         private Rigidbody grippedRigidbody = null;
         private Camera cachedCamera = null;
@@ -73,49 +74,12 @@ namespace ProjectCook.Interaction
         private RigidbodyInterpolation originalInterpolation = RigidbodyInterpolation.None;
         private RigidbodyConstraints originalConstraints = RigidbodyConstraints.None;
 
-        public bool IsControllerActive => isControllerActive;
         public IngredientInstance CurrentGrippedIngredient => currentGrippedIngredient;
-
-        public void SetTargetCamera(Camera cam)
-        {
-            targetCamera = cam;
-        }
-
-        /// <summary>
-        /// เข้าใช้งานสถานี: ใช้กล้องประจำสถานีเป็นระนาบอ้างอิงแล้วเริ่มรับอินพุต (IStationModule)
-        /// </summary>
-        public void OnStationEnter(Camera stationCamera)
-        {
-            SetTargetCamera(stationCamera);
-            SetControllerActive(true);
-        }
-
-        /// <summary>
-        /// ออกจากสถานี: หยุดรับอินพุตและปล่อยวัตถุดิบที่คีบค้างอยู่ (IStationModule)
-        /// </summary>
-        public void OnStationExit()
-        {
-            SetControllerActive(false);
-        }
 
         private Camera GetEffectiveCamera()
         {
-            if (targetCamera != null) return targetCamera;
             if (cachedCamera == null) cachedCamera = Camera.main;
             return cachedCamera;
-        }
-
-        /// <summary>
-        /// เปิด/ปิด ระบบคีบลากวัตถุดิบ (ถูกสั่งจาก PanStation ตอนเข้า/ออกสถานีทำอาหาร)
-        /// หมายเหตุ: ไม่ต้องสั่งล็อกเคอร์เซอร์เอง เพราะสถานะเริ่มต้นของ CursorManager คือล็อกอยู่แล้ว
-        /// </summary>
-        public void SetControllerActive(bool active)
-        {
-            isControllerActive = active;
-            if (!active && currentGrippedIngredient != null)
-            {
-                ReleaseIngredient();
-            }
         }
 
         private void Awake()
@@ -128,8 +92,6 @@ namespace ProjectCook.Interaction
 
         private void Update()
         {
-            if (!isControllerActive) return;
-
             Camera cam = GetEffectiveCamera();
             if (cam == null) return;
 
@@ -162,7 +124,7 @@ namespace ProjectCook.Interaction
 
         private void FixedUpdate()
         {
-            if (!isControllerActive || currentGrippedIngredient == null) return;
+            if (currentGrippedIngredient == null) return;
 
             Camera cam = GetEffectiveCamera();
             if (cam == null) return;
@@ -248,6 +210,10 @@ namespace ProjectCook.Interaction
                 RaycastHit hit = raycastHitBuffer[i];
                 if (hit.collider == null) continue;
 
+                // เช็ค Tag ก่อนเป็นชั้นกรองแรก (ถูกและเร็วกว่า GetComponent) ป้องกันไม่ให้ไปคีบโดนวัตถุอื่น
+                // ที่ดันมาอยู่ Layer เดียวกันโดยไม่ตั้งใจ โดยเฉพาะตอนนี้ที่ระบบทำงานได้ทั่วทั้งฉากแล้ว
+                if (!string.IsNullOrEmpty(ingredientTag) && !hit.collider.CompareTag(ingredientTag)) continue;
+
                 IngredientInstance ingredient = hit.collider.GetComponentInParent<IngredientInstance>();
                 if (ingredient == null)
                 {
@@ -289,7 +255,9 @@ namespace ProjectCook.Interaction
                 }
 
                 // บันทึกระยะห่างความลึกคงที่ (Fixed Distance) ระหว่างกล้องกับจุดที่คลิกโดน
-                initialGripDistance = closestDistance;
+                // Clamp เข้าช่วง min/max ทันทีตอนคีบ (ไม่ใช่แค่ตอน Scroll) กันคีบของที่อยู่ไกลสุด Raycast
+                // แล้วโดนลากติดมือทันทีข้ามระยะทางไกลๆ ตอนนี้ใช้งานได้ทั่วฉากแล้วไม่ได้จำกัดแค่มุมกล้องสถานีระยะประชิดอีกต่อไป
+                initialGripDistance = Mathf.Clamp(closestDistance, minGripDistance, maxGripDistance);
             }
         }
 
