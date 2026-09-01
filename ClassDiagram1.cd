@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ProjectCook.CameraSystem.CameraManager">
+    <Position X="7.5" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAGAAACAAIgAAACACAAAAABAAACAAACAABAA=</HashCode>
+      <FileName>Assets\Scripts\Camera\CameraManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.CameraSystem.HeadBob">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAACAACAEAAAAAMAAQAAAAABAIAEAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Camera\HeadBob.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Control.PlayerMovement">
+    <Position X="4.75" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAgAAKAAAAEAAAQAAAAAACAAEAAoACRAACAACEA=</HashCode>
+      <FileName>Assets\Scripts\Control\PlayerMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.FoodContainer">
+    <Position X="18" Y="0.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="ProjectCook.Cooking.FoodContainer.FoodItemData">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Cooking\Containers\FoodContainer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAEBABAAAgAAAEAACAAAAAABBBAAIIAASAEAAAAgAEA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Containers\FoodContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.HeatingFoodContainer">
+    <Position X="15.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAABAAAAAAAAABAAAAAAACAAAAAgAAQA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Containers\HeatingFoodContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.PanFoodContainer">
+    <Position X="12.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAIAgAAAAAAAAAAAAAIAAAAAAAAAAAAEg=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Containers\PanFoodContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.IngredientDataSO">
+    <Position X="24.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACCBAQIgpQhSYAAIkAEAEIgAJBAIIAQgQQICIAECAgk=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Data\IngredientDataSO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.IngredientInstance">
+    <Position X="27" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAABlBQCUIAAAACIAADQEAAIABEIAAAwACBBC0A=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Ingredients\IngredientInstance.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.IngredientVisuals">
+    <Position X="29.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AhEBSAgAQAAAAAAEAIBECkIAgIAgBAAIAAAaSxAAYAI=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Ingredients\IngredientVisuals.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.ContainerContentPhysics">
+    <Position X="15.25" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAiAAAAAEAAAAAAhAAAAAAAIAAAAAAAAABEA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Modules\ContainerContentPhysics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.PanController" BaseTypeListCollapsed="true">
+    <Position X="3" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAYCLBAAGqAAMIAAAAgAQAAAIAAAIImJAgKAAAABCEA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Modules\PanController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ProjectCook.Cooking.CookingStation">
+    <Position X="8.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAABAAAAABAAAABAAAAQgIAAAAAAIAAIAIACECGA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Stations\CookingStation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ProjectCook.Cooking.PanStation">
+    <Position X="6.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Stations\PanStation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Cooking.ContainerAudioController">
+    <Position X="21.25" Y="0.5" Width="2.5" />
+    <NestedTypes>
+      <Struct Name="ProjectCook.Cooking.ContainerAudioController.ClipCount" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Cooking\ContainerAudioController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Class Name="ProjectCook.Cooking.ContainerAudioController.SizzleVoice" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Cooking\ContainerAudioController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ggQACAAgABAAAgAQBABAAIABKFQAACIIACAAAAgACEA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\ContainerAudioController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Core.CursorManager">
+    <Position X="16" Y="13" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAEAgAABABAAAAAAAEAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Core\CursorManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Core.GameStateManager">
+    <Position X="19.25" Y="13" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAEAAAAAAAAAgAAACAAAAAAAAAAAQAgQ=</HashCode>
+      <FileName>Assets\Scripts\Core\GameStateManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Core.PersistentSingleton&lt;T&gt;">
+    <Position X="17.5" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABABAAAAAAAAAAAAAAAAABAABAAAAAQAAAAgAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Core\PersistentSingleton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Core.SceneSingleton&lt;T&gt;">
+    <Position X="10.25" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAgAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Core\SceneSingleton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.Conditions.DialogueConditionSO">
+    <Position X="22.75" Y="11.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\Conditions\DialogueConditionSO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.Conditions.DialogueConditionUtility">
+    <Position X="28.75" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\Conditions\DialogueConditionUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.Conditions.GameFlagConditionSO">
+    <Position X="22.5" Y="13.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQCAAIAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\Conditions\GameFlagConditionSO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.ConditionalDialogueEntry">
+    <Position X="31.75" Y="13.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQYAAAAAAQAEAAAQAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\ConditionalDialogueEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.DialogueChoice">
+    <Position X="29.75" Y="13.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QAQQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAABAACAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\DialogueChoice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.DialogueDataSO">
+    <Position X="25.25" Y="13.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAQAAAAAgEAAIAAAIAAAAAIAAKAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\DialogueDataSO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.DialogueDataDTO">
+    <Position X="25.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAIAAAAAIAAIAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\DialogueDataSO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.DialogueManager">
+    <Position X="13.25" Y="9.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQVAAAggA0gACAAAAgEAAAiEAAAQhBAIYAFCAAMECAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\DialogueManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.DialogueNode">
+    <Position X="27.5" Y="13.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQCAAAgAAAEAACAAAAAAAAAAAAAAAAgQAAIAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\DialogueNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Dialogue.DialogueParser">
+    <Position X="27" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Dialogue\DialogueParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Interaction.IngredientDragController">
+    <Position X="0.5" Y="12" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AERAIAwCAkYEIAgCBAgAIAgAAgEAIASBABCIAEAgAWg=</HashCode>
+      <FileName>Assets\Scripts\Interaction\IngredientDragController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.Interaction.PlayerInteractor">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACIAAACBAIACEAEAABAAAAAIAAAAAhAACAA=</HashCode>
+      <FileName>Assets\Scripts\Interaction\PlayerInteractor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCook.NPC.NPCController" BaseTypeListCollapsed="true">
+    <Position X="10" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkAAAAAAEAIAAAAEAgBAACKAAAAIAQAAAAAAAAABA=</HashCode>
+      <FileName>Assets\Scripts\NPC\NPCController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ProjectCook.UI.CenterDotUI">
+    <Position X="2.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAAAAEQCAAQAgAAAAAAAAAAAAAAAEAAAAAAAAUAAg=</HashCode>
+      <FileName>Assets\Scripts\UI\CenterDotUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ProjectCook.Interaction.IInteractable">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Interaction\IInteractable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ProjectCook.Interaction.IStationModule">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Interaction\IStationModule.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ProjectCook.NPC.INPCActionHandler">
+    <Position X="2.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\NPC\INPCActionHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ProjectCook.CameraSystem.CameraState">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Camera\CameraState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ProjectCook.Cooking.CookingSide">
+    <Position X="2.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Data\CookingSide.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ProjectCook.Cooking.CookingState">
+    <Position X="4" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAEIAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Cooking\Data\CookingState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ProjectCook.Core.FlagComparison">
+    <Position X="5.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAQRAACA=</HashCode>
+      <FileName>Assets\Scripts\Core\GameStateManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
