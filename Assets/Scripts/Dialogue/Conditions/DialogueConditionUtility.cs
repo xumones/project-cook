@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using UnityEngine;
+using ProjectCook.Core;
 
 namespace ProjectCook.Dialogue.Conditions
 {
     /// <summary>
-    /// Utility Class สำหรับตรวจสอบรายการเงื่อนไข DialogueConditionSO แบบรวมศูนย์
-    /// (ใช้ร่วมกันระหว่าง DialogueChoice และ ConditionalDialogueEntry เพื่อไม่ให้ Logic ซ้ำกัน)
+    /// Utility Class สำหรับตรวจสอบเงื่อนไขบทสนทนาแบบรวมศูนย์
+    /// (ใช้ร่วมกันระหว่าง DialogueChoice, ConditionalDialogueEntry และ GameFlagConditionSO เพื่อไม่ให้ Logic ซ้ำกัน)
     /// </summary>
     public static class DialogueConditionUtility
     {
@@ -24,6 +26,21 @@ namespace ProjectCook.Dialogue.Conditions
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// จุดเช็คเดียวสำหรับ Game Flag ทั้งหมด: ใช้ทั้งจากช่อง conditionFlag (string ด่วนสำหรับ JSON)
+        /// และจาก GameFlagConditionSO (asset) เพื่อไม่ให้มีสองเส้นทางที่ยิงเข้า GameStateManager แยกกัน
+        /// </summary>
+        public static bool IsFlagMet(string flagKey, FlagComparison comparison, int targetValue)
+        {
+            if (GameStateManager.Instance == null)
+            {
+                Debug.LogWarning("[DialogueConditionUtility] ไม่พบ GameStateManager ใน Scene!");
+                return false;
+            }
+
+            return GameStateManager.Instance.CheckFlag(flagKey, comparison, targetValue);
         }
     }
 }

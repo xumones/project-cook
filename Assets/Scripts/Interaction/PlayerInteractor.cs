@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ProjectCook.Dialogue;
 
 namespace ProjectCook.Interaction
 {
@@ -63,7 +64,21 @@ namespace ProjectCook.Interaction
             // 1. ยิง Raycast ตรวจจับวัตถุตรงหน้าทุกเฟรม
             PerformRaycastDetection();
 
-            // 2. ถ้ามีวัตถุที่มองอยู่ และผู้เล่นกดปุ่ม E ให้เรียกคำสั่ง Interact()
+            if (DialogueManager.Instance != null)
+            {
+                // ระหว่างที่กำลังคุยบทสนทนาอยู่ ปุ่ม E ถูกใช้เป็นปุ่มเดินหน้า/ยืนยันคำตอบของ DialogueManager แล้ว
+                if (DialogueManager.Instance.IsDialogueActive)
+                {
+                    return;
+                }
+
+                // เฟรมที่บทสนทนาเพิ่งจบ ปุ่ม E ที่กดปิดบทสนทนาไปยัง wasPressedThisFrame == true อยู่
+                if (Time.frameCount == DialogueManager.Instance.LastDialogueEndFrame)
+                {
+                    return;
+                }
+            }
+
             if (WasInteractPressed() && currentTarget != null)
             {
                 currentTarget.Interact(this);

@@ -38,6 +38,14 @@ namespace ProjectCook.Control
             if (!active)
             {
                 velocity = Vector3.zero;
+
+                // CharacterController.velocity สะท้อนการขยับจากการเรียก Move() ครั้งล่าสุดเท่านั้น
+                // ถ้าหยุดเรียก Move() กลางคันตอนผู้เล่นกำลังเดินอยู่ ค่านี้จะค้างไม่เป็นศูนย์ไปเรื่อยๆ
+                // (ทำให้ระบบอื่นที่อ่านค่านี้ เช่น HeadBob เข้าใจผิดว่ายังเดินอยู่) เลยต้อง Move(zero) เพื่อรีเซ็ตค่าทันที
+                if (controller != null)
+                {
+                    controller.Move(Vector3.zero);
+                }
             }
         }
 

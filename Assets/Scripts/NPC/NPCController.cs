@@ -104,7 +104,7 @@ namespace ProjectCook.NPC
             {
                 if (cachedDefaultJsonDialogue == null)
                 {
-                    cachedDefaultJsonDialogue = DialogueParser.ParseTextAsset(defaultJsonDialogue);
+                    cachedDefaultJsonDialogue = DialogueDataSO.FromTextAsset(defaultJsonDialogue);
                 }
                 return cachedDefaultJsonDialogue;
             }

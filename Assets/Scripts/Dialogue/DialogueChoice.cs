@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectCook.Core;
 using ProjectCook.Dialogue.Conditions;
 
 namespace ProjectCook.Dialogue
@@ -28,18 +29,13 @@ namespace ProjectCook.Dialogue
         /// <summary>
         /// เช็คว่าเงื่อนไขทุกข้อของตัวเลือกนี้ผ่านหรือไม่
         /// </summary>
-public bool AreConditionsMet()
+        public bool AreConditionsMet()
         {
-            // 1. เช็ค conditionFlag แบบง่าย (ถ้ามีระบุไว้)
-            if (!string.IsNullOrEmpty(conditionFlag))
+            // 1. เช็ค conditionFlag แบบง่าย (ถ้ามีระบุไว้) ผ่านจุดเช็คเดียวกับ GameFlagConditionSO
+            // (เทียบเท่า flag > 0 แบบเดิม แต่ยิงผ่าน DialogueConditionUtility.IsFlagMet ที่เดียว)
+            if (!string.IsNullOrEmpty(conditionFlag) && !DialogueConditionUtility.IsFlagMet(conditionFlag, FlagComparison.GreaterThan, 0))
             {
-                if (ProjectCook.Core.GameStateManager.Instance != null)
-                {
-                    if (ProjectCook.Core.GameStateManager.Instance.GetFlag(conditionFlag) <= 0)
-                    {
-                        return false;
-                    }
-                }
+                return false;
             }
 
             // 2. เช็ค ScriptableObject conditions (ถ้ามีระบุไว้) ผ่าน Utility กลาง

@@ -20,20 +20,20 @@
       "choices": [
         {
           "choiceText": "this is first answer (function)",
-          "nextNodeID": "end_shop",
-          "actionID": "OPEN_SHOP",
+          "nextNodeID": "end_give",
+          "actionID": "GIVE_ITEM",
           "conditionFlag": ""
         },
         {
           "choiceText": "this is second answer (exit)",
           "nextNodeID": "end_close",
-          "actionID": "CLOSE",
+          "actionID": "",
           "conditionFlag": ""
         }
       ]
     },
     {
-      "nodeID": "end_shop",
+      "nodeID": "end_give",
       "speakerNameOverride": "System",
       "dialogueText": "start function",
       "audioEvent": "",

@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 using ProjectCook.NPC;
 using ProjectCook.Control;
 using ProjectCook.Core;
+using ProjectCook.CameraSystem;
 using ProjectCook.Dialogue.UI;
 
 namespace ProjectCook.Dialogue
@@ -20,6 +21,8 @@ namespace ProjectCook.Dialogue
 
         [Header("Input Settings")]
         [SerializeField] private InputActionReference advanceAction; // ปุ่มกดไปต่อ (เช่น E/Space/Click)
+        [SerializeField] private InputActionReference navigateAction; // เลื่อนตัวเลือกคำตอบขึ้น/ลง (UI/Navigate: W/S)
+        [SerializeField] private InputActionReference submitAction; // ยืนยันตัวเลือกคำตอบที่ไฮไลต์อยู่ (UI/Submit: E)
 
         [Header("UI Reference")]
         [FormerlySerializedAs("dialogUI")]
@@ -38,29 +41,41 @@ namespace ProjectCook.Dialogue
         private bool isTyping = false;
         private bool isWaitingForChoice = false;
 
-        // เฟรมล่าสุดที่ผู้เล่นกดเลือกคำตอบบน UI
-        // ใช้กันคลิกเดียวถูกนับซ้ำเป็น "กดไปต่อ" ในเฟรมเดียวกัน เพราะ wasPressedThisFrame ยังเป็น true ทั้งเฟรม
-        private int lastChoiceSelectedFrame = -1;
+        // ตัวเลือกคำตอบที่ผ่านเงื่อนไขของโหนดปัจจุบัน และ index ที่กำลังไฮไลต์อยู่ (-1 = ยังไม่ได้เลือก ต้องกด W/S ก่อน)
+        private readonly List<DialogueChoice> currentChoices = new List<DialogueChoice>();
+        private int selectedChoiceIndex = -1;
+
+        // เฟรมล่าสุดที่บทสนทนาเพิ่งจบลง (EndDialogue) ใช้กันปุ่ม E เดียวกันที่เพิ่งปิดบทสนทนา
+        // ถูกตีความเป็น Interact() ใหม่ซ้ำในเฟรมเดียวกัน (ดู PlayerInteractor.Update)
+        private int lastDialogueEndFrame = -1;
 
         public bool IsDialogueActive => isDialogueActive;
         public bool IsTyping => isTyping;
+        public int LastDialogueEndFrame => lastDialogueEndFrame;
 
         private void OnEnable()
         {
             advanceAction?.action?.Enable();
+            navigateAction?.action?.Enable();
+            submitAction?.action?.Enable();
         }
 
         private void OnDisable()
         {
             advanceAction?.action?.Disable();
+            navigateAction?.action?.Disable();
+            submitAction?.action?.Disable();
         }
 
         private void Update()
         {
-            if (!isDialogueActive || isWaitingForChoice) return;
+            if (!isDialogueActive) return;
 
-            // ข้ามเฟรมที่เพิ่งกดเลือกคำตอบไป เพื่อไม่ให้คลิกเดียวทั้งเลือกคำตอบและข้ามข้อความบรรทัดถัดไปรวดเดียว
-            if (Time.frameCount == lastChoiceSelectedFrame) return;
+            if (isWaitingForChoice)
+            {
+                HandleChoiceInput();
+                return;
+            }
 
             // ตรวจสอบการกดปุ่มเปลี่ยนบรรทัด/ข้ามข้อความ
             if (WasAdvancePressed())
@@ -75,7 +90,7 @@ namespace ProjectCook.Dialogue
         public void StartDialogue(NPCController npc, TextAsset jsonAsset)
         {
             if (jsonAsset == null) return;
-            DialogueDataSO data = DialogueParser.ParseTextAsset(jsonAsset);
+            DialogueDataSO data = DialogueDataSO.FromTextAsset(jsonAsset);
             if (data != null)
             {
                 StartDialogue(npc, data);
@@ -93,8 +108,14 @@ namespace ProjectCook.Dialogue
             currentDialogueData = dialogueData;
             isDialogueActive = true;
 
-            // 1. หยุดการเคลื่อนที่ของผู้เล่นและปลดล็อกเคอร์เซอร์เมาส์
+            // 1. หยุดการเคลื่อนที่ของผู้เล่น (เคอร์เซอร์ยังคงล็อกอยู่ เพื่อให้เมาส์ใช้หมุนกล้องได้ตามข้อ 1)
             SetPlayerControl(false);
+
+            // 1.1 เข้าโหมดกล้องบทสนทนา: หมุนได้แต่จำกัดมุมรอบทิศที่กล้องเล็งอยู่ตอนนี้ (คล้าย PanStation)
+            if (CameraManager.Instance != null)
+            {
+                CameraManager.Instance.SwitchToDialogue();
+            }
 
             // 2. แสดงผล UI หน้าต่างบทสนทนา
             if (dialogueUI != null)
@@ -128,6 +149,8 @@ namespace ProjectCook.Dialogue
 
             currentNode = node;
             isWaitingForChoice = false;
+            currentChoices.Clear();
+            selectedChoiceIndex = -1;
 
             if (dialogueUI != null)
             {
@@ -206,19 +229,21 @@ namespace ProjectCook.Dialogue
             if (currentNode == null || dialogueUI == null) return;
 
             // คัดกรองเฉพาะตัวเลือกที่ผ่านเงื่อนไข
-            List<DialogueChoice> validChoices = new List<DialogueChoice>();
+            currentChoices.Clear();
             foreach (var choice in currentNode.choices)
             {
                 if (choice != null && choice.AreConditionsMet())
                 {
-                    validChoices.Add(choice);
+                    currentChoices.Add(choice);
                 }
             }
 
-            if (validChoices.Count > 0)
+            if (currentChoices.Count > 0)
             {
                 isWaitingForChoice = true;
-                dialogueUI.DisplayChoices(validChoices, SelectChoice);
+                // ยังไม่ auto-select คำตอบแรก ต้องรอผู้เล่นกด W/S ก่อนถึงจะมีไฮไลต์ขึ้นมา
+                selectedChoiceIndex = -1;
+                dialogueUI.DisplayChoices(currentChoices);
             }
             else
             {
@@ -228,14 +253,52 @@ namespace ProjectCook.Dialogue
         }
 
         /// <summary>
-        /// ถูกเรียกเมื่อผู้เล่นคลิกเลือกตัวเลือกคำตอบบน UI
+        /// อ่าน Input W (ขึ้น) / S (ลง) / E (ยืนยัน) ระหว่างที่กำลังรอผู้เล่นเลือกคำตอบอยู่
         /// </summary>
-        public void SelectChoice(DialogueChoice choice)
+        private void HandleChoiceInput()
+        {
+            int direction = ReadNavigateDirection();
+            if (direction != 0)
+            {
+                MoveChoiceSelection(direction);
+            }
+
+            // ต้องเลื่อนไฮไลต์ไปเจอคำตอบก่อน (กด W หรือ S อย่างน้อยหนึ่งครั้ง) ถึงจะกด E ยืนยันได้
+            if (selectedChoiceIndex >= 0 && WasSubmitPressed())
+            {
+                ConfirmSelectedChoice();
+            }
+        }
+
+        private void MoveChoiceSelection(int direction)
+        {
+            if (currentChoices.Count == 0) return;
+
+            // กด W หรือ S ครั้งแรกแค่เริ่มไฮไลต์ที่ตัวบนสุด ยังไม่เลื่อนตามทิศทาง
+            selectedChoiceIndex = selectedChoiceIndex < 0
+                ? 0
+                : Mathf.Clamp(selectedChoiceIndex - direction, 0, currentChoices.Count - 1);
+
+            if (dialogueUI != null)
+            {
+                dialogueUI.SetHighlightedIndex(selectedChoiceIndex);
+            }
+        }
+
+        private void ConfirmSelectedChoice()
+        {
+            if (selectedChoiceIndex < 0 || selectedChoiceIndex >= currentChoices.Count) return;
+            SelectChoice(currentChoices[selectedChoiceIndex]);
+        }
+
+        /// <summary>
+        /// ประมวลผลเมื่อผู้เล่นยืนยันเลือกตัวเลือกคำตอบ
+        /// </summary>
+        private void SelectChoice(DialogueChoice choice)
         {
             if (choice == null) return;
 
             isWaitingForChoice = false;
-            lastChoiceSelectedFrame = Time.frameCount;
 
             if (dialogueUI != null)
             {
@@ -309,6 +372,9 @@ namespace ProjectCook.Dialogue
             isDialogueActive = false;
             isTyping = false;
             isWaitingForChoice = false;
+            currentChoices.Clear();
+            selectedChoiceIndex = -1;
+            lastDialogueEndFrame = Time.frameCount;
 
             if (typingCoroutine != null)
             {
@@ -320,8 +386,14 @@ namespace ProjectCook.Dialogue
                 dialogueUI.HideUI();
             }
 
-            // คืนค่าการเคลื่อนที่และล็อกเคอร์เซอร์กลับให้ผู้เล่น
+            // คืนค่าการเคลื่อนที่ให้ผู้เล่น
             SetPlayerControl(true);
+
+            // ออกจากโหมดกล้องบทสนทนา คืนขอบเขตการหมุนกล้องผู้เล่นกลับเป็นค่าเดิม
+            if (CameraManager.Instance != null)
+            {
+                CameraManager.Instance.ExitDialogue();
+            }
 
             if (currentNPC != null)
             {
@@ -340,17 +412,6 @@ namespace ProjectCook.Dialogue
             {
                 player.SetControlActive(enableControl);
             }
-
-            // ขอ/คืนสิทธิ์การใช้ตัวชี้เมาส์ผ่าน CursorManager แทนการสั่ง Cursor ตรงๆ
-            // เพื่อไม่ให้แย่งสถานะกับระบบอื่น (เช่น ระบบคีบวัตถุดิบในโหมดทำอาหาร)
-            if (enableControl)
-            {
-                CursorManager.ReleaseUnlock(this);
-            }
-            else
-            {
-                CursorManager.RequestUnlock(this);
-            }
         }
 
         private bool WasAdvancePressed()
@@ -359,12 +420,45 @@ namespace ProjectCook.Dialogue
             {
                 if (advanceAction.action.WasPressedThisFrame()) return true;
             }
-            
+
             bool ePressed = Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
             bool spacePressed = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
             bool mousePressed = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
 
             return ePressed || spacePressed || mousePressed;
+        }
+
+        /// <summary>
+        /// อ่านทิศทางเลื่อนไฮไลต์คำตอบ: 1 = ขึ้น (W), -1 = ลง (S), 0 = ไม่ได้กด
+        /// เช็คปุ่ม W/S ตรงๆ ก่อน (กันการกดค้างแล้วเลื่อนรัว เพราะ wasPressedThisFrame ติดครั้งเดียวต่อการกด)
+        /// แล้วค่อยรองรับ Gamepad/Joystick ผ่าน UI/Navigate action เป็นทางเลือกเสริม
+        /// </summary>
+        private int ReadNavigateDirection()
+        {
+            if (Keyboard.current != null)
+            {
+                if (Keyboard.current.wKey.wasPressedThisFrame) return 1;
+                if (Keyboard.current.sKey.wasPressedThisFrame) return -1;
+            }
+
+            if (navigateAction?.action != null && navigateAction.action.enabled && navigateAction.action.WasPerformedThisFrame())
+            {
+                float y = navigateAction.action.ReadValue<Vector2>().y;
+                if (y > 0.5f) return 1;
+                if (y < -0.5f) return -1;
+            }
+
+            return 0;
+        }
+
+        private bool WasSubmitPressed()
+        {
+            if (submitAction?.action != null && submitAction.action.enabled && submitAction.action.WasPressedThisFrame())
+            {
+                return true;
+            }
+
+            return Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
         }
     }
 }

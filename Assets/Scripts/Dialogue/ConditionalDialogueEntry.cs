@@ -40,7 +40,7 @@ namespace ProjectCook.Dialogue
             {
                 if (cachedJsonDialogue == null)
                 {
-                    cachedJsonDialogue = DialogueParser.ParseTextAsset(jsonFile);
+                    cachedJsonDialogue = DialogueDataSO.FromTextAsset(jsonFile);
                 }
                 return cachedJsonDialogue;
             }

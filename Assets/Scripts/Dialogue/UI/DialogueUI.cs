@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,8 +25,19 @@ namespace ProjectCook.Dialogue.UI
         [SerializeField] private Transform choiceButtonContainer;
         [SerializeField] private GameObject choiceButtonPrefab;
 
+        [Header("Choice Highlight")]
+        [Tooltip("สีข้อความตัวเลือกปกติที่ยังไม่ถูกไฮไลต์")]
+        [SerializeField] private Color normalChoiceColor = Color.black;
+        [Tooltip("สีข้อความตัวเลือกที่กำลังไฮไลต์อยู่ (เลื่อนด้วย W/S)")]
+        [SerializeField] private Color highlightedChoiceColor = Color.yellow;
+        [Tooltip("ข้อความนำหน้าตัวเลือกที่กำลังไฮไลต์อยู่")]
+        [SerializeField] private string highlightedPrefix = "> ";
+
         // Choice Button Pool สำหรับบริหารจัดการปุ่มตัวเลือกโดยไม่ต้อง Instantiates ใหม่ทุกครั้ง (Zero GC Leak)
         private List<GameObject> buttonPool = new List<GameObject>();
+
+        // ข้อความดิบของแต่ละตัวเลือก (ไม่รวม prefix ไฮไลต์) เก็บไว้ใช้สร้างข้อความใหม่ตอนสลับไฮไลต์
+        private List<string> choiceBaseTexts = new List<string>();
 
         private void Awake()
         {
@@ -129,9 +139,9 @@ namespace ProjectCook.Dialogue.UI
         }
 
         /// <summary>
-        /// แสดงผลปุ่มตัวเลือกคำตอบแบบ Dynamic
+        /// แสดงผลปุ่มตัวเลือกคำตอบแบบ Dynamic (เลือกด้วย W/S/E ผ่าน DialogueManager ไม่ใช้เมาส์คลิกแล้ว)
         /// </summary>
-        public void DisplayChoices(List<DialogueChoice> choices, Action<DialogueChoice> onChoiceSelected)
+        public void DisplayChoices(List<DialogueChoice> choices)
         {
             HideChoices();
 
@@ -148,27 +158,37 @@ namespace ProjectCook.Dialogue.UI
             for (int i = 0; i < choices.Count; i++)
             {
                 DialogueChoice choice = choices[i];
-                GameObject btnObj = GetChoiceButtonFromPool(i);
+                string baseText = $"{i + 1}. {choice.choiceText}";
+                choiceBaseTexts.Add(baseText);
 
+                GameObject btnObj = GetChoiceButtonFromPool(i);
                 btnObj.SetActive(true);
 
-                // ตั้งค่าข้อความบนปุ่ม
                 TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 if (btnText != null)
                 {
-                    btnText.text = $"{i + 1}. {choice.choiceText}";
+                    btnText.text = baseText;
+                    btnText.color = normalChoiceColor;
                 }
+            }
+        }
 
-                // ผูก Event ปุ่มกด
-                Button btn = btnObj.GetComponent<Button>();
-                if (btn != null)
-                {
-                    btn.onClick.RemoveAllListeners();
-                    btn.onClick.AddListener(() =>
-                    {
-                        onChoiceSelected?.Invoke(choice);
-                    });
-                }
+        /// <summary>
+        /// ไฮไลต์ตัวเลือกคำตอบที่ index ที่ระบุ (ส่ง -1 เพื่อยกเลิกไฮไลต์ทั้งหมด)
+        /// </summary>
+        public void SetHighlightedIndex(int highlightedIndex)
+        {
+            for (int i = 0; i < choiceBaseTexts.Count && i < buttonPool.Count; i++)
+            {
+                GameObject btnObj = buttonPool[i];
+                if (btnObj == null) continue;
+
+                TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
+                if (btnText == null) continue;
+
+                bool isHighlighted = i == highlightedIndex;
+                btnText.text = isHighlighted ? highlightedPrefix + choiceBaseTexts[i] : choiceBaseTexts[i];
+                btnText.color = isHighlighted ? highlightedChoiceColor : normalChoiceColor;
             }
         }
 
@@ -184,6 +204,7 @@ namespace ProjectCook.Dialogue.UI
                     btnObj.SetActive(false);
                 }
             }
+            choiceBaseTexts.Clear();
 
             if (continuePrompt != null)
             {

@@ -38,6 +38,18 @@ namespace ProjectCook.Cooking
         protected virtual void Awake()
         {
             CollectModules();
+
+            // ค่าที่ Save ไว้ใน Scene ของกล้องสถานีจะเป็น enabled เสมอ ปิด Input ไว้ก่อนตั้งแต่เริ่มเกม
+            // กันไม่ให้มันแอบอ่าน mouse look อยู่เงียบๆ ทั้งที่ยังไม่เคยเข้าใช้งานสถานีนี้เลยสักครั้ง
+            // (ปกติ CameraManager.SwitchToFirstPerson เป็นคนปิดให้ตอนออกจากสถานี แต่รอบแรกยังไม่เคยเข้าจึงไม่เคยถูกปิด)
+            if (stationCamera != null)
+            {
+                var stationInput = stationCamera.GetComponent<CinemachineInputAxisController>();
+                if (stationInput != null)
+                {
+                    stationInput.enabled = false;
+                }
+            }
         }
 
         /// <summary>

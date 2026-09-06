@@ -120,6 +120,64 @@ namespace ProjectCook.Dialogue
             }
             return false;
         }
+
+        /// <summary>
+        /// ส่งออกข้อมูลของ ScriptableObject นี้ให้กลายเป็นข้อความ JSON String สำหรับบันทึกลงไฟล์
+        /// </summary>
+        public string ToJson(bool prettyPrint = true)
+        {
+            DialogueDataDTO dto = new DialogueDataDTO
+            {
+                dialogID = dialogID,
+                defaultSpeakerName = defaultSpeakerName,
+                startNodeID = startNodeID,
+                nodes = nodes
+            };
+
+            return JsonUtility.ToJson(dto, prettyPrint);
+        }
+
+        /// <summary>
+        /// สร้าง DialogueDataSO Instance ใหม่ในความจำจากข้อความ JSON String
+        /// </summary>
+        public static DialogueDataSO FromJson(string jsonText)
+        {
+            if (string.IsNullOrEmpty(jsonText))
+            {
+                Debug.LogWarning("[DialogueDataSO] ข้อความ JSON ว่างเปล่า ไม่สามารถ Parse ได้");
+                return null;
+            }
+
+            DialogueDataSO dialogueData = CreateInstance<DialogueDataSO>();
+            bool success = dialogueData.PopulateFromJson(jsonText);
+            if (!success)
+            {
+                Destroy(dialogueData);
+                return null;
+            }
+
+            return dialogueData;
+        }
+
+        /// <summary>
+        /// สร้าง DialogueDataSO Instance ใหม่จากไฟล์ TextAsset (JSON)
+        /// </summary>
+        public static DialogueDataSO FromTextAsset(TextAsset jsonAsset)
+        {
+            if (jsonAsset == null)
+            {
+                Debug.LogWarning("[DialogueDataSO] jsonAsset เป็น null ไม่สามารถ Parse ได้");
+                return null;
+            }
+
+            DialogueDataSO dialogueData = FromJson(jsonAsset.text);
+            if (dialogueData != null && string.IsNullOrEmpty(dialogueData.dialogID))
+            {
+                dialogueData.dialogID = jsonAsset.name;
+            }
+
+            return dialogueData;
+        }
     }
 
     /// <summary>

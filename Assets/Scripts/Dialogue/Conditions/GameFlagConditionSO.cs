@@ -3,6 +3,8 @@ using ProjectCook.Core;
 
 namespace ProjectCook.Dialogue.Conditions
 {
+    // ทำหน้าที่เป็นแค่ตัวหุ้ม flagKey/comparison/targetValue ให้เลือกได้จาก Inspector
+    // ตรรกะการเช็คจริงอยู่ที่ DialogueConditionUtility.IsFlagMet ที่เดียว (ใช้ร่วมกับ DialogueChoice.conditionFlag)
     /// <summary>
     /// ScriptableObject สำหรับตรวจสอบเงื่อนไขความก้าวหน้าในเกมจาก GameStateManager
     /// </summary>
@@ -20,13 +22,7 @@ namespace ProjectCook.Dialogue.Conditions
 
         public override bool IsMet()
         {
-            if (GameStateManager.Instance == null)
-            {
-                Debug.LogWarning("[GameFlagConditionSO] ไม่พบ GameStateManager ใน Scene!");
-                return false;
-            }
-
-            return GameStateManager.Instance.CheckFlag(flagKey, comparison, targetValue);
+            return DialogueConditionUtility.IsFlagMet(flagKey, comparison, targetValue);
         }
     }
 }

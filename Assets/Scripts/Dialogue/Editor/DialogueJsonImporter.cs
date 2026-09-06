@@ -27,24 +27,24 @@ namespace ProjectCook.Dialogue.Editor
                 return;
             }
 
-            DialogueDataSO DialogueDataSO = DialogueParser.ParseTextAsset(textAsset);
-            if (DialogueDataSO == null)
+            DialogueDataSO dialogueDataSO = DialogueDataSO.FromTextAsset(textAsset);
+            if (dialogueDataSO == null)
             {
                 EditorUtility.DisplayDialog("Import Dialogue JSON", "เกิดข้อผิดพลาดในการ Parse ไฟล์ JSON กรุณาเช็คโครงสร้างไฟล์", "ตกลง");
                 return;
             }
 
             string dirPath = Path.GetDirectoryName(assetPath);
-            string assetName = string.IsNullOrEmpty(DialogueDataSO.dialogID) ? textAsset.name : DialogueDataSO.dialogID;
+            string assetName = string.IsNullOrEmpty(dialogueDataSO.dialogID) ? textAsset.name : dialogueDataSO.dialogID;
             string targetPath = Path.Combine(dirPath, $"{assetName}_Data.asset");
             targetPath = AssetDatabase.GenerateUniqueAssetPath(targetPath);
 
-            AssetDatabase.CreateAsset(DialogueDataSO, targetPath);
+            AssetDatabase.CreateAsset(dialogueDataSO, targetPath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
             EditorUtility.FocusProjectWindow();
-            Selection.activeObject = DialogueDataSO;
+            Selection.activeObject = dialogueDataSO;
 
             Debug.Log($"[DialogueJsonImporter] สร้าง DialogueDataSO Asset สำเร็จที่: {targetPath}");
         }

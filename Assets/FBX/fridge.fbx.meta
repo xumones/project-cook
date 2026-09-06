@@ -23,17 +23,17 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: fridge-body
-    second: {fileID: 2800000, guid: e37d62d8bd4ee1542a2ed3889fc784cc, type: 3}
+    second: {fileID: 2800000, guid: d39b62daf0e77c442a60a1f737292251, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: fridge-door
-    second: {fileID: 2800000, guid: 7b49a539aba14f745bd3bf5602e43866, type: 3}
+    second: {fileID: 2800000, guid: 8b6034f32ff7b2c41828bb7391366e97, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: fridge-handle
-    second: {fileID: 2800000, guid: fa6c1f91bf5ddc54097d5066926ab253, type: 3}
+    second: {fileID: 2800000, guid: 2a11eff3514ce894d8c7a50b7aed11b1, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

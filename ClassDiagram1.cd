@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="ProjectCook.CameraSystem.CameraManager">
-    <Position X="7.5" Y="9.25" Width="2" />
+    <Position X="14" Y="11.25" Width="2" />
     <TypeIdentifier>
       <HashCode>BAAAAAAAAGAAACAAIgAAACACAAAAABAAACAAACAABAA=</HashCode>
       <FileName>Assets\Scripts\Camera\CameraManager.cs</FileName>
@@ -123,35 +123,35 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Core.CursorManager">
-    <Position X="16" Y="13" Width="2" />
+    <Position X="7.75" Y="15" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAQAAAAAAAAAAAAAAEAgAABABAAAAAAAEAAAEA=</HashCode>
       <FileName>Assets\Scripts\Core\CursorManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Core.GameStateManager">
-    <Position X="19.25" Y="13" Width="2.25" />
+    <Position X="11" Y="15" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAAAAAEAAAAAAAAAgAAACAAAAAAAAAAAQAgQ=</HashCode>
       <FileName>Assets\Scripts\Core\GameStateManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Core.PersistentSingleton&lt;T&gt;">
-    <Position X="17.5" Y="9.25" Width="2" />
+    <Position X="9.25" Y="11.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAABABAAAAAAAAAAAAAAAAABAABAAAAAQAAAAgAAAEA=</HashCode>
       <FileName>Assets\Scripts\Core\PersistentSingleton.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Core.SceneSingleton&lt;T&gt;">
-    <Position X="10.25" Y="9.25" Width="2" />
+    <Position X="16.75" Y="11.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAgAAAEA=</HashCode>
       <FileName>Assets\Scripts\Core\SceneSingleton.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.Conditions.DialogueConditionSO">
-    <Position X="22.75" Y="11.25" Width="2" />
+    <Position X="22.5" Y="14.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\Conditions\DialogueConditionSO.cs</FileName>
@@ -160,35 +160,35 @@
   <Class Name="ProjectCook.Dialogue.Conditions.DialogueConditionUtility">
     <Position X="28.75" Y="11.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\Conditions\DialogueConditionUtility.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.Conditions.GameFlagConditionSO">
-    <Position X="22.5" Y="13.25" Width="2.5" />
+    <Position X="22.5" Y="16.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQCAAIAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\Conditions\GameFlagConditionSO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.ConditionalDialogueEntry">
-    <Position X="31.75" Y="13.25" Width="2.25" />
+    <Position X="29.5" Y="13.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAQYAAAAAAQAEAAAQAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\ConditionalDialogueEntry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.DialogueChoice">
-    <Position X="29.75" Y="13.25" Width="1.75" />
+    <Position X="27.5" Y="13.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>QAQQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAABAACAAAAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\DialogueChoice.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.DialogueDataSO">
-    <Position X="25.25" Y="13.25" Width="2" />
+    <Position X="22.5" Y="11.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAABAAAAAAAAAAQAAAAAgEAAIAAAIAAAAAIAAKAA=</HashCode>
+      <HashCode>AAAAACBAAAAAAAAAAQAAAAAgEAAIAAAIIAAAAIAAKAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\DialogueDataSO.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -200,14 +200,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.DialogueManager">
-    <Position X="13.25" Y="9.25" Width="2.5" />
+    <Position X="19.75" Y="11.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AQVAAAggA0gACAAAAgEAAAiEAAAQhBAIYAFCAAMECAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\DialogueManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ProjectCook.Dialogue.DialogueNode">
-    <Position X="27.5" Y="13.25" Width="2" />
+    <Position X="25.25" Y="13.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAQCAAAgAAAEAACAAAAAAAAAAAAAAAAgQAAIAEAAAAA=</HashCode>
       <FileName>Assets\Scripts\Dialogue\DialogueNode.cs</FileName>

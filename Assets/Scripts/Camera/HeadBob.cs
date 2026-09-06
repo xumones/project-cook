@@ -1,4 +1,5 @@
 using UnityEngine;
+using ProjectCook.Control;
 
 namespace ProjectCook.CameraSystem
 {
@@ -19,6 +20,7 @@ namespace ProjectCook.CameraSystem
         [SerializeField] private CharacterController controller; // อ้างอิง CharacterController เพื่อเช็คความเร็วและสถานะติดพื้น
         [SerializeField] private Transform headTransform;       // Transform ของ Head Anchor ที่ต้องการให้ขยับไหว
 
+        private PlayerMovement playerMovement; // ใช้เช็คว่าผู้เล่นถูกปิดการควบคุมอยู่หรือไม่ (เช่น ระหว่างคุย dialogue)
         private float timer = 0f;
         private Vector3 defaultHeadPos;
 
@@ -27,6 +29,11 @@ namespace ProjectCook.CameraSystem
             if (controller == null)
             {
                 controller = GetComponentInParent<CharacterController>();
+            }
+
+            if (playerMovement == null)
+            {
+                playerMovement = GetComponentInParent<PlayerMovement>();
             }
 
             // หากไม่ได้ระบุ หรือดันระบุไปที่ Main Camera (ซึ่งโดน CinemachineBrain เขียนทับทุกเฟรม) ให้ใช้ transform ของตัวเอง (Head)
@@ -47,8 +54,9 @@ namespace ProjectCook.CameraSystem
             Vector3 horizontalVelocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
             float speed = horizontalVelocity.magnitude;
 
-            // 2. เช็คว่าผู้เล่นติดพื้นอยู่ และมีการเคลื่อนที่จริงหรือไม่
-            if (controller.isGrounded && speed > 0.1f)
+            // 2. เช็คว่าผู้เล่นติดพื้นอยู่ มีการเคลื่อนที่จริง และไม่ได้ถูกปิดการควบคุมอยู่ (เช่น ระหว่างคุย dialogue)
+            bool isControlActive = playerMovement == null || playerMovement.IsControlActive;
+            if (isControlActive && controller.isGrounded && speed > 0.1f)
             {
                 // เช็คว่ากำลังวิ่งเร็วหรือไม่
                 bool isSprinting = speed > 2.5f;
