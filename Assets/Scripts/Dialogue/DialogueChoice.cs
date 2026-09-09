@@ -5,9 +5,7 @@ using ProjectCook.Dialogue.Conditions;
 
 namespace ProjectCook.Dialogue
 {
-    /// <summary>
-    /// Data structure สำหรับเก็บข้อมูลตัวเลือกคำตอบ 1 ข้อ (Multiple Choice Option)
-    /// </summary>
+    /// <summary>Data structure สำหรับเก็บข้อมูลตัวเลือกคำตอบ 1 ข้อ (Multiple Choice Option)</summary>
     [System.Serializable]
     public class DialogueChoice
     {
@@ -26,9 +24,7 @@ namespace ProjectCook.Dialogue
         [Tooltip("รายการเงื่อนไขที่จะให้ตัวเลือกนี้โชว์บน UI (ทุกข้อต้องผ่านทั้งหมด)")]
         public List<DialogueConditionSO> conditions = new List<DialogueConditionSO>();
 
-        /// <summary>
-        /// เช็คว่าเงื่อนไขทุกข้อของตัวเลือกนี้ผ่านหรือไม่
-        /// </summary>
+        /// <summary>เช็คว่าเงื่อนไขทุกข้อของตัวเลือกนี้ผ่านหรือไม่</summary>
         public bool AreConditionsMet()
         {
             // 1. เช็ค conditionFlag แบบง่าย (ถ้ามีระบุไว้) ผ่านจุดเช็คเดียวกับ GameFlagConditionSO

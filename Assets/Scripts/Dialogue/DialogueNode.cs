@@ -3,9 +3,7 @@ using UnityEngine;
 
 namespace ProjectCook.Dialogue
 {
-    /// <summary>
-    /// Data structure สำหรับเก็บข้อมูลโหนดบทสนทนา 1 โหนดใน Dialogue Tree
-    /// </summary>
+    /// <summary>Data structure สำหรับเก็บข้อมูลโหนดบทสนทนา 1 โหนดใน Dialogue Tree</summary>
     [System.Serializable]
     public class DialogueNode
     {
@@ -34,9 +32,7 @@ namespace ProjectCook.Dialogue
         [Tooltip("รายการตัวเลือกคำตอบ (ถ้ามีหลายข้อ หน้าต่างตัวเลือกจะเด้งขึ้นมาแทนการผ่านบรรทัดอัตโนมัติ)")]
         public List<DialogueChoice> choices = new List<DialogueChoice>();
 
-        /// <summary>
-        /// เช็คว่าโหนดนี้มีตัวเลือกคำตอบหรือไม่
-        /// </summary>
+        /// <summary>เช็คว่าโหนดนี้มีตัวเลือกคำตอบหรือไม่</summary>
         public bool HasChoices => choices != null && choices.Count > 0;
     }
 }

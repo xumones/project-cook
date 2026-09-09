@@ -2,9 +2,7 @@ using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// สคริปต์ย่อยจัดการการแสดงผลทางสายตาของวัตถุดิบ (Material Property Block, Color & Shader Progress Blending)
-    /// </summary>
+    /// <summary>สคริปต์ย่อยจัดการการแสดงผลทางสายตาของวัตถุดิบ (Material Property Block, Color & Shader Progress Blending)</summary>
     [DisallowMultipleComponent]
     public class IngredientVisuals : MonoBehaviour
     {
@@ -50,10 +48,7 @@ namespace ProjectCook.Cooking
             propertyBlock = new MaterialPropertyBlock();
         }
 
-        /// <summary>
-        /// ตั้งค่าการแสดงผลใหม่ทั้งชุดตามข้อมูลวัตถุดิบที่ได้รับ
-        /// (รวมขั้นตอนที่เดิมต้องเรียกต่อกัน 4 บรรทัดไว้ในเมธอดเดียว เพื่อไม่ให้ผู้เรียกลืมขั้นตอนใดขั้นตอนหนึ่ง)
-        /// </summary>
+        /// <summary>ตั้งค่าการแสดงผลใหม่ทั้งชุดตามข้อมูลวัตถุดิบที่ได้รับ</summary>
         public void Configure(IngredientDataSO data, float sideACookTime, float sideBCookTime, float omniCookTime)
         {
             UpdateColorPropertyId(data);
@@ -122,10 +117,7 @@ namespace ProjectCook.Cooking
             isMaterialCached = true;
         }
 
-        /// <summary>
-        /// ส่ง Texture ที่แคชไว้เข้า MaterialPropertyBlock เพียงครั้งเดียวตอนเปลี่ยน Material
-        /// ค่าใน PropertyBlock จะคงอยู่ข้ามการเรียก SetPropertyBlock จึงไม่ต้องส่งซ้ำทุกครั้งที่ความสุกเปลี่ยน
-        /// </summary>
+        /// <summary>ส่ง Texture ที่แคชไว้เข้า MaterialPropertyBlock เพียงครั้งเดียวตอนเปลี่ยน Material</summary>
         private void ApplyCachedTexturesToBlock()
         {
             if (propertyBlock == null) return;
@@ -142,9 +134,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// สลับ Material ตามสภาวะความสุก (Raw -> Cooked -> Burnt)
-        /// </summary>
+        /// <summary>สลับ Material ตามสภาวะความสุก (Raw -> Cooked -> Burnt)</summary>
         public void UpdateMaterialForState(CookingState state, IngredientDataSO data)
         {
             if (meshRenderer == null || data == null) return;
@@ -169,9 +159,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// อัปเดตสีและ Texture ของ Material แบบ Smooth Transition ด้วย MaterialPropertyBlock
-        /// </summary>
+        /// <summary>อัปเดตสีและ Texture ของ Material แบบ Smooth Transition ด้วย MaterialPropertyBlock</summary>
         public void ApplyVisuals(IngredientDataSO data, float sideACookTime, float sideBCookTime, float omniCookTime)
         {
             if (meshRenderer == null || data == null) return;

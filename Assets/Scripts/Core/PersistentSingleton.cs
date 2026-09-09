@@ -2,25 +2,13 @@ using UnityEngine;
 
 namespace ProjectCook.Core
 {
-    /// <summary>
-    /// Base Class สำหรับ Manager ที่ต้องคงอยู่ข้าม Scene (Persistent / Cross-Scene Singleton)
-    ///
-    /// ใช้กับ Manager ที่ "ไม่มี Reference ไปยัง Object ใน Scene" เท่านั้น เช่น ระบบเก็บสถานะความคืบหน้าเกม
-    /// หรือระบบควบคุมเคอร์เซอร์ เพราะ Object ของ Scene เดิมจะถูกทำลายเมื่อเปลี่ยน Scene
-    /// ทำให้ Reference ที่ถือค้างไว้ใช้งานไม่ได้อีกต่อไป
-    ///
-    /// คุณสมบัติ: สร้างตัวเองอัตโนมัติเมื่อถูกเรียกใช้ครั้งแรก จึงไม่จำเป็นต้องวางไว้ใน Scene ล่วงหน้า
-    /// หาก Manager จำเป็นต้องตั้งค่า Reference ผ่าน Inspector ให้ใช้ SceneSingleton แทน
-    /// </summary>
+    /// <summary>Base Class สำหรับ Manager ที่ต้องคงอยู่ข้าม Scene (Persistent / Cross-Scene Singleton)</summary>
     public abstract class PersistentSingleton<T> : MonoBehaviour where T : PersistentSingleton<T>
     {
         private static T instance;
         private static bool isQuitting = false;
 
-        /// <summary>
-        /// ดึง Instance โดยค้นหาใน Scene ก่อน หากไม่พบจะสร้าง GameObject ขึ้นมาให้อัตโนมัติ
-        /// จะคืนค่า null เฉพาะตอนเกมกำลังปิดตัวลงเท่านั้น เพื่อไม่ให้สร้าง Object ค้างไว้ระหว่างปิดเกม
-        /// </summary>
+        /// <summary>ดึง Instance โดยค้นหาใน Scene ก่อน หากไม่พบจะสร้าง GameObject ขึ้นมาให้อัตโนมัติ</summary>
         public static T Instance
         {
             get
@@ -42,10 +30,9 @@ namespace ProjectCook.Core
             }
         }
 
-        /// <summary>
-        /// ตรวจสอบว่ามี Instance อยู่แล้วหรือไม่ โดยไม่สร้างขึ้นมาใหม่
-        /// </summary>
-        public static bool HasInstance => instance != null;
+        /// <summary>มี Instance ที่เรียกใช้ได้จริงอยู่หรือไม่ โดยไม่สร้างขึ้นมาใหม่</summary>
+        /// <remarks>ต้องเช็ค isQuitting ด้วย ไม่งั้นตอนปิดเกมจะคืน true ทั้งที่ Instance คืน null ไปแล้ว</remarks>
+        public static bool HasInstance => !isQuitting && instance != null;
 
         protected virtual void Awake()
         {

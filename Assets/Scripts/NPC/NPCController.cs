@@ -2,16 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
-using ProjectCook.Interaction;
+using ProjectCook.Core;
 using ProjectCook.Dialogue;
 using ProjectCook.Dialogue.Conditions;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>
-    /// คลาสหลักสำหรับ NPC ทุกตัวในเกม Implement IInteractable และ INPCActionHandler
-    /// </summary>
-    public class NPCController : MonoBehaviour, IInteractable, INPCActionHandler
+    /// <summary>NPC ที่ผู้เล่นคุยด้วยได้ เลือกบทสนทนาตามเงื่อนไขแล้วส่งต่อให้ DialogueManager</summary>
+    public class NPCController : MonoBehaviour, IInteractable, IDialogueTarget
     {
         [Header("NPC Profile")]
         [SerializeField] private string npcID;
@@ -44,13 +42,9 @@ namespace ProjectCook.NPC
         // แคชผลการแปลง JSON ของบทสนทนาเริ่มต้น (กันการสร้าง ScriptableObject ใหม่ทุกครั้งที่กดคุย)
         private DialogueDataSO cachedDefaultJsonDialogue;
 
-        public string NPCID => npcID;
-        public string NPCName => npcName;
+        public string DisplayName => npcName;
 
-        /// <summary>
-        /// ถูกเรียกจาก PlayerInteractor เมื่อผู้เล่นเล็ง NPC แล้วกด E
-        /// </summary>
-        public void Interact(PlayerInteractor interactor)
+        public void Interact()
         {
             onInteract?.Invoke(this);
 
@@ -72,10 +66,8 @@ namespace ProjectCook.NPC
             }
         }
 
-        /// <summary>
-        /// ค้นหาบทสนทนาที่ผ่านเงื่อนไขและมีความสำคัญสูงสุด
-        /// </summary>
-        public DialogueDataSO GetValidDialogue()
+        /// <summary>บทสนทนาที่ผ่านเงื่อนไขและมี priority สูงสุด</summary>
+        private DialogueDataSO GetValidDialogue()
         {
             ConditionalDialogueEntry bestMatch = null;
             DialogueDataSO bestMatchData = null;
@@ -112,30 +104,26 @@ namespace ProjectCook.NPC
             return null;
         }
 
-        /// <summary>
-        /// รับคำสั่ง Action ID ที่ผู้เล่นเลือกจากตัวเลือกบทสนทนา (Implement INPCActionHandler)
-        /// </summary>
-        public void HandleAction(string actionID)
+        /// <summary>รับคำสั่ง Action ID ที่ผู้เล่นเลือกจากตัวเลือกบทสนทนา (Implement INPCActionHandler)</summary>
+        public void HandleAction(string actionId)
         {
-            if (string.IsNullOrEmpty(actionID)) return;
+            if (string.IsNullOrEmpty(actionId)) return;
 
             // ยิง Event กระจายสัญญาณคำสั่งไปให้ Component อื่นๆ รับไปทำงานต่อ
-            onActionTriggered?.Invoke(actionID);
+            onActionTriggered?.Invoke(actionId);
 
             // ถ้ามี INPCActionHandler ตัวอื่นบน GameObject นี้ (เช่น สคริปต์ร้านค้า MerchantShop) สั่งให้ทำงานด้วย
-            var handlers = GetComponents<INPCActionHandler>();
+            var handlers = GetComponents<IDialogueActionHandler>();
             foreach (var handler in handlers)
             {
-                if (handler != null && handler != (INPCActionHandler)this)
+                if (handler != null && handler != (IDialogueActionHandler)this)
                 {
-                    handler.HandleAction(actionID);
+                    handler.HandleAction(actionId);
                 }
             }
         }
 
-        /// <summary>
-        /// ถูกเรียกจาก DialogueManager เมื่อเล่นบทสนทนาจบลง
-        /// </summary>
+        /// <summary>ถูกเรียกจาก DialogueManager เมื่อเล่นบทสนทนาจบลง</summary>
         public void OnDialogueEnded()
         {
             onDialogueComplete?.Invoke(this);

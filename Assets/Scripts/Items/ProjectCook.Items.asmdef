@@ -1,0 +1,17 @@
+{
+    "name": "ProjectCook.Items",
+    "rootNamespace": "ProjectCook.Items",
+    "references": [
+        "ProjectCook.Core",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

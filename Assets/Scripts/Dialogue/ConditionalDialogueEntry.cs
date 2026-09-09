@@ -5,9 +5,7 @@ using ProjectCook.Dialogue.Conditions;
 
 namespace ProjectCook.Dialogue
 {
-    /// <summary>
-    /// โครงสร้างเก็บข้อมูลบทสนทนาที่มีเงื่อนไข (ใช้โดย NPCController เพื่อเลือกบทสนทนาที่เหมาะสมที่สุด)
-    /// </summary>
+    /// <summary>โครงสร้างเก็บข้อมูลบทสนทนาที่มีเงื่อนไข (ใช้โดย NPCController เพื่อเลือกบทสนทนาที่เหมาะสมที่สุด)</summary>
     [System.Serializable]
     public class ConditionalDialogueEntry
     {
@@ -29,9 +27,7 @@ namespace ProjectCook.Dialogue
             return DialogueConditionUtility.AreAllMet(conditions);
         }
 
-        /// <summary>
-        /// คืนบทสนทนาที่ใช้งานจริงของรายการนี้ (เลือก Asset ก่อน ถ้าไม่มีจึงแปลงจากไฟล์ JSON)
-        /// </summary>
+        /// <summary>คืนบทสนทนาที่ใช้งานจริงของรายการนี้ (เลือก Asset ก่อน ถ้าไม่มีจึงแปลงจากไฟล์ JSON)</summary>
         public DialogueDataSO GetEffectiveDialogue()
         {
             if (dialogueData != null) return dialogueData;

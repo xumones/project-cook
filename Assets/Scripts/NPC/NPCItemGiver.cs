@@ -1,18 +1,16 @@
 using UnityEngine;
+using ProjectCook.Dialogue;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>
-    /// รับ Action ID "GIVE_ITEM" จากตัวเลือกบทสนทนาแล้วทำการมอบไอเทมให้ผู้เล่น
-    /// (ตอนนี้เป็นแค่ placeholder log ไว้ทดสอบ flow ก่อนใส่ Instantiate จริง)
-    /// </summary>
-    public class NPCItemGiver : MonoBehaviour, INPCActionHandler
+    /// <summary>รับ Action ID "GIVE_ITEM" จากตัวเลือกบทสนทนาแล้วทำการมอบไอเทมให้ผู้เล่น</summary>
+    public class NPCItemGiver : MonoBehaviour, IDialogueActionHandler
     {
         private const string GiveItemActionID = "GIVE_ITEM";
 
-        public void HandleAction(string actionID)
+        public void HandleAction(string actionId)
         {
-            if (actionID != GiveItemActionID) return;
+            if (actionId != GiveItemActionID) return;
 
             Debug.Log("create item");
         }

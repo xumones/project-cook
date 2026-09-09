@@ -3,15 +3,11 @@ using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// ScriptableObject สำหรับเก็บข้อมูลและค่าคอนฟิกคงที่ของวัตถุดิบ (Data Container)
-    /// </summary>
+    /// <summary>ScriptableObject สำหรับเก็บข้อมูลและค่าคอนฟิกคงที่ของวัตถุดิบ (Data Container)</summary>
     [CreateAssetMenu(fileName = "IngredientData_", menuName = "ProjectCook/Cooking/Ingredient Data")]
     public class IngredientDataSO : ScriptableObject
     {
-        /// <summary>
-        /// Callback Event แจ้งเตือนเมื่อข้อมูลใน ScriptableObject มีการเปลี่ยนแปลง
-        /// </summary>
+        /// <summary>Callback Event แจ้งเตือนเมื่อข้อมูลใน ScriptableObject มีการเปลี่ยนแปลง</summary>
         public event Action OnDataChanged;
         [Header("General Info")]
         [Tooltip("รหัสอ้างอิงวัตถุดิบ (เช่น pork_chop, french_fries)")]

@@ -3,10 +3,7 @@ using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// สคริปต์หลักควบคุมวัตถุดิบแต่ละชิ้นในฉาก (Runtime State & Main Facade Coordinator)
-    /// ประสานงานระหว่าง Logic เวลาความสุกและการแสดงผล (IngredientVisuals)
-    /// </summary>
+    /// <summary>สคริปต์หลักควบคุมวัตถุดิบแต่ละชิ้นในฉาก (Runtime State & Main Facade Coordinator)</summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(IngredientVisuals))]
     public class IngredientInstance : MonoBehaviour
@@ -18,20 +15,8 @@ namespace ProjectCook.Cooking
         // Sub Component References (Auto-initialized)
         private IngredientVisuals visualsComponent;
 
-        /// <summary>
-        /// Callback Event แจ้งเตือนเมื่อสถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)
-        /// </summary>
+        /// <summary>Callback Event แจ้งเตือนเมื่อสถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)</summary>
         public event Action<CookingState> OnStateChanged;
-
-        /// <summary>
-        /// Callback Event แจ้งเตือนเมื่อระดับความสุกเปลี่ยน (0.0 ถึง 1.0)
-        /// </summary>
-        public event Action<float> OnCookProgressChanged;
-
-        /// <summary>
-        /// Callback Event แจ้งเตือนเมื่อ IngredientDataSO ถูกเปลี่ยน
-        /// </summary>
-        public event Action<IngredientDataSO> OnDataChanged;
 
         // Dynamic Runtime States
         private CookingState currentCookingState = CookingState.Raw;
@@ -42,7 +27,6 @@ namespace ProjectCook.Cooking
         private float sideBCookTime = 0f;
 
         private bool isVisualsDirty = false;
-        private float lastReportedCookProgress = -1f;
 
         // Getters
         public IngredientDataSO Data => data;
@@ -79,12 +63,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// อัปเดตการแสดงผลหากมีการเปลี่ยนแปลง ถูกเรียกจากภาชนะที่วัตถุดิบชิ้นนี้อยู่
-        ///
-        /// เดิมทีทำงานใน Update() ของตัวเอง แต่ย้ายมาให้ภาชนะเป็นคนสั่งในลูปที่วนรายการอยู่แล้ว
-        /// เพื่อตัด Overhead ของการเรียก Update() แยกต่อวัตถุดิบทุกชิ้นออกไป
-        /// </summary>
+        /// <summary>อัปเดตการแสดงผลหากมีการเปลี่ยนแปลง ถูกเรียกจากภาชนะที่วัตถุดิบชิ้นนี้อยู่</summary>
         public void TickVisuals()
         {
             if (!isVisualsDirty) return;
@@ -122,27 +101,9 @@ namespace ProjectCook.Cooking
         private void HandleDataSOChanged()
         {
             visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
-            OnDataChanged?.Invoke(data);
         }
 
-        /// <summary>
-        /// กำหนดข้อมูลวัตถุดิบใหม่แบบ Dynamic
-        /// </summary>
-        public void SetData(IngredientDataSO newData)
-        {
-            UnsubscribeFromDataEvents();
-            data = newData;
-            SubscribeToDataEvents();
-
-            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
-            OnDataChanged?.Invoke(data);
-        }
-
-        /// <summary>
-        /// รับความร้อนจากกระทะ/เตา และคำนวณการสะสมความสุก (พร้อมคำนวณทิศทางการพลิกด้าน)
-        /// </summary>
-        /// <param name="deltaHeatTime">ระยะเวลาได้รับความร้อน (วินาที)</param>
-        /// <param name="panUpVector">ทิศทางหันขึ้นของกระทะ (สำหรับคำนวณ Vector Dot Product เช็กการพลิกด้าน)</param>
+        /// <summary>รับความร้อนจากกระทะ/เตา และคำนวณการสะสมความสุก (พร้อมคำนวณทิศทางการพลิกด้าน)</summary>
         public void ApplyHeat(float deltaHeatTime, Vector3 panUpVector)
         {
             if (data == null || currentCookingState == CookingState.Burnt) return;
@@ -175,26 +136,15 @@ namespace ProjectCook.Cooking
             }
 
             isVisualsDirty = true;
-
-            float currentProgress = CookProgress;
-            if (Mathf.Abs(currentProgress - lastReportedCookProgress) >= 0.005f)
-            {
-                lastReportedCookProgress = currentProgress;
-                OnCookProgressChanged?.Invoke(currentProgress);
-            }
         }
 
-        /// <summary>
-        /// overload สำหรับการเรียกทอดแบบ Omni-directional โดยไม่ต้องระบุ Vector ทิศทาง
-        /// </summary>
+        /// <summary>overload สำหรับการเรียกทอดแบบ Omni-directional โดยไม่ต้องระบุ Vector ทิศทาง</summary>
         public void ApplyHeat(float deltaHeatTime)
         {
             ApplyHeat(deltaHeatTime, Vector3.up);
         }
 
-        /// <summary>
-        /// ตรวจสอบการหันของวัตถุดิบเทียบกับกระทะด้วย Vector Dot Product (Zero Allocation)
-        /// </summary>
+        /// <summary>ตรวจสอบการหันของวัตถุดิบเทียบกับกระทะด้วย Vector Dot Product (Zero Allocation)</summary>
         private void DetermineActiveSide(Vector3 panUpVector)
         {
             float dot = Vector3.Dot(transform.up, panUpVector);
@@ -212,9 +162,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// ประเมินสถานะความสุกสำหรับการทอดรอบทิศทาง (Omni)
-        /// </summary>
+        /// <summary>ประเมินสถานะความสุกสำหรับการทอดรอบทิศทาง (Omni)</summary>
         private void EvaluateCookingState()
         {
             float totalTargetTime = data.CookTime + data.BurnTime;
@@ -233,9 +181,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// ประเมินสถานะความสุกสำหรับการทอดแบบสองด้าน (Two-Sided)
-        /// </summary>
+        /// <summary>ประเมินสถานะความสุกสำหรับการทอดแบบสองด้าน (Two-Sided)</summary>
         private void EvaluateTwoSidedCookingState()
         {
             float totalTargetTime = data.CookTime + data.BurnTime;
@@ -269,9 +215,7 @@ namespace ProjectCook.Cooking
             OnStateChanged?.Invoke(currentCookingState);
         }
 
-        /// <summary>
-        /// สถานะว่าวัตถุดิบนี้กำลังถูกคีบจับอยู่หรือไม่
-        /// </summary>
+        /// <summary>สถานะว่าวัตถุดิบนี้กำลังถูกคีบจับอยู่หรือไม่</summary>
         public bool IsGripped { get; set; } = false;
     }
 }

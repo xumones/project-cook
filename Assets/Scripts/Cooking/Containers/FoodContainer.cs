@@ -1,14 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectCook.Items;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// Abstract Class แม่สำหรับอุปกรณ์ทำอาหาร/ภาชนะเก็บวัตถุดิบ (Base Food Container System)
-    /// ควบคุมการติดตามวัตถุดิบในภาชนะ, การคัดกรองวัตถุดิบ, ระบบความร้อนพื้นฐาน และระบบเสียงศูนย์กลางแบบ Coroutine
-    /// </summary>
-    public abstract class FoodContainer : MonoBehaviour
+    /// <summary>Abstract Class แม่สำหรับอุปกรณ์ทำอาหาร/ภาชนะเก็บวัตถุดิบ (Base Food Container System)</summary>
+    public abstract class FoodContainer : MonoBehaviour, IItemContents
     {
         [Header("Filtering Settings")]
         [Tooltip("เปิดใช้งานการกรองเฉพาะวัตถุที่มี Tag ที่กำหนด (หากปิดจะรับ Rigidbody ทุกชิ้นที่เป็นอาหาร)")]
@@ -17,14 +14,10 @@ namespace ProjectCook.Cooking
         [Tooltip("Tag ของวัตถุดิบอาหาร เช่น 'Food' หรือ 'Ingredient'")]
         [SerializeField] protected string foodTag = "Food";
 
-        /// <summary>
-        /// Callback Event แจ้งเตือนเมื่อมีวัตถุดิบวางลงในภาชนะ
-        /// </summary>
+        /// <summary>Callback Event แจ้งเตือนเมื่อมีวัตถุดิบวางลงในภาชนะ</summary>
         public event System.Action<IngredientDataSO> OnIngredientDropped;
 
-        /// <summary>
-        /// Callback Event แจ้งเตือนเมื่อวัตถุดิบในภาชนะสุกได้ที่ (Cooked)
-        /// </summary>
+        /// <summary>Callback Event แจ้งเตือนเมื่อวัตถุดิบในภาชนะสุกได้ที่ (Cooked)</summary>
         public event System.Action<IngredientDataSO> OnIngredientCooked;
 
         public class FoodItemData
@@ -41,12 +34,13 @@ namespace ProjectCook.Cooking
 
         protected readonly List<FoodItemData> foodItems = new List<FoodItemData>();
 
-        /// <summary>
-        /// ภาชนะนี้กำลังแผ่ความร้อนอยู่หรือไม่ (ภาชนะที่ไม่มีความร้อน เช่น จานเสิร์ฟ จะเป็น false เสมอ)
-        /// </summary>
+        /// <summary>ภาชนะนี้กำลังแผ่ความร้อนอยู่หรือไม่ (ภาชนะที่ไม่มีความร้อน เช่น จานเสิร์ฟ จะเป็น false เสมอ)</summary>
         public virtual bool IsHeating => false;
 
         public IReadOnlyList<FoodItemData> GetContainedFoodItems() => foodItems;
+
+        /// <summary>ตอนนี้มีวัตถุดิบอยู่ในภาชนะหรือไม่ (IItemContents)</summary>
+        public bool HasContents => foodItems.Count > 0;
 
         protected virtual void Awake()
         {
@@ -109,10 +103,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// ถอด Subscription ของวัตถุดิบออกก่อนแล้วจึงลบออกจากรายการ
-        /// (ต้องถอนทุกครั้งเพื่อไม่ให้ Event สะสมและยิงซ้ำเมื่อวัตถุดิบชิ้นเดิมถูกใส่กลับเข้ามาใหม่)
-        /// </summary>
+        /// <summary>ถอด Subscription ของวัตถุดิบออกก่อนแล้วจึงลบออกจากรายการ</summary>
         protected void RemoveFoodItemAt(int index)
         {
             if (index < 0 || index >= foodItems.Count) return;
@@ -168,17 +159,12 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// Hook สำหรับให้ภาชนะแต่ละชนิดประมวลผลวัตถุดิบตามความสามารถของตัวเอง
-        /// (ภาชนะที่ให้ความร้อนจะ Override เพื่อทอด/ต้ม ส่วนจานเสิร์ฟไม่ต้องทำอะไร)
-        /// </summary>
+        /// <summary>Hook สำหรับให้ภาชนะแต่ละชนิดประมวลผลวัตถุดิบตามความสามารถของตัวเอง</summary>
         protected virtual void ProcessItem(FoodItemData item)
         {
         }
 
-        /// <summary>
-        /// Hook สำหรับการตรวจสอบว่าวัตถุดิบกำลังอยู่ในสภาวะทอด/ต้มจริงในภาชนะหรือไม่
-        /// </summary>
+        /// <summary>Hook สำหรับการตรวจสอบว่าวัตถุดิบกำลังอยู่ในสภาวะทอด/ต้มจริงในภาชนะหรือไม่</summary>
         public virtual bool IsItemBeingProcessed(FoodItemData item)
         {
             return true;

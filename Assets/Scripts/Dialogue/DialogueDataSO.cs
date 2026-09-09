@@ -3,9 +3,7 @@ using UnityEngine;
 
 namespace ProjectCook.Dialogue
 {
-    /// <summary>
-    /// ScriptableObject สำหรับจัดเก็บชุดบทสนทนาทั้งหมด (Dialogue Tree Container)
-    /// </summary>
+    /// <summary>ScriptableObject สำหรับจัดเก็บชุดบทสนทนาทั้งหมด (Dialogue Tree Container)</summary>
     [CreateAssetMenu(fileName = "NewDialogueData", menuName = "ProjectCook/Dialogue/Dialogue Data")]
     public class DialogueDataSO : ScriptableObject
     {
@@ -30,9 +28,7 @@ namespace ProjectCook.Dialogue
             BuildNodeCache();
         }
 
-        /// <summary>
-        /// สร้าง Dictionary แคชชิ่งเพื่อเร่งความเร็วการค้นหาโหนดและตรวจสอบ ID ซ้ำ
-        /// </summary>
+        /// <summary>สร้าง Dictionary แคชชิ่งเพื่อเร่งความเร็วการค้นหาโหนดและตรวจสอบ ID ซ้ำ</summary>
         public void BuildNodeCache()
         {
             if (nodeCache == null)
@@ -61,9 +57,7 @@ namespace ProjectCook.Dialogue
             }
         }
 
-        /// <summary>
-        /// ค้นหาโหนดตาม nodeID
-        /// </summary>
+        /// <summary>ค้นหาโหนดตาม nodeID</summary>
         public DialogueNode GetNode(string nodeID)
         {
             if (string.IsNullOrEmpty(nodeID)) return null;
@@ -81,9 +75,7 @@ namespace ProjectCook.Dialogue
             return null;
         }
 
-        /// <summary>
-        /// ดึงโหนดเริ่มต้น
-        /// </summary>
+        /// <summary>ดึงโหนดเริ่มต้น</summary>
         public DialogueNode GetStartNode()
         {
             DialogueNode node = GetNode(startNodeID);
@@ -94,9 +86,7 @@ namespace ProjectCook.Dialogue
             return node;
         }
 
-        /// <summary>
-        /// เติมข้อมูลลงใน ScriptableObject นี้โดยอ่านจาก JSON String
-        /// </summary>
+        /// <summary>เติมข้อมูลลงใน ScriptableObject นี้โดยอ่านจาก JSON String</summary>
         public bool PopulateFromJson(string jsonText)
         {
             if (string.IsNullOrEmpty(jsonText)) return false;
@@ -121,9 +111,7 @@ namespace ProjectCook.Dialogue
             return false;
         }
 
-        /// <summary>
-        /// ส่งออกข้อมูลของ ScriptableObject นี้ให้กลายเป็นข้อความ JSON String สำหรับบันทึกลงไฟล์
-        /// </summary>
+        /// <summary>ส่งออกข้อมูลของ ScriptableObject นี้ให้กลายเป็นข้อความ JSON String สำหรับบันทึกลงไฟล์</summary>
         public string ToJson(bool prettyPrint = true)
         {
             DialogueDataDTO dto = new DialogueDataDTO
@@ -137,9 +125,7 @@ namespace ProjectCook.Dialogue
             return JsonUtility.ToJson(dto, prettyPrint);
         }
 
-        /// <summary>
-        /// สร้าง DialogueDataSO Instance ใหม่ในความจำจากข้อความ JSON String
-        /// </summary>
+        /// <summary>สร้าง DialogueDataSO Instance ใหม่ในความจำจากข้อความ JSON String</summary>
         public static DialogueDataSO FromJson(string jsonText)
         {
             if (string.IsNullOrEmpty(jsonText))
@@ -159,9 +145,7 @@ namespace ProjectCook.Dialogue
             return dialogueData;
         }
 
-        /// <summary>
-        /// สร้าง DialogueDataSO Instance ใหม่จากไฟล์ TextAsset (JSON)
-        /// </summary>
+        /// <summary>สร้าง DialogueDataSO Instance ใหม่จากไฟล์ TextAsset (JSON)</summary>
         public static DialogueDataSO FromTextAsset(TextAsset jsonAsset)
         {
             if (jsonAsset == null)
@@ -180,9 +164,7 @@ namespace ProjectCook.Dialogue
         }
     }
 
-    /// <summary>
-    /// Data Transfer Object สำหรับช่วยให้ Unity JsonUtility สามารถ Deserialize JSON ข้อความมาใส่ใน DialogueDataSO ได้ตรงๆ
-    /// </summary>
+    /// <summary>Data Transfer Object สำหรับช่วยให้ Unity JsonUtility สามารถ Deserialize JSON ข้อความมาใส่ใน DialogueDataSO ได้ตรงๆ</summary>
     [System.Serializable]
     public class DialogueDataDTO
     {

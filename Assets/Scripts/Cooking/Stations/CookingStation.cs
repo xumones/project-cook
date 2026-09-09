@@ -1,20 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ProjectCook.Interaction;
-using ProjectCook.CameraSystem;
+using ProjectCook.Core;
+using ProjectCook.Player;
 using Unity.Cinemachine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// Abstract Base Class สำหรับสถานีทำอาหารทุกประเภทในเกม (กระทะ, หม้อ, เตาอบ ฯลฯ)
-    /// จัดการการเข้า/ออกจากสถานี, สั่งเปลี่ยน State กล้องผ่าน CameraManager
-    /// และขับเคลื่อนโมดูลประจำสถานี (IStationModule) ทั้งหมดให้อัตโนมัติ
-    ///
-    /// สถานีชนิดใหม่เพียงสืบทอดคลาสนี้แล้วแปะโมดูลที่ต้องการลงบน GameObject
-    /// โดยไม่ต้องเขียนโค้ดเปิด/ปิดโมดูลเองอีก
-    /// </summary>
+    /// <summary>Abstract Base Class สำหรับสถานีทำอาหารทุกประเภทในเกม (กระทะ, หม้อ, เตาอบ ฯลฯ)</summary>
     public abstract class CookingStation : MonoBehaviour, IInteractable
     {
         [Header("Camera Settings")]
@@ -33,7 +26,6 @@ namespace ProjectCook.Cooking
         private readonly List<IStationModule> modules = new List<IStationModule>();
 
         protected bool isCooking = false;
-        public bool IsCooking => isCooking;
 
         protected virtual void Awake()
         {
@@ -52,9 +44,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// รวบรวมโมดูลจากตัวเองและลูกๆ พร้อมกับโมดูลภายนอกที่ระบุไว้ใน Inspector
-        /// </summary>
+        /// <summary>รวบรวมโมดูลจากตัวเองและลูกๆ พร้อมกับโมดูลภายนอกที่ระบุไว้ใน Inspector</summary>
         private void CollectModules()
         {
             modules.Clear();
@@ -98,18 +88,13 @@ namespace ProjectCook.Cooking
             exitAction?.action?.Disable();
         }
 
-        /// <summary>
-        /// พฤติกรรมเริ่มต้นเมื่อผู้เล่นกด Interact คือเข้าใช้งานสถานี
-        /// สถานีที่ต้องการเงื่อนไขพิเศษ (เช่น ต้องมีวัตถุดิบก่อน) ให้ Override เมธอดนี้
-        /// </summary>
-        public virtual void Interact(PlayerInteractor interactor)
+        /// <summary>สถานีที่ต้องการเงื่อนไขพิเศษก่อนเข้าใช้งานให้ Override เมธอดนี้</summary>
+        public virtual void Interact()
         {
-            EnterStation(interactor);
+            EnterStation();
         }
 
-        /// <summary>
-        /// ดึงกล้องประจำสถานี (หากไม่ได้ตั้งค่าไว้จะใช้ Camera.main แทน)
-        /// </summary>
+        /// <summary>ดึงกล้องประจำสถานี (หากไม่ได้ตั้งค่าไว้จะใช้ Camera.main แทน)</summary>
         protected Camera GetStationCamera()
         {
             if (stationCamera != null)
@@ -121,17 +106,20 @@ namespace ProjectCook.Cooking
             return Camera.main;
         }
 
-        /// <summary>
-        /// เข้าสู่โหมดทำอาหาร: สลับกล้องมายังสถานีนี้ แล้วสั่งเปิดโมดูลทั้งหมด
-        /// </summary>
-        public virtual void EnterStation(PlayerInteractor interactor)
+        /// <summary>เข้าสู่โหมดทำอาหาร: สลับกล้องมายังสถานีนี้ แล้วสั่งเปิดโมดูลทั้งหมด</summary>
+        public virtual void EnterStation()
         {
             if (isCooking) return;
 
             isCooking = true;
-            if (stationCamera != null && CameraManager.Instance != null)
+            if (CameraManager.Instance != null)
             {
-                CameraManager.Instance.SwitchToCooking(stationCamera);
+                CameraManager.Instance.StationCamera = stationCamera;
+            }
+
+            if (GameModeManager.Instance != null)
+            {
+                GameModeManager.Instance.SetMode(GameMode.Cooking);
             }
 
             Camera stationCam = GetStationCamera();
@@ -141,9 +129,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// ออกจากโหมดทำอาหาร: สั่งปิดโมดูลทั้งหมด แล้วสลับกล้องกลับสภาวะ FirstPerson
-        /// </summary>
+        /// <summary>ออกจากโหมดทำอาหาร: สั่งปิดโมดูลทั้งหมด แล้วสลับกล้องกลับสภาวะ FirstPerson</summary>
         public virtual void ExitStation()
         {
             if (!isCooking) return;
@@ -155,9 +141,9 @@ namespace ProjectCook.Cooking
                 modules[i]?.OnStationExit();
             }
 
-            if (CameraManager.Instance != null)
+            if (GameModeManager.Instance != null)
             {
-                CameraManager.Instance.SwitchToFirstPerson();
+                GameModeManager.Instance.SetMode(GameMode.Exploring);
             }
         }
 
@@ -169,9 +155,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// ตรวจสอบการกดปุ่มออกผ่าน New Input System
-        /// </summary>
+        /// <summary>ตรวจสอบการกดปุ่มออกผ่าน New Input System</summary>
         private bool WasExitPressed()
         {
             if (exitAction?.action != null)

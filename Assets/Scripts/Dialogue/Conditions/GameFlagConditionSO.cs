@@ -5,9 +5,7 @@ namespace ProjectCook.Dialogue.Conditions
 {
     // ทำหน้าที่เป็นแค่ตัวหุ้ม flagKey/comparison/targetValue ให้เลือกได้จาก Inspector
     // ตรรกะการเช็คจริงอยู่ที่ DialogueConditionUtility.IsFlagMet ที่เดียว (ใช้ร่วมกับ DialogueChoice.conditionFlag)
-    /// <summary>
-    /// ScriptableObject สำหรับตรวจสอบเงื่อนไขความก้าวหน้าในเกมจาก GameStateManager
-    /// </summary>
+    /// <summary>ScriptableObject สำหรับตรวจสอบเงื่อนไขความก้าวหน้าในเกมจาก GameFlagsManager</summary>
     [CreateAssetMenu(fileName = "NewGameFlagCondition", menuName = "ProjectCook/Dialogue/Conditions/Game Flag Condition")]
     public class GameFlagConditionSO : DialogueConditionSO
     {

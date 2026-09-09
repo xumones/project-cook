@@ -2,10 +2,7 @@ using UnityEngine;
 
 namespace ProjectCook.UI
 {
-    /// <summary>
-    /// สคริปต์จัดการจุด UI กลางหน้าจอ (Center Dot / Crosshair Reticle) 
-    /// แสดงผลเมื่อผู้เล่นหันกล้อง (Fade In 2s), รอ 3s หลังหยุดหัน และ Fade Out หายไปใน 2s
-    /// </summary>
+    /// <summary>สคริปต์จัดการจุด UI กลางหน้าจอ (Center Dot / Crosshair Reticle)</summary>
     [RequireComponent(typeof(CanvasGroup))]
     public class CenterDotUI : MonoBehaviour
     {

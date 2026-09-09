@@ -1,16 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using ProjectCook.Interaction;
+using ProjectCook.Core;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// โมดูลรับอินพุตเพื่อเคลื่อนที่และเอียงกระทะบนเตาในโหมดทำอาหาร
-    /// (Hybrid: WASD Position + Dynamic Tilting via Kinematic Physics)
-    ///
-    /// รับผิดชอบเฉพาะ "อินพุต → ทรานส์ฟอร์มของกระทะ" เท่านั้น
-    /// ส่วนแรงฟิสิกส์ที่กระทำต่ออาหารในกระทะถูกแยกไปอยู่ที่ ContainerContentPhysics แล้ว
-    /// </summary>
+    /// <summary>โมดูลรับอินพุตเพื่อเคลื่อนที่และเอียงกระทะบนเตาในโหมดทำอาหาร</summary>
     public class PanController : MonoBehaviour, IStationModule
     {
         [Header("Pan References")]
@@ -61,8 +55,6 @@ namespace ProjectCook.Cooking
         private bool isControllerActive = false;
         private bool isResetting = false;
 
-        public bool IsControllerActive => isControllerActive;
-
         private Camera GetMainCamera()
         {
             if (cachedMainCamera == null) cachedMainCamera = Camera.main;
@@ -93,18 +85,14 @@ namespace ProjectCook.Cooking
             targetLocalRotation = initialLocalRotation;
         }
 
-        /// <summary>
-        /// เข้าใช้งานสถานี: อ้างอิงทิศทางจากกล้องประจำสถานีแล้วเริ่มรับอินพุต (IStationModule)
-        /// </summary>
+        /// <summary>เข้าใช้งานสถานี: อ้างอิงทิศทางจากกล้องประจำสถานีแล้วเริ่มรับอินพุต (IStationModule)</summary>
         public void OnStationEnter(Camera stationCamera)
         {
             referenceTransform = stationCamera != null ? stationCamera.transform : null;
             SetControllerActive(true);
         }
 
-        /// <summary>
-        /// ออกจากสถานี: หยุดรับอินพุตและสไลด์กระทะกลับตำแหน่งเริ่มต้น (IStationModule)
-        /// </summary>
+        /// <summary>ออกจากสถานี: หยุดรับอินพุตและสไลด์กระทะกลับตำแหน่งเริ่มต้น (IStationModule)</summary>
         public void OnStationExit()
         {
             SetControllerActive(false);
@@ -120,17 +108,13 @@ namespace ProjectCook.Cooking
             moveAction?.action?.Disable();
         }
 
-        /// <summary>
-        /// กำหนด Transform อ้างอิงทิศทางการเคลื่อนที่ (เช่น กล้องทำอาหาร)
-        /// </summary>
+        /// <summary>กำหนด Transform อ้างอิงทิศทางการเคลื่อนที่ (เช่น กล้องทำอาหาร)</summary>
         public void SetReferenceTransform(Transform refTrans)
         {
             referenceTransform = refTrans;
         }
 
-        /// <summary>
-        /// เปิด/ปิด การใช้งานระบบควบคุมกระทะ
-        /// </summary>
+        /// <summary>เปิด/ปิด การใช้งานระบบควบคุมกระทะ</summary>
         public void SetControllerActive(bool active)
         {
             isControllerActive = active;
@@ -145,9 +129,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// รีเซ็ตตำแหน่งและมุมเอียงของกระทะให้สไลด์และหมุนกลับสู่จุดเริ่มต้นบนเตาอย่างนุ่มนวล
-        /// </summary>
+        /// <summary>รีเซ็ตตำแหน่งและมุมเอียงของกระทะให้สไลด์และหมุนกลับสู่จุดเริ่มต้นบนเตาอย่างนุ่มนวล</summary>
         public void ResetPanPosition()
         {
             targetLocalPosition = initialLocalPosition;
@@ -273,9 +255,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// ใช้ MovePosition และ MoveRotation เพื่อย้ายกระทะผ่าน PhysX engine สำหรับ Kinematic Rigidbody
-        /// </summary>
+        /// <summary>ใช้ MovePosition และ MoveRotation เพื่อย้ายกระทะผ่าน PhysX engine สำหรับ Kinematic Rigidbody</summary>
         private void ApplyPhysicsTransform(Vector3 localPos, Quaternion localRot)
         {
             Transform parentTrans = panTransform.parent;
@@ -294,9 +274,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        /// <summary>
-        /// อ่านค่า Input จาก New Input System หรือ Keyboard Fallback
-        /// </summary>
+        /// <summary>อ่านค่า Input จาก New Input System หรือ Keyboard Fallback</summary>
         private Vector2 ReadMoveInput()
         {
             if (moveAction?.action != null)

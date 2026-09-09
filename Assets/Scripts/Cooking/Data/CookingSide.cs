@@ -1,8 +1,6 @@
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// ด้านของวัตถุดิบที่สัมผัสกับกระทะ/เตา
-    /// </summary>
+    /// <summary>ด้านของวัตถุดิบที่สัมผัสกับกระทะ/เตา</summary>
     public enum CookingSide
     {
         Omni,   // รอบทิศทาง (สำหรับของชิ้นเล็ก เช่น นักเก็ต, เฟรนช์ฟรายส์)

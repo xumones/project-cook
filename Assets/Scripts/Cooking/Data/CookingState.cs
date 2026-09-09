@@ -1,8 +1,6 @@
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// สถานะความสุกของวัตถุดิบ
-    /// </summary>
+    /// <summary>สถานะความสุกของวัตถุดิบ</summary>
     public enum CookingState
     {
         Raw,        // ดิบ/สด

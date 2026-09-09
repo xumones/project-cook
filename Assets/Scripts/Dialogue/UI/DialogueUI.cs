@@ -5,9 +5,7 @@ using TMPro;
 
 namespace ProjectCook.Dialogue.UI
 {
-    /// <summary>
-    /// สคริปต์ควบคุมหน้าต่าง Canvas UI สำหรับแสดงผลบทสนทนาและปุ่มตัวเลือกคำตอบแบบ Dynamic
-    /// </summary>
+    /// <summary>สคริปต์ควบคุมหน้าต่าง Canvas UI สำหรับแสดงผลบทสนทนาและปุ่มตัวเลือกคำตอบแบบ Dynamic</summary>
     public class DialogueUI : MonoBehaviour
     {
         [Header("UI Panels")]
@@ -48,9 +46,7 @@ namespace ProjectCook.Dialogue.UI
             HideChoices();
         }
 
-        /// <summary>
-        /// แสดงหน้าต่างบทสนทนา
-        /// </summary>
+        /// <summary>แสดงหน้าต่างบทสนทนา</summary>
         public void ShowUI()
         {
             if (dialoguePanel != null)
@@ -59,9 +55,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// ซ่อนหน้าต่างบทสนทนา
-        /// </summary>
+        /// <summary>ซ่อนหน้าต่างบทสนทนา</summary>
         public void HideUI()
         {
             if (dialoguePanel != null)
@@ -71,9 +65,7 @@ namespace ProjectCook.Dialogue.UI
             HideChoices();
         }
 
-        /// <summary>
-        /// กำหนดข้อมูลผู้พูดและภาพตัวละคร
-        /// </summary>
+        /// <summary>กำหนดข้อมูลผู้พูดและภาพตัวละคร</summary>
         public void SetSpeakerInfo(string speakerName, Sprite avatarSprite)
         {
             if (speakerNameText != null)
@@ -95,9 +87,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// กำหนดข้อความบทสนทนาและแสดงผลเต็มบรรทัดทันที
-        /// </summary>
+        /// <summary>กำหนดข้อความบทสนทนาและแสดงผลเต็มบรรทัดทันที</summary>
         public void SetDialogueText(string text)
         {
             if (dialogueText != null)
@@ -107,12 +97,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// เตรียมข้อความสำหรับเอฟเฟกต์ Typewriter โดยใส่ข้อความเต็มไว้ก่อนแล้วซ่อนตัวอักษรทั้งหมด
-        /// วิธีนี้ทำให้ TMP คำนวณ Layout และสร้าง Mesh เพียงครั้งเดียวต่อบรรทัด
-        /// (แทนการต่อสตริงทีละตัวซึ่งบังคับให้ TMP สร้าง Mesh ใหม่ทุกตัวอักษรและสร้างขยะ GC จำนวนมาก)
-        /// </summary>
-        /// <returns>จำนวนตัวอักษรที่มองเห็นได้จริง (ไม่นับแท็ก Rich Text)</returns>
+        /// <summary>เตรียมข้อความสำหรับเอฟเฟกต์ Typewriter โดยใส่ข้อความเต็มไว้ก่อนแล้วซ่อนตัวอักษรทั้งหมด</summary>
         public int PrepareTypewriterText(string text)
         {
             if (dialogueText == null) return 0;
@@ -126,10 +111,7 @@ namespace ProjectCook.Dialogue.UI
             return dialogueText.textInfo.characterCount;
         }
 
-        /// <summary>
-        /// กำหนดจำนวนตัวอักษรที่เปิดเผยให้เห็นสำหรับเอฟเฟกต์ Typewriter
-        /// TMP เพียงเปลี่ยนว่า Vertex ไหนถูกวาด ไม่มีการแปลงข้อความหรือสร้าง Mesh ใหม่ (Zero Allocation)
-        /// </summary>
+        /// <summary>กำหนดจำนวนตัวอักษรที่เปิดเผยให้เห็นสำหรับเอฟเฟกต์ Typewriter</summary>
         public void SetVisibleCharacterCount(int count)
         {
             if (dialogueText != null)
@@ -138,9 +120,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// แสดงผลปุ่มตัวเลือกคำตอบแบบ Dynamic (เลือกด้วย W/S/E ผ่าน DialogueManager ไม่ใช้เมาส์คลิกแล้ว)
-        /// </summary>
+        /// <summary>แสดงผลปุ่มตัวเลือกคำตอบแบบ Dynamic (เลือกด้วย W/S/E ผ่าน DialogueManager ไม่ใช้เมาส์คลิกแล้ว)</summary>
         public void DisplayChoices(List<DialogueChoice> choices)
         {
             HideChoices();
@@ -173,9 +153,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// ไฮไลต์ตัวเลือกคำตอบที่ index ที่ระบุ (ส่ง -1 เพื่อยกเลิกไฮไลต์ทั้งหมด)
-        /// </summary>
+        /// <summary>ไฮไลต์ตัวเลือกคำตอบที่ index ที่ระบุ (ส่ง -1 เพื่อยกเลิกไฮไลต์ทั้งหมด)</summary>
         public void SetHighlightedIndex(int highlightedIndex)
         {
             for (int i = 0; i < choiceBaseTexts.Count && i < buttonPool.Count; i++)
@@ -192,9 +170,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// ซ่อนปุ่มตัวเลือกคำตอบทั้งหมด
-        /// </summary>
+        /// <summary>ซ่อนปุ่มตัวเลือกคำตอบทั้งหมด</summary>
         public void HideChoices()
         {
             foreach (var btnObj in buttonPool)
@@ -212,9 +188,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>
-        /// ดึงปุ่มจาก Pool หรือสร้างใหม่กรณีไม่พอ
-        /// </summary>
+        /// <summary>ดึงปุ่มจาก Pool หรือสร้างใหม่กรณีไม่พอ</summary>
         private GameObject GetChoiceButtonFromPool(int index)
         {
             if (index < buttonPool.Count)

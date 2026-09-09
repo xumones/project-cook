@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
-using ProjectCook.NPC;
-using ProjectCook.Control;
 using ProjectCook.Core;
-using ProjectCook.CameraSystem;
 using ProjectCook.Dialogue.UI;
 
 namespace ProjectCook.Dialogue
 {
-    /// <summary>
-    /// Singleton Manager สำหรับควบคุมวงจรการทำงานของบทสนทนาทั้งหมด
-    /// </summary>
+    /// <summary>ควบคุมวงจรการทำงานของบทสนทนาทั้งหมด</summary>
     public class DialogueManager : SceneSingleton<DialogueManager>
     {
         [Header("Settings")]
@@ -28,7 +23,7 @@ namespace ProjectCook.Dialogue
         [FormerlySerializedAs("dialogUI")]
         [SerializeField] private DialogueUI dialogueUI;
 
-        private NPCController currentNPC;
+        private IDialogueTarget currentTarget;
         private DialogueDataSO currentDialogueData;
         private DialogueNode currentNode;
         private Coroutine typingCoroutine;
@@ -44,14 +39,6 @@ namespace ProjectCook.Dialogue
         // ตัวเลือกคำตอบที่ผ่านเงื่อนไขของโหนดปัจจุบัน และ index ที่กำลังไฮไลต์อยู่ (-1 = ยังไม่ได้เลือก ต้องกด W/S ก่อน)
         private readonly List<DialogueChoice> currentChoices = new List<DialogueChoice>();
         private int selectedChoiceIndex = -1;
-
-        // เฟรมล่าสุดที่บทสนทนาเพิ่งจบลง (EndDialogue) ใช้กันปุ่ม E เดียวกันที่เพิ่งปิดบทสนทนา
-        // ถูกตีความเป็น Interact() ใหม่ซ้ำในเฟรมเดียวกัน (ดู PlayerInteractor.Update)
-        private int lastDialogueEndFrame = -1;
-
-        public bool IsDialogueActive => isDialogueActive;
-        public bool IsTyping => isTyping;
-        public int LastDialogueEndFrame => lastDialogueEndFrame;
 
         private void OnEnable()
         {
@@ -84,40 +71,32 @@ namespace ProjectCook.Dialogue
             }
         }
 
-        /// <summary>
-        /// เริ่มต้นบทสนทนากับ NPC โดยใช้ไฟล์ JSON (TextAsset)
-        /// </summary>
-        public void StartDialogue(NPCController npc, TextAsset jsonAsset)
+        /// <summary>เริ่มต้นบทสนทนากับ NPC โดยใช้ไฟล์ JSON (TextAsset)</summary>
+        public void StartDialogue(IDialogueTarget target, TextAsset jsonAsset)
         {
             if (jsonAsset == null) return;
             DialogueDataSO data = DialogueDataSO.FromTextAsset(jsonAsset);
             if (data != null)
             {
-                StartDialogue(npc, data);
+                StartDialogue(target, data);
             }
         }
 
-        /// <summary>
-        /// เริ่มต้นบทสนทนากับ NPC
-        /// </summary>
-        public void StartDialogue(NPCController npc, DialogueDataSO dialogueData)
+        /// <summary>เริ่มต้นบทสนทนากับ NPC</summary>
+        public void StartDialogue(IDialogueTarget target, DialogueDataSO dialogueData)
         {
-            if (npc == null || dialogueData == null) return;
+            if (target == null || dialogueData == null) return;
 
-            currentNPC = npc;
+            currentTarget = target;
             currentDialogueData = dialogueData;
             isDialogueActive = true;
 
-            // 1. หยุดการเคลื่อนที่ของผู้เล่น (เคอร์เซอร์ยังคงล็อกอยู่ เพื่อให้เมาส์ใช้หมุนกล้องได้ตามข้อ 1)
-            SetPlayerControl(false);
-
-            // 1.1 เข้าโหมดกล้องบทสนทนา: หมุนได้แต่จำกัดมุมรอบทิศที่กล้องเล็งอยู่ตอนนี้ (คล้าย PanStation)
-            if (CameraManager.Instance != null)
+            if (GameModeManager.Instance != null)
             {
-                CameraManager.Instance.SwitchToDialogue();
+                GameModeManager.Instance.SetMode(GameMode.Dialogue);
             }
 
-            // 2. แสดงผล UI หน้าต่างบทสนทนา
+            // แสดงผล UI หน้าต่างบทสนทนา
             if (dialogueUI != null)
             {
                 dialogueUI.ShowUI();
@@ -136,9 +115,7 @@ namespace ProjectCook.Dialogue
             }
         }
 
-        /// <summary>
-        /// แสดงผลโหนดบทสนทนา
-        /// </summary>
+        /// <summary>แสดงผลโหนดบทสนทนา</summary>
         public void DisplayNode(DialogueNode node)
         {
             if (node == null)
@@ -160,7 +137,7 @@ namespace ProjectCook.Dialogue
             // กำหนดชื่อผู้พูด
             string speakerName = !string.IsNullOrEmpty(node.speakerNameOverride)
                 ? node.speakerNameOverride
-                : (currentNPC != null ? currentNPC.NPCName : currentDialogueData.defaultSpeakerName);
+                : (currentTarget != null ? currentTarget.DisplayName : currentDialogueData.defaultSpeakerName);
 
             if (dialogueUI != null)
             {
@@ -200,10 +177,7 @@ namespace ProjectCook.Dialogue
             OnTypingComplete();
         }
 
-        /// <summary>
-        /// ดึงตัวหน่วงเวลาที่แคชไว้ (สร้างใหม่เฉพาะตอนค่า typingSpeed ถูกปรับเปลี่ยน)
-        /// เพื่อไม่ให้เกิดการ Allocate Object ใหม่ทุกตัวอักษรที่พิมพ์
-        /// </summary>
+        /// <summary>ดึงตัวหน่วงเวลาที่แคชไว้ (สร้างใหม่เฉพาะตอนค่า typingSpeed ถูกปรับเปลี่ยน)</summary>
         private WaitForSeconds GetTypingDelay()
         {
             if (cachedTypingDelay == null || !Mathf.Approximately(cachedTypingSpeed, typingSpeed))
@@ -252,9 +226,7 @@ namespace ProjectCook.Dialogue
             }
         }
 
-        /// <summary>
-        /// อ่าน Input W (ขึ้น) / S (ลง) / E (ยืนยัน) ระหว่างที่กำลังรอผู้เล่นเลือกคำตอบอยู่
-        /// </summary>
+        /// <summary>อ่าน Input W (ขึ้น) / S (ลง) / E (ยืนยัน) ระหว่างที่กำลังรอผู้เล่นเลือกคำตอบอยู่</summary>
         private void HandleChoiceInput()
         {
             int direction = ReadNavigateDirection();
@@ -291,9 +263,7 @@ namespace ProjectCook.Dialogue
             SelectChoice(currentChoices[selectedChoiceIndex]);
         }
 
-        /// <summary>
-        /// ประมวลผลเมื่อผู้เล่นยืนยันเลือกตัวเลือกคำตอบ
-        /// </summary>
+        /// <summary>ประมวลผลเมื่อผู้เล่นยืนยันเลือกตัวเลือกคำตอบ</summary>
         private void SelectChoice(DialogueChoice choice)
         {
             if (choice == null) return;
@@ -308,9 +278,9 @@ namespace ProjectCook.Dialogue
             // 1. ถ้าระบุ actionID ให้ส่งยิง Action ไปยัง NPC
             if (!string.IsNullOrEmpty(choice.actionID))
             {
-                if (currentNPC != null)
+                if (currentTarget != null)
                 {
-                    currentNPC.HandleAction(choice.actionID);
+                    currentTarget.HandleAction(choice.actionID);
                 }
             }
 
@@ -364,9 +334,7 @@ namespace ProjectCook.Dialogue
             }
         }
 
-        /// <summary>
-        /// จบการคุยบทสนทนา
-        /// </summary>
+        /// <summary>จบการคุยบทสนทนา</summary>
         public void EndDialogue()
         {
             isDialogueActive = false;
@@ -374,7 +342,6 @@ namespace ProjectCook.Dialogue
             isWaitingForChoice = false;
             currentChoices.Clear();
             selectedChoiceIndex = -1;
-            lastDialogueEndFrame = Time.frameCount;
 
             if (typingCoroutine != null)
             {
@@ -386,32 +353,19 @@ namespace ProjectCook.Dialogue
                 dialogueUI.HideUI();
             }
 
-            // คืนค่าการเคลื่อนที่ให้ผู้เล่น
-            SetPlayerControl(true);
-
-            // ออกจากโหมดกล้องบทสนทนา คืนขอบเขตการหมุนกล้องผู้เล่นกลับเป็นค่าเดิม
-            if (CameraManager.Instance != null)
+            if (GameModeManager.Instance != null)
             {
-                CameraManager.Instance.ExitDialogue();
+                GameModeManager.Instance.SetMode(GameMode.Exploring);
             }
 
-            if (currentNPC != null)
+            if (currentTarget != null)
             {
-                currentNPC.OnDialogueEnded();
-                currentNPC = null;
+                currentTarget.OnDialogueEnded();
+                currentTarget = null;
             }
 
             currentDialogueData = null;
             currentNode = null;
-        }
-
-        private void SetPlayerControl(bool enableControl)
-        {
-            PlayerMovement player = FindFirstObjectByType<PlayerMovement>();
-            if (player != null)
-            {
-                player.SetControlActive(enableControl);
-            }
         }
 
         private bool WasAdvancePressed()
@@ -428,11 +382,7 @@ namespace ProjectCook.Dialogue
             return ePressed || spacePressed || mousePressed;
         }
 
-        /// <summary>
-        /// อ่านทิศทางเลื่อนไฮไลต์คำตอบ: 1 = ขึ้น (W), -1 = ลง (S), 0 = ไม่ได้กด
-        /// เช็คปุ่ม W/S ตรงๆ ก่อน (กันการกดค้างแล้วเลื่อนรัว เพราะ wasPressedThisFrame ติดครั้งเดียวต่อการกด)
-        /// แล้วค่อยรองรับ Gamepad/Joystick ผ่าน UI/Navigate action เป็นทางเลือกเสริม
-        /// </summary>
+        /// <summary>อ่านทิศทางเลื่อนไฮไลต์คำตอบ: 1 = ขึ้น (W), -1 = ลง (S), 0 = ไม่ได้กด</summary>
         private int ReadNavigateDirection()
         {
             if (Keyboard.current != null)

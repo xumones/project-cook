@@ -1,12 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>
-    /// สคริปต์จัดการการทอดอาหารในกระทะ (Pan Food Container System)
-    /// สืบทอดจาก HeatingFoodContainer เพิ่มเติมส่วนตรวจจับพื้นผิวกระทะ 3 ซม. และทอดอาหารแบบ 2 ด้าน
-    /// </summary>
+    /// <summary>สคริปต์จัดการการทอดอาหารในกระทะ (Pan Food Container System)</summary>
     public class PanFoodContainer : HeatingFoodContainer
     {
         [Header("Pan Specific References")]
@@ -25,9 +21,7 @@ namespace ProjectCook.Cooking
             base.Awake();
         }
 
-        /// <summary>
-        /// Abstract Method Implementation: กำหนดการทอดเฉพาะของกระทะ (เช็กระยะ 3 ซม. + ส่ง Vector panUp)
-        /// </summary>
+        /// <summary>Abstract Method Implementation: กำหนดการทอดเฉพาะของกระทะ (เช็กระยะ 3 ซม. + ส่ง Vector panUp)</summary>
         protected override void ApplyHeatToItem(FoodItemData item)
         {
             if (item == null || item.Ingredient == null) return;
@@ -48,9 +42,7 @@ namespace ProjectCook.Cooking
             return true;
         }
 
-        /// <summary>
-        /// ตรวจสอบว่าวัตถุดิบชิ้นที่กำลังคีบจับอยู่ สัมผัสอยู่กับพื้นผิวกระทะจริงหรือไม่ในระยะ 3 ซม. (0.03m) แบบ Zero-GC
-        /// </summary>
+        /// <summary>ตรวจสอบว่าวัตถุดิบชิ้นที่กำลังคีบจับอยู่ สัมผัสอยู่กับพื้นผิวกระทะจริงหรือไม่ในระยะ 3 ซม. (0.03m) แบบ Zero-GC</summary>
         public bool IsTouchingPanSurface(FoodItemData item)
         {
             if (item == null || item.Rigidbody == null || item.Ingredient == null) return false;
