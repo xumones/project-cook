@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0ee4ed81ae40846a282084bffd2fe2, type: 3}
+  m_Name: Quest_Lettuce
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
+  questId: lettuce
+  recipe: {fileID: 11400000, guid: 846867b42c8232143b266d95a437c070, type: 2}
+  offerText: "Good fish. Now something green, fresh, no cooking needed."
+  reminderText: "Just lettuce. Fresh. Nothing fancy."
+  exactText: "Crisp and fresh. That's all I needed."
+  extraText: "Lettuce and company. Fine by me."

@@ -7,13 +7,6 @@ namespace ProjectCook.Cooking
     /// <summary>Abstract Class แม่สำหรับอุปกรณ์ทำอาหาร/ภาชนะเก็บวัตถุดิบ (Base Food Container System)</summary>
     public abstract class FoodContainer : MonoBehaviour, IItemContents
     {
-        [Header("Filtering Settings")]
-        [Tooltip("เปิดใช้งานการกรองเฉพาะวัตถุที่มี Tag ที่กำหนด (หากปิดจะรับ Rigidbody ทุกชิ้นที่เป็นอาหาร)")]
-        [SerializeField] protected bool useTagFilter = false;
-
-        [Tooltip("Tag ของวัตถุดิบอาหาร เช่น 'Food' หรือ 'Ingredient'")]
-        [SerializeField] protected string foodTag = "Food";
-
         /// <summary>Callback Event แจ้งเตือนเมื่อมีวัตถุดิบวางลงในภาชนะ</summary>
         public event System.Action<IngredientDataSO> OnIngredientDropped;
 
@@ -42,6 +35,40 @@ namespace ProjectCook.Cooking
         /// <summary>ตอนนี้มีวัตถุดิบอยู่ในภาชนะหรือไม่ (IItemContents)</summary>
         public bool HasContents => foodItems.Count > 0;
 
+        /// <summary>เติมรายชื่อวัตถุดิบข้างในลง list ที่ผู้เรียกเตรียมมา ไม่เปิด Rigidbody ให้ระบบภายนอกยุ่ง</summary>
+        public void GetIngredients(List<IngredientInstance> buffer)
+        {
+            buffer.Clear();
+            for (int i = 0; i < foodItems.Count; i++)
+            {
+                if (foodItems[i]?.Ingredient != null)
+                {
+                    buffer.Add(foodItems[i].Ingredient);
+                }
+            }
+        }
+
+        /// <summary>เอาวัตถุดิบออกจากภาชนะทั้งหมดแล้วทำลายทิ้ง ใช้ตอนส่งมอบ</summary>
+        public void ConsumeAll()
+        {
+            for (int i = foodItems.Count - 1; i >= 0; i--)
+            {
+                GameObject item = foodItems[i]?.Rigidbody != null ? foodItems[i].Rigidbody.gameObject : null;
+
+                // ถอดออกจากรายการก่อน (คลาสลูกจะได้คืนสถานะที่ยึดไว้) แล้วค่อยทำลาย
+                RemoveFoodItemAt(i);
+                if (item != null)
+                {
+                    Destroy(item);
+                }
+            }
+        }
+
+        /// <summary>ยึดวัตถุดิบข้างในให้ติดไปกับภาชนะ ภาชนะที่ให้ความร้อนไม่รองรับเพราะอาหารต้องไถลได้</summary>
+        public virtual void SetFrozen(bool frozen)
+        {
+        }
+
         protected virtual void Awake()
         {
         }
@@ -51,8 +78,6 @@ namespace ProjectCook.Cooking
             Rigidbody rb = other.attachedRigidbody;
             if (rb == null || rb.isKinematic) return;
 
-            if (useTagFilter && !other.CompareTag(foodTag)) return;
-
             IngredientInstance ingredient = other.GetComponentInParent<IngredientInstance>();
             if (ingredient == null && rb != null)
             {
@@ -61,31 +86,30 @@ namespace ProjectCook.Cooking
 
             if (ingredient == null) return;
 
-            bool alreadyExists = false;
+            AddFoodItem(rb, ingredient);
+        }
+
+        /// <summary>ลงทะเบียนวัตถุดิบเข้าภาชนะ ใช้ทั้งจาก trigger และจากระบบที่ยื่นของให้ตรง ๆ คืน false ถ้ามีอยู่แล้ว</summary>
+        protected bool AddFoodItem(Rigidbody rb, IngredientInstance ingredient)
+        {
             for (int i = 0; i < foodItems.Count; i++)
             {
-                if (foodItems[i] != null && foodItems[i].Rigidbody == rb)
-                {
-                    alreadyExists = true;
-                    break;
-                }
+                if (foodItems[i] != null && foodItems[i].Rigidbody == rb) return false;
             }
 
-            if (!alreadyExists)
+            FoodItemData newItem = new FoodItemData { Rigidbody = rb, Ingredient = ingredient };
+
+            // เก็บ Delegate ไว้ใน FoodItemData เพื่อให้ถอน Subscription ได้ตอนวัตถุดิบออกจากภาชนะ
+            newItem.StateChangedHandler = state => HandleIngredientStateChanged(ingredient, state);
+            ingredient.OnStateChanged += newItem.StateChangedHandler;
+
+            foodItems.Add(newItem);
+
+            if (ingredient.Data != null)
             {
-                FoodItemData newItem = new FoodItemData { Rigidbody = rb, Ingredient = ingredient };
-
-                // เก็บ Delegate ไว้ใน FoodItemData เพื่อให้ถอน Subscription ได้ตอนวัตถุดิบออกจากภาชนะ
-                newItem.StateChangedHandler = state => HandleIngredientStateChanged(ingredient, state);
-                ingredient.OnStateChanged += newItem.StateChangedHandler;
-
-                foodItems.Add(newItem);
-
-                if (ingredient.Data != null)
-                {
-                    OnIngredientDropped?.Invoke(ingredient.Data);
-                }
+                OnIngredientDropped?.Invoke(ingredient.Data);
             }
+            return true;
         }
 
         public virtual void OnTriggerExit(Collider other)
@@ -104,7 +128,7 @@ namespace ProjectCook.Cooking
         }
 
         /// <summary>ถอด Subscription ของวัตถุดิบออกก่อนแล้วจึงลบออกจากรายการ</summary>
-        protected void RemoveFoodItemAt(int index)
+        protected virtual void RemoveFoodItemAt(int index)
         {
             if (index < 0 || index >= foodItems.Count) return;
 

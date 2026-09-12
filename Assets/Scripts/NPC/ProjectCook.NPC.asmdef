@@ -3,7 +3,9 @@
     "rootNamespace": "ProjectCook.NPC",
     "references": [
         "ProjectCook.Core",
-        "ProjectCook.Dialogue"
+        "ProjectCook.Dialogue",
+        "ProjectCook.Items",
+        "ProjectCook.Cooking"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

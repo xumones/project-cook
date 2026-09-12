@@ -5,6 +5,17 @@ using ProjectCook.Dialogue.Conditions;
 
 namespace ProjectCook.Dialogue
 {
+    /// <summary>ปลายทางทางเลือกของตัวเลือกคำตอบ ใช้เมื่อ flag ที่ระบุเป็นจริง</summary>
+    [System.Serializable]
+    public class DialogueBranch
+    {
+        [Tooltip("Flag ที่ต้อง > 0 ถึงจะไปทางนี้")]
+        public string conditionFlag;
+
+        [Tooltip("โหนดถัดไปเมื่อเข้าเงื่อนไข")]
+        public string nextNodeID;
+    }
+
     /// <summary>Data structure สำหรับเก็บข้อมูลตัวเลือกคำตอบ 1 ข้อ (Multiple Choice Option)</summary>
     [System.Serializable]
     public class DialogueChoice
@@ -12,30 +23,29 @@ namespace ProjectCook.Dialogue
         [Tooltip("ข้อความที่จะแสดงบนปุ่มตัวเลือก")]
         public string choiceText;
 
-        [Tooltip("ID ของโหนดบทสนทนาถัดไปเมื่อเลือกข้อนี้ (ถ้าว่างไว้จะจบการคุย)")]
+        [Tooltip("ID ของโหนดบทสนทนาถัดไปเมื่อเลือกข้อนี้ (ถ้าว่างไว้จะจบการคุย) ถูก branches ทับได้")]
         public string nextNodeID;
+
+        [Tooltip("ปลายทางตาม flag ตรวจตามลำดับ ตัวแรกที่เข้าเงื่อนไขชนะ ไม่เข้าเลยจึงใช้ nextNodeID")]
+        public List<DialogueBranch> branches = new List<DialogueBranch>();
 
         [Tooltip("Action ID สำหรับเรียกใช้ฟังก์ชันพิเศษของ NPC (เช่น 'OPEN_SHOP', 'GIVE_RECIPE', 'CLOSE')")]
         public string actionID;
 
-        [Tooltip("ชื่อ Flag Key ในเกมที่ต้องการเช็คแบบรวดเร็ว (สำหรับใช้กับ JSON Data เช่น 'has_recipe')")]
+        [Tooltip("นิพจน์ flag สำหรับ JSON เช่น 'has_recipe' (> 0), 'step=2', 'a,b>=1' (ทุกตัวต้องผ่าน)")]
         public string conditionFlag;
 
         [Tooltip("รายการเงื่อนไขที่จะให้ตัวเลือกนี้โชว์บน UI (ทุกข้อต้องผ่านทั้งหมด)")]
         public List<DialogueConditionSO> conditions = new List<DialogueConditionSO>();
 
+        /// <summary>หาโหนดถัดไปจริง ๆ โดยดู branches ก่อน ให้ NPC ตอบต่างกันได้จากตัวเลือกเดียวของผู้เล่น</summary>
+        public string ResolveNextNodeID() => DialogueConditionUtility.ResolveBranch(branches, nextNodeID);
+
         /// <summary>เช็คว่าเงื่อนไขทุกข้อของตัวเลือกนี้ผ่านหรือไม่</summary>
         public bool AreConditionsMet()
         {
-            // 1. เช็ค conditionFlag แบบง่าย (ถ้ามีระบุไว้) ผ่านจุดเช็คเดียวกับ GameFlagConditionSO
-            // (เทียบเท่า flag > 0 แบบเดิม แต่ยิงผ่าน DialogueConditionUtility.IsFlagMet ที่เดียว)
-            if (!string.IsNullOrEmpty(conditionFlag) && !DialogueConditionUtility.IsFlagMet(conditionFlag, FlagComparison.GreaterThan, 0))
-            {
-                return false;
-            }
-
-            // 2. เช็ค ScriptableObject conditions (ถ้ามีระบุไว้) ผ่าน Utility กลาง
-            return DialogueConditionUtility.AreAllMet(conditions);
+            return DialogueConditionUtility.IsFlagExpressionMet(conditionFlag)
+                && DialogueConditionUtility.AreAllMet(conditions);
         }
     }
 }

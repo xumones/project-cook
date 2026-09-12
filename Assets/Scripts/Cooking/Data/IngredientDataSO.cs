@@ -19,6 +19,9 @@ namespace ProjectCook.Cooking
         [Tooltip("รูปไอคอนสำหรับ UI")]
         [SerializeField] private Sprite icon;
 
+        [Tooltip("Prefab ของวัตถุดิบชิ้นนี้ ทุกระบบที่สร้างวัตถุดิบต้องอ้างจากตรงนี้ที่เดียว")]
+        [SerializeField] private GameObject prefab;
+
         [Header("Cooking Mode")]
         [Tooltip("เปิดใช้งานโหมดทอดแยกด้าน (เช่น เนื้อสเต๊ก/เบอร์เกอร์ ต้องทอดสุกทั้งด้านหน้าและด้านหลัง)")]
         [SerializeField] private bool isTwoSidedCooking = false;
@@ -87,6 +90,7 @@ namespace ProjectCook.Cooking
         public string IngredientId => ingredientId;
         public string IngredientName => ingredientName;
         public Sprite Icon => icon;
+        public GameObject Prefab => prefab;
         public bool IsTwoSidedCooking => isTwoSidedCooking;
         public float CookTime => cookTime;
         public float BurnTime => burnTime;

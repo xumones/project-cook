@@ -16,6 +16,30 @@ namespace ProjectCook.Core
             flags[key] = value;
         }
 
+        /// <summary>ลบ flag ทุกตัวที่ขึ้นต้นด้วย prefix ใช้ล้าง flag ชั่วคราวก่อนคำนวณใหม่</summary>
+        public void ClearWithPrefix(string prefix)
+        {
+            if (string.IsNullOrEmpty(prefix)) return;
+
+            removeBuffer.Clear();
+            foreach (string key in flags.Keys)
+            {
+                if (key.StartsWith(prefix)) removeBuffer.Add(key);
+            }
+            foreach (string key in removeBuffer)
+            {
+                flags.Remove(key);
+            }
+        }
+
+        private readonly List<string> removeBuffer = new List<string>();
+
+        /// <summary>ล้างความคืบหน้าทั้งหมด ใช้ตอนเริ่มเกมใหม่</summary>
+        public void ClearAll()
+        {
+            flags.Clear();
+        }
+
         /// <summary>ดึงค่า Flag (ถ้าไม่มีจะคืนค่า default 0)</summary>
         public int GetFlag(string key)
         {
@@ -27,8 +51,17 @@ namespace ProjectCook.Core
         public bool HasCookedDish(string dishID)
         {
             if (string.IsNullOrEmpty(dishID)) return false;
-            return GetFlag($"cooked_{dishID.ToLower()}") > 0;
+            return GetFlag(CookedDishKey(dishID)) > 0;
         }
+
+        /// <summary>บันทึกว่าส่งมอบเมนูนั้นสำเร็จแล้ว</summary>
+        public void SetDishCooked(string dishID)
+        {
+            if (string.IsNullOrEmpty(dishID)) return;
+            SetFlag(CookedDishKey(dishID), 1);
+        }
+
+        private static string CookedDishKey(string dishID) => $"cooked_{dishID.ToLower()}";
 
         /// <summary>ตรวจสอบเปรียบเทียบค่า Flag ตามเงื่อนไขที่กำหนด</summary>
         public bool CheckFlag(string key, FlagComparison comparison, int targetValue)

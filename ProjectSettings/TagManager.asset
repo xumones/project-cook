@@ -16,7 +16,7 @@ TagManager:
   - Interactable
   - NonSolidFood
   - SolidFood
-  - 
+  - HeldItem
   - Item
   - 
   - 

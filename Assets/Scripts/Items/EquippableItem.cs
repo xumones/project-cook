@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using ProjectCook.Core;
 
 namespace ProjectCook.Items
 {
@@ -17,11 +18,8 @@ namespace ProjectCook.Items
         /// <summary>มีของอยู่ข้างใน = ยกไม่ได้ ต้องเทออกก่อน (กระทะ)</summary>
         BlockPickup,
 
-        /// <summary>ยกได้ โดยแช่ของข้างในให้นิ่งติดภาชนะระหว่างถือ (จาน)</summary>
-        Freeze,
-
-        /// <summary>ยกได้ โดยปล่อยของข้างในเดินฟิสิกส์ต่อ (ยังไม่มีของชิ้นไหนใช้)</summary>
-        Simulate
+        /// <summary>ยกได้ โดยยึดของข้างในให้ติดภาชนะระหว่างถือ (จาน)</summary>
+        Freeze
     }
 
     /// <summary>ทำให้ไอเทมถือเข้ามือได้ — เป็นทั้ง "สิทธิ์" และ "กลไก" ในตัวเดียวกัน</summary>
@@ -43,19 +41,13 @@ namespace ProjectCook.Items
         [Tooltip("ของที่อยู่ในภาชนะนี้จะเป็นอย่างไรตอนถูกยกขึ้นถือ")]
         [SerializeField] private ContentsPolicy contentsPolicy = ContentsPolicy.Freeze;
 
-        /// <summary>Layer ที่ไอเทมย้ายไปอยู่ระหว่างถือ</summary>
-        public const string HeldLayerName = "HeldItem";
-
         private Item item;
         private Rigidbody cachedRigidbody;
-        private Collider[] cachedColliders;
-        private Transform[] cachedTransforms;
-        private int[] savedLayers;
         private IItemContents contents;
 
+        private LayerSnapshot heldLayers;
         private bool savedIsKinematic;
         private bool savedUseGravity;
-        private bool layersApplied;
 
         /// <summary>มือที่ไอเทมชิ้นนี้จะไปอยู่</summary>
         public HandRole HandRole => overrideHandRole ? handRoleOverride : item.PreferredHandRole;
@@ -64,9 +56,6 @@ namespace ProjectCook.Items
         {
             item = GetComponent<Item>();
             cachedRigidbody = GetComponent<Rigidbody>();
-            cachedColliders = GetComponentsInChildren<Collider>(true);
-            cachedTransforms = GetComponentsInChildren<Transform>(true);
-            savedLayers = new int[cachedTransforms.Length];
             contents = GetComponentInChildren<IItemContents>(true);
         }
 
@@ -92,6 +81,11 @@ namespace ProjectCook.Items
         /// <summary>เรียกจาก EquipmentManager เท่านั้น: ปิดฟิสิกส์ + ย้าย Layer + parent เข้า anchor + จัดท่าถือ</summary>
         public void NotifyEquipped(Transform anchor)
         {
+            if (contentsPolicy == ContentsPolicy.Freeze)
+            {
+                contents?.SetFrozen(true);
+            }
+
             if (cachedRigidbody != null)
             {
                 savedIsKinematic = cachedRigidbody.isKinematic;
@@ -100,7 +94,8 @@ namespace ProjectCook.Items
                 cachedRigidbody.useGravity = false;
             }
 
-            ApplyHeldLayer();
+            // Layer HeldItem ถูกตัดออกจากการเล็งและไม่ชนกับผู้เล่นผ่าน Collision Matrix ไม่ต้องจัดการการชนเองอีก
+            heldLayers = LayerSnapshot.Apply(transform, GameLayers.HeldItem);
 
             transform.SetParent(anchor, false);
             transform.localPosition = holdPose.localPosition;
@@ -115,7 +110,7 @@ namespace ProjectCook.Items
             transform.SetParent(null, true);
             transform.SetPositionAndRotation(worldPosition, worldRotation);
 
-            RestoreLayers();
+            heldLayers.Restore();
 
             if (cachedRigidbody != null)
             {
@@ -125,59 +120,13 @@ namespace ProjectCook.Items
                 cachedRigidbody.angularVelocity = Vector3.zero;
             }
 
+            // ปล่อยของข้างในเป็นขั้นสุดท้าย ตอนภาชนะอยู่ตำแหน่งสุดท้ายแล้ว ของจะได้ตกลงถูกที่
+            if (contentsPolicy == ContentsPolicy.Freeze)
+            {
+                contents?.SetFrozen(false);
+            }
+
             item.SetLocation(ItemLocation.World);
-        }
-
-        /// <summary>เปิด/ปิดการชนกันระหว่างไอเทมชิ้นนี้กับตัวผู้เล่น</summary>
-        public void SetIgnoreCollisionWith(Collider[] others, bool ignore)
-        {
-            if (others == null || cachedColliders == null) return;
-
-            for (int i = 0; i < cachedColliders.Length; i++)
-            {
-                Collider mine = cachedColliders[i];
-                if (mine == null) continue;
-
-                for (int j = 0; j < others.Length; j++)
-                {
-                    if (others[j] == null) continue;
-                    Physics.IgnoreCollision(mine, others[j], ignore);
-                }
-            }
-        }
-
-        private void ApplyHeldLayer()
-        {
-            int heldLayer = LayerMask.NameToLayer(HeldLayerName);
-            if (heldLayer < 0)
-            {
-                Debug.LogWarning($"[EquippableItem] ไม่พบ Layer '{HeldLayerName}' ไอเทมจะคง Layer เดิมไว้ระหว่างถือ", this);
-                return;
-            }
-
-            for (int i = 0; i < cachedTransforms.Length; i++)
-            {
-                if (cachedTransforms[i] == null) continue;
-
-                savedLayers[i] = cachedTransforms[i].gameObject.layer;
-                cachedTransforms[i].gameObject.layer = heldLayer;
-            }
-
-            layersApplied = true;
-        }
-
-        private void RestoreLayers()
-        {
-            if (!layersApplied) return;
-
-            for (int i = 0; i < cachedTransforms.Length; i++)
-            {
-                if (cachedTransforms[i] == null) continue;
-
-                cachedTransforms[i].gameObject.layer = savedLayers[i];
-            }
-
-            layersApplied = false;
         }
     }
 }

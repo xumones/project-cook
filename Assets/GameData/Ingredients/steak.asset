@@ -15,6 +15,7 @@ MonoBehaviour:
   ingredientId: steak_1
   ingredientName: steak
   icon: {fileID: 0}
+  prefab: {fileID: 7868236622428405660, guid: 33be8fa5623a92f4aa6239b30c3278b1, type: 3}
   isTwoSidedCooking: 1
   cookTime: 70
   burnTime: 100

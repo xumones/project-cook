@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0ee4ed81ae40846a282084bffd2fe2, type: 3}
+  m_Name: Quest_Sausage
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
+  questId: sausage
+  recipe: {fileID: 11400000, guid: 1c5f1fbb951dcc24ca70956192d1b9c5, type: 2}
+  offerText: "Prove it. Cook me one sausage, properly, and bring it on a plate."
+  reminderText: "Sausage. Cooked through. That's the whole job."
+  exactText: "Now that's properly done. Well cooked."
+  extraText: "Ha, you overdid it. I'm not complaining."

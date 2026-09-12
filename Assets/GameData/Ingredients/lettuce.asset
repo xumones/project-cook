@@ -15,11 +15,11 @@ MonoBehaviour:
   ingredientId: lettuce_1
   ingredientName: lettuce
   icon: {fileID: 0}
+  prefab: {fileID: 4540402395726398216, guid: 8e46261ecd4609e47815f73d51d71229, type: 3}
   isTwoSidedCooking: 0
   cookTime: 40
   burnTime: 70
-  rawMaterial: {fileID: 2100000, guid: 02a98d3636fa5a140aa25b43614546f1, type: 2}
-  cookedMaterial: {fileID: 0}
+  cookingMaterial: {fileID: 0}
   burntMaterial: {fileID: 0}
   tintIntensity: 0.5
   burntColor: {r: 0.35, g: 0.3, b: 0.3, a: 1}

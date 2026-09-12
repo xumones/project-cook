@@ -6,6 +6,9 @@ namespace ProjectCook.Dialogue
         /// <summary>ชื่อที่ขึ้นบนกล่องข้อความเมื่อโหนดไม่ได้ระบุชื่อผู้พูดเอง</summary>
         string DisplayName { get; }
 
+        /// <summary>เติม placeholder ในข้อความก่อนแสดง คืนข้อความเดิมถ้าไม่มีอะไรให้แทน</summary>
+        string ResolveText(string text);
+
         void OnDialogueEnded();
     }
 }

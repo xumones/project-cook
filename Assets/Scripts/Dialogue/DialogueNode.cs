@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectCook.Dialogue.Conditions;
 
 namespace ProjectCook.Dialogue
 {
@@ -26,13 +27,22 @@ namespace ProjectCook.Dialogue
         [Tooltip("ID หรือ Path ของ Event เสียงพากย์/SFX (สำหรับใช้กับ FMOD/Audio Event System หรือ JSON Data)")]
         public string audioEvent;
 
-        [Tooltip("ID ของโหนดถัดไปอัตโนมัติกรณีไม่มีตัวเลือกคำตอบ")]
+        [Tooltip("ID ของโหนดถัดไปอัตโนมัติกรณีไม่มีตัวเลือกคำตอบ ถูก branches ทับได้")]
         public string nextNodeID;
+
+        [Tooltip("ปลายทางตาม flag ตรวจตามลำดับ ตัวแรกที่เข้าเงื่อนไขชนะ ไม่เข้าเลยจึงใช้ nextNodeID")]
+        public List<DialogueBranch> branches = new List<DialogueBranch>();
 
         [Tooltip("รายการตัวเลือกคำตอบ (ถ้ามีหลายข้อ หน้าต่างตัวเลือกจะเด้งขึ้นมาแทนการผ่านบรรทัดอัตโนมัติ)")]
         public List<DialogueChoice> choices = new List<DialogueChoice>();
 
-        /// <summary>เช็คว่าโหนดนี้มีตัวเลือกคำตอบหรือไม่</summary>
-        public bool HasChoices => choices != null && choices.Count > 0;
+        [Tooltip("ยืมตัวเลือกของโหนดอื่นมาใช้แทน choices ของตัวเอง ใช้ทำข้อความต่างกันแต่เมนูเดียวกัน")]
+        public string choicesFrom;
+
+        /// <summary>เช็คว่าโหนดนี้มีตัวเลือกคำตอบหรือไม่ (นับรวมที่ยืมมาด้วย)</summary>
+        public bool HasChoices => (choices != null && choices.Count > 0) || !string.IsNullOrEmpty(choicesFrom);
+
+        /// <summary>หาโหนดถัดไปจริง ๆ ตอน auto-advance ให้ NPC พูดต่างกันตามสถานะได้ในไฟล์เดียว</summary>
+        public string ResolveNextNodeID() => DialogueConditionUtility.ResolveBranch(branches, nextNodeID);
     }
 }

@@ -15,6 +15,7 @@ MonoBehaviour:
   ingredientId: egg_1
   ingredientName: egg
   icon: {fileID: 0}
+  prefab: {fileID: 5990088820357481865, guid: 9e6388f35bbfbe54eb064cc7c9cb8b27, type: 3}
   isTwoSidedCooking: 0
   cookTime: 40
   burnTime: 60

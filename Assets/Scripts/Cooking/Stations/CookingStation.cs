@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ProjectCook.Core;
+using ProjectCook.Items;
 using ProjectCook.Player;
 using Unity.Cinemachine;
 
@@ -91,6 +92,14 @@ namespace ProjectCook.Cooking
         /// <summary>สถานีที่ต้องการเงื่อนไขพิเศษก่อนเข้าใช้งานให้ Override เมธอดนี้</summary>
         public virtual void Interact()
         {
+            // ของในมือใช้ในสถานีไม่ได้และบังกล้อง ต้องวางก่อน (โหมด Cooking ปิดการหยิบอยู่แล้ว จึงกันแค่ตอนเข้าพอ)
+            EquipmentManager equipment = EquipmentManager.Instance;
+            if (equipment != null && equipment.IsHoldingAnything)
+            {
+                Debug.Log($"[CookingStation] เข้า {name} ไม่ได้: ต้องวางของในมือก่อน");
+                return;
+            }
+
             EnterStation();
         }
 

@@ -26,6 +26,7 @@ namespace ProjectCook.Dialogue
         private IDialogueTarget currentTarget;
         private DialogueDataSO currentDialogueData;
         private DialogueNode currentNode;
+        private string currentDisplayText;
         private Coroutine typingCoroutine;
 
         // แคชตัวหน่วงเวลาของเอฟเฟกต์พิมพ์ เพื่อไม่ให้ Allocate ใหม่ทุกตัวอักษร
@@ -150,12 +151,15 @@ namespace ProjectCook.Dialogue
                 AudioSource.PlayClipAtPoint(node.voiceClip, UnityEngine.Camera.main != null ? UnityEngine.Camera.main.transform.position : Vector3.zero);
             }
 
+            // เติม placeholder ครั้งเดียวตรงนี้ ทั้งตอนพิมพ์และตอนกดข้ามจะได้ข้อความเดียวกัน
+            currentDisplayText = currentTarget != null ? currentTarget.ResolveText(node.dialogueText) : node.dialogueText;
+
             // เริ่มเอฟเฟกต์พิมพ์ตัวอักษรทีละตัว
             if (typingCoroutine != null)
             {
                 StopCoroutine(typingCoroutine);
             }
-            typingCoroutine = StartCoroutine(TypeTextRoutine(node.dialogueText));
+            typingCoroutine = StartCoroutine(TypeTextRoutine(currentDisplayText));
         }
 
         private IEnumerator TypeTextRoutine(string fullText)
@@ -202,9 +206,14 @@ namespace ProjectCook.Dialogue
         {
             if (currentNode == null || dialogueUI == null) return;
 
+            // โหนดที่ตั้ง choicesFrom ไว้ใช้ตัวเลือกของโหนดนั้นแทน จะได้เขียนเมนูเดียวกันไว้ที่เดียว
+            DialogueNode source = string.IsNullOrEmpty(currentNode.choicesFrom)
+                ? currentNode
+                : currentDialogueData.GetNode(currentNode.choicesFrom) ?? currentNode;
+
             // คัดกรองเฉพาะตัวเลือกที่ผ่านเงื่อนไข
             currentChoices.Clear();
-            foreach (var choice in currentNode.choices)
+            foreach (var choice in source.choices)
             {
                 if (choice != null && choice.AreConditionsMet())
                 {
@@ -275,6 +284,10 @@ namespace ProjectCook.Dialogue
                 dialogueUI.HideChoices();
             }
 
+            // ตัดสินปลายทางก่อนยิง action เพราะ action อาจเปลี่ยน flag (เช่น ส่งของแล้วจานว่าง)
+            // แต่คำตอบของ NPC ต้องอิงสถานะ "ตอนที่ผู้เล่นเลือก" ไม่ใช่หลังจากนั้น
+            string nextNodeID = choice.ResolveNextNodeID();
+
             // 1. ถ้าระบุ actionID ให้ส่งยิง Action ไปยัง NPC
             if (!string.IsNullOrEmpty(choice.actionID))
             {
@@ -285,9 +298,9 @@ namespace ProjectCook.Dialogue
             }
 
             // 2. ขยับไปยังโหนดถัดไป หรือจบการคุย
-            if (!string.IsNullOrEmpty(choice.nextNodeID))
+            if (!string.IsNullOrEmpty(nextNodeID))
             {
-                DialogueNode nextNode = currentDialogueData.GetNode(choice.nextNodeID);
+                DialogueNode nextNode = currentDialogueData.GetNode(nextNodeID);
                 DisplayNode(nextNode);
             }
             else
@@ -309,7 +322,7 @@ namespace ProjectCook.Dialogue
 
                 if (dialogueUI != null && currentNode != null)
                 {
-                    dialogueUI.SetDialogueText(currentNode.dialogueText);
+                    dialogueUI.SetDialogueText(currentDisplayText);
                 }
 
                 OnTypingComplete();
@@ -323,9 +336,10 @@ namespace ProjectCook.Dialogue
 
         private void AdvanceOrEnd()
         {
-            if (currentNode != null && !string.IsNullOrEmpty(currentNode.nextNodeID))
+            string nextNodeID = currentNode != null ? currentNode.ResolveNextNodeID() : null;
+            if (!string.IsNullOrEmpty(nextNodeID))
             {
-                DialogueNode nextNode = currentDialogueData.GetNode(currentNode.nextNodeID);
+                DialogueNode nextNode = currentDialogueData.GetNode(nextNodeID);
                 DisplayNode(nextNode);
             }
             else

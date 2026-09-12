@@ -8,7 +8,7 @@ PhysicsMaterial:
   m_PrefabAsset: {fileID: 0}
   m_Name: Bacon_PM
   serializedVersion: 2
-  m_DynamicFriction: 0.5
+  m_DynamicFriction: 0.7
   m_StaticFriction: 1
   m_Bounciness: 0.25
   m_FrictionCombine: 0

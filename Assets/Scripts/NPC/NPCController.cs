@@ -44,9 +44,15 @@ namespace ProjectCook.NPC
 
         public string DisplayName => npcName;
 
+        /// <summary>รหัสประจำ NPC ใช้เป็นส่วนหนึ่งของชื่อ flag ที่ผูกกับ NPC ตัวนี้</summary>
+        public string NpcID => npcID;
+
         public void Interact()
         {
             onInteract?.Invoke(this);
+
+            // ให้ component บน NPC เตรียม flag ก่อน เพราะทั้งการเลือกบทสนทนาและตัวเลือกจะอ่าน flag ตอนนี้
+            RefreshDialogueState();
 
             DialogueDataSO dialogueToPlay = GetValidDialogue();
             if (dialogueToPlay != null)
@@ -112,15 +118,36 @@ namespace ProjectCook.NPC
             // ยิง Event กระจายสัญญาณคำสั่งไปให้ Component อื่นๆ รับไปทำงานต่อ
             onActionTriggered?.Invoke(actionId);
 
-            // ถ้ามี INPCActionHandler ตัวอื่นบน GameObject นี้ (เช่น สคริปต์ร้านค้า MerchantShop) สั่งให้ทำงานด้วย
-            var handlers = GetComponents<IDialogueActionHandler>();
-            foreach (var handler in handlers)
+            // ถ้ามี IDialogueActionHandler ตัวอื่นบน GameObject นี้ (เช่น สคริปต์ร้านค้า) สั่งให้ทำงานด้วย
+            foreach (IDialogueActionHandler handler in GetComponents<IDialogueActionHandler>())
             {
                 if (handler != null && handler != (IDialogueActionHandler)this)
                 {
                     handler.HandleAction(actionId);
                 }
             }
+
+            // action เปลี่ยนสถานะได้ (ให้ของ/รับของ) ต้องให้ทุก component คำนวณ flag ใหม่ ไม่ใช่แค่ตัวที่ทำ action
+            RefreshDialogueState();
+        }
+
+        private void RefreshDialogueState()
+        {
+            foreach (IDialogueStateListener listener in GetComponents<IDialogueStateListener>())
+            {
+                listener.RefreshDialogueState();
+            }
+        }
+
+        public string ResolveText(string text)
+        {
+            if (string.IsNullOrEmpty(text) || text.IndexOf('{') < 0) return text;
+
+            foreach (IDialogueTextProvider provider in GetComponents<IDialogueTextProvider>())
+            {
+                text = provider.ResolveText(text);
+            }
+            return text;
         }
 
         /// <summary>ถูกเรียกจาก DialogueManager เมื่อเล่นบทสนทนาจบลง</summary>

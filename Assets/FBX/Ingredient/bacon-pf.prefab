@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_Name
-      value: bacon-pf 1
+      value: bacon-pf
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0ae7ead6f01e4ea45b9e6c9c31cf09a7, type: 3}
       propertyPath: m_Layer
@@ -98,8 +98,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5447725316567452177}
   serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 5
+  m_Mass: 3
+  m_LinearDamping: 1
   m_AngularDamping: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

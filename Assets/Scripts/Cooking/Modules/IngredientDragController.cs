@@ -6,12 +6,9 @@ namespace ProjectCook.Cooking
     /// <summary>สคริปต์ควบคุมการจับ คีบ/ยก และลากเคลื่อนย้ายอาหารด้วยระบบแรงฟิสิกส์ (Physics Velocity-Driven Dragging)</summary>
     public class IngredientDragController : MonoBehaviour
     {
-        [Header("Layer & Tag Settings")]
+        [Header("Layer Settings")]
         [Tooltip("LayerMask สำหรับตรวจจับชิ้นวัตถุดิบอาหาร")]
         [SerializeField] private LayerMask ingredientLayerMask;
-
-        [Tooltip("Tag ที่วัตถุดิบทุกชิ้นต้องมี ใช้เป็นตัวกรองซ้ำอีกชั้นนอกเหนือจาก Layer กันชนกับระบบลาก/ถือวัตถุอื่นในอนาคต")]
-        [SerializeField] private string ingredientTag = "Food";
 
         [Header("Drag Settings")]
         [Tooltip("ระยะยิง Raycast เล็งวัตถุดิบสูงสุด (เมตร) ปรับให้เป็นระยะเอื้อมมือทั่วไปเพราะตอนนี้ใช้ได้ทั้งเกม ไม่ใช่แค่มุมกล้องสถานีระยะประชิดอีกต่อไป")]
@@ -198,10 +195,6 @@ namespace ProjectCook.Cooking
             {
                 RaycastHit hit = raycastHitBuffer[i];
                 if (hit.collider == null) continue;
-
-                // เช็ค Tag ก่อนเป็นชั้นกรองแรก (ถูกและเร็วกว่า GetComponent) ป้องกันไม่ให้ไปคีบโดนวัตถุอื่น
-                // ที่ดันมาอยู่ Layer เดียวกันโดยไม่ตั้งใจ โดยเฉพาะตอนนี้ที่ระบบทำงานได้ทั่วทั้งฉากแล้ว
-                if (!string.IsNullOrEmpty(ingredientTag) && !hit.collider.CompareTag(ingredientTag)) continue;
 
                 IngredientInstance ingredient = hit.collider.GetComponentInParent<IngredientInstance>();
                 if (ingredient == null)

@@ -15,6 +15,7 @@ MonoBehaviour:
   ingredientId: bacon_1
   ingredientName: bacon
   icon: {fileID: 0}
+  prefab: {fileID: 5447725316567452177, guid: 7a4674662135fee4ab5fbd208fdcd876, type: 3}
   isTwoSidedCooking: 1
   cookTime: 50
   burnTime: 80
