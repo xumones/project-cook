@@ -4,62 +4,58 @@ using ProjectCook.Items;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>Abstract Class แม่สำหรับอุปกรณ์ทำอาหาร/ภาชนะเก็บวัตถุดิบ (Base Food Container System)</summary>
+    /// <summary>ฐานของภาชนะทุกชนิด ติดตามว่าวัตถุดิบตัวไหนอยู่ข้างในโดยนับจากชิ้นฟิสิกส์ที่อยู่ใน trigger</summary>
     public abstract class FoodContainer : MonoBehaviour, IItemContents
     {
-        /// <summary>Callback Event แจ้งเตือนเมื่อมีวัตถุดิบวางลงในภาชนะ</summary>
         public event System.Action<IngredientDataSO> OnIngredientDropped;
-
-        /// <summary>Callback Event แจ้งเตือนเมื่อวัตถุดิบในภาชนะสุกได้ที่ (Cooked)</summary>
         public event System.Action<IngredientDataSO> OnIngredientCooked;
 
-        public class FoodItemData
+        /// <summary>วัตถุดิบหนึ่งตัวตนที่อยู่ในภาชนะ วัตถุดิบหั่นจะมีหลายชิ้นแต่เป็นรายการเดียว</summary>
+        public class ContainedIngredient
         {
-            public Rigidbody Rigidbody;
             public IngredientInstance Ingredient;
-            public int LastRaycastFrame = -1;
-            public bool CachedIsTouchingSurface = false;
 
-            // เก็บ Delegate ที่ Subscribe ไว้ เพื่อให้ถอนออกได้ตอนวัตถุดิบออกจากภาชนะ
-            // (หากไม่เก็บไว้จะถอนไม่ได้ ทำให้ Event ค้างสะสมและยิงซ้ำหลายรอบ)
+            /// <summary>ชิ้นที่ยังอยู่ใน trigger ตอนนี้ ว่างเมื่อไหร่ถือว่าวัตถุดิบออกจากภาชนะแล้ว</summary>
+            public readonly HashSet<Rigidbody> BodiesInside = new HashSet<Rigidbody>();
+
+            // เก็บ delegate ไว้เพื่อถอน subscription ได้ตอนวัตถุดิบออกจากภาชนะ
             public System.Action<CookingState> StateChangedHandler;
         }
 
-        protected readonly List<FoodItemData> foodItems = new List<FoodItemData>();
+        protected readonly List<ContainedIngredient> contents = new List<ContainedIngredient>();
 
-        /// <summary>ภาชนะนี้กำลังแผ่ความร้อนอยู่หรือไม่ (ภาชนะที่ไม่มีความร้อน เช่น จานเสิร์ฟ จะเป็น false เสมอ)</summary>
+        /// <summary>Trigger ที่ใช้นับของเข้า/ออก หาจาก collider ตัวแรกที่เป็น trigger ในตัวหรือลูก</summary>
+        protected Collider TriggerCollider { get; private set; }
+
+        /// <summary>ภาชนะนี้กำลังแผ่ความร้อนอยู่หรือไม่</summary>
         public virtual bool IsHeating => false;
 
-        public IReadOnlyList<FoodItemData> GetContainedFoodItems() => foodItems;
+        public IReadOnlyList<ContainedIngredient> Contents => contents;
 
-        /// <summary>ตอนนี้มีวัตถุดิบอยู่ในภาชนะหรือไม่ (IItemContents)</summary>
-        public bool HasContents => foodItems.Count > 0;
+        public bool HasContents => contents.Count > 0;
 
-        /// <summary>เติมรายชื่อวัตถุดิบข้างในลง list ที่ผู้เรียกเตรียมมา ไม่เปิด Rigidbody ให้ระบบภายนอกยุ่ง</summary>
+        /// <summary>เติมรายชื่อวัตถุดิบข้างในลง list ที่ผู้เรียกเตรียมมา</summary>
         public void GetIngredients(List<IngredientInstance> buffer)
         {
             buffer.Clear();
-            for (int i = 0; i < foodItems.Count; i++)
+            for (int i = 0; i < contents.Count; i++)
             {
-                if (foodItems[i]?.Ingredient != null)
-                {
-                    buffer.Add(foodItems[i].Ingredient);
-                }
+                buffer.Add(contents[i].Ingredient);
             }
         }
 
         /// <summary>เอาวัตถุดิบออกจากภาชนะทั้งหมดแล้วทำลายทิ้ง ใช้ตอนส่งมอบ</summary>
         public void ConsumeAll()
         {
-            for (int i = foodItems.Count - 1; i >= 0; i--)
+            for (int i = contents.Count - 1; i >= 0; i--)
             {
-                GameObject item = foodItems[i]?.Rigidbody != null ? foodItems[i].Rigidbody.gameObject : null;
+                IngredientInstance ingredient = contents[i].Ingredient;
 
                 // ถอดออกจากรายการก่อน (คลาสลูกจะได้คืนสถานะที่ยึดไว้) แล้วค่อยทำลาย
-                RemoveFoodItemAt(i);
-                if (item != null)
+                RemoveAt(i);
+                if (ingredient != null)
                 {
-                    Destroy(item);
+                    Destroy(ingredient.gameObject);
                 }
             }
         }
@@ -71,82 +67,125 @@ namespace ProjectCook.Cooking
 
         protected virtual void Awake()
         {
+            Collider[] colliders = GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (!colliders[i].isTrigger) continue;
+
+                TriggerCollider = colliders[i];
+                break;
+            }
+
+            if (TriggerCollider == null)
+            {
+                Debug.LogError($"[FoodContainer] {name} ไม่มี Trigger Collider จะตรวจจับวัตถุดิบไม่ได้เลย", this);
+            }
+        }
+
+        /// <summary>จุดศูนย์ถ่วงของชิ้นอยู่ในปริมาตร trigger หรือไม่ ใช้แทน event ตอนที่ PhysX ไม่ยิงให้ (ของถูกวางเข้ามาตรง ๆ หรือสลับ kinematic)</summary>
+        protected bool IsInsideTrigger(Rigidbody body)
+        {
+            if (TriggerCollider == null || body == null) return false;
+
+            Vector3 point = body.worldCenterOfMass;
+            return (TriggerCollider.ClosestPoint(point) - point).sqrMagnitude <= 1e-6f;
         }
 
         public virtual void OnTriggerEnter(Collider other)
         {
-            Rigidbody rb = other.attachedRigidbody;
-            if (rb == null || rb.isKinematic) return;
+            Rigidbody body = other.attachedRigidbody;
+            if (body == null || body.isKinematic) return;
 
             IngredientInstance ingredient = other.GetComponentInParent<IngredientInstance>();
-            if (ingredient == null && rb != null)
-            {
-                ingredient = rb.GetComponent<IngredientInstance>();
-            }
-
             if (ingredient == null) return;
 
-            AddFoodItem(rb, ingredient);
+            ContainedIngredient entry = Find(ingredient) ?? Register(ingredient);
+            entry.BodiesInside.Add(body);
         }
 
-        /// <summary>ลงทะเบียนวัตถุดิบเข้าภาชนะ ใช้ทั้งจาก trigger และจากระบบที่ยื่นของให้ตรง ๆ คืน false ถ้ามีอยู่แล้ว</summary>
-        protected bool AddFoodItem(Rigidbody rb, IngredientInstance ingredient)
+        public virtual void OnTriggerExit(Collider other)
         {
-            for (int i = 0; i < foodItems.Count; i++)
+            Rigidbody body = other.attachedRigidbody;
+            if (body == null) return;
+
+            for (int i = contents.Count - 1; i >= 0; i--)
             {
-                if (foodItems[i] != null && foodItems[i].Rigidbody == rb) return false;
+                ContainedIngredient entry = contents[i];
+                if (!entry.BodiesInside.Remove(body)) continue;
+
+                if (entry.BodiesInside.Count == 0)
+                {
+                    RemoveAt(i);
+                }
+                return;
             }
+        }
 
-            FoodItemData newItem = new FoodItemData { Rigidbody = rb, Ingredient = ingredient };
+        protected ContainedIngredient Find(IngredientInstance ingredient)
+        {
+            for (int i = 0; i < contents.Count; i++)
+            {
+                if (contents[i].Ingredient == ingredient) return contents[i];
+            }
+            return null;
+        }
 
-            // เก็บ Delegate ไว้ใน FoodItemData เพื่อให้ถอน Subscription ได้ตอนวัตถุดิบออกจากภาชนะ
-            newItem.StateChangedHandler = state => HandleIngredientStateChanged(ingredient, state);
-            ingredient.OnStateChanged += newItem.StateChangedHandler;
-
-            foodItems.Add(newItem);
+        /// <summary>ลงทะเบียนวัตถุดิบเข้าภาชนะ ผู้เรียกต้องเช็คก่อนว่ายังไม่มี</summary>
+        protected ContainedIngredient Register(IngredientInstance ingredient)
+        {
+            var entry = new ContainedIngredient { Ingredient = ingredient };
+            entry.StateChangedHandler = state => HandleIngredientStateChanged(ingredient, state);
+            ingredient.OnStateChanged += entry.StateChangedHandler;
+            contents.Add(entry);
 
             if (ingredient.Data != null)
             {
                 OnIngredientDropped?.Invoke(ingredient.Data);
             }
-            return true;
+            return entry;
         }
 
-        public virtual void OnTriggerExit(Collider other)
+        /// <summary>ลงทะเบียนวัตถุดิบที่ระบบอื่นยื่นให้ตรง ๆ คืน null ถ้ามีอยู่แล้ว ผู้เรียกต้องวางชิ้นให้เสร็จก่อนแล้วเรียก RecountBodiesInside</summary>
+        protected ContainedIngredient RegisterWhole(IngredientInstance ingredient)
         {
-            Rigidbody rb = other.attachedRigidbody;
-            if (rb != null)
+            return Find(ingredient) != null ? null : Register(ingredient);
+        }
+
+        // ชิ้นที่ถูกวางเข้ามาตรง ๆ ไม่มี Enter จาก PhysX ถ้าบันทึกว่าอยู่ข้างในทั้งที่จริงอยู่นอก trigger จะไม่มี Exit มาถอดให้ตลอดไป
+        // จึงต้องนับจากตำแหน่งจริงเสมอ ชิ้นที่อยู่นอกจะร่วงลงมาแล้วถูก Enter นับเพิ่มเอง
+        protected void RecountBodiesInside(ContainedIngredient entry)
+        {
+            entry.BodiesInside.Clear();
+
+            IReadOnlyList<Rigidbody> bodies = entry.Ingredient.Bodies;
+            for (int i = 0; i < bodies.Count; i++)
             {
-                for (int i = foodItems.Count - 1; i >= 0; i--)
+                if (IsInsideTrigger(bodies[i]))
                 {
-                    if (foodItems[i] == null || foodItems[i].Rigidbody == rb)
-                    {
-                        RemoveFoodItemAt(i);
-                    }
+                    entry.BodiesInside.Add(bodies[i]);
                 }
             }
         }
 
-        /// <summary>ถอด Subscription ของวัตถุดิบออกก่อนแล้วจึงลบออกจากรายการ</summary>
-        protected virtual void RemoveFoodItemAt(int index)
+        /// <summary>ถอด subscription ของวัตถุดิบออกก่อนแล้วจึงลบออกจากรายการ</summary>
+        protected virtual void RemoveAt(int index)
         {
-            if (index < 0 || index >= foodItems.Count) return;
+            if (index < 0 || index >= contents.Count) return;
 
-            FoodItemData item = foodItems[index];
-            if (item != null && item.Ingredient != null && item.StateChangedHandler != null)
+            ContainedIngredient entry = contents[index];
+            if (entry.Ingredient != null && entry.StateChangedHandler != null)
             {
-                item.Ingredient.OnStateChanged -= item.StateChangedHandler;
+                entry.Ingredient.OnStateChanged -= entry.StateChangedHandler;
             }
 
-            foodItems.RemoveAt(index);
+            contents.RemoveAt(index);
         }
 
         protected virtual void OnDestroy()
         {
-            // ถอน Subscription ที่ค้างอยู่ทั้งหมดเมื่อภาชนะถูกทำลาย
-            for (int i = foodItems.Count - 1; i >= 0; i--)
+            for (int i = contents.Count - 1; i >= 0; i--)
             {
-                RemoveFoodItemAt(i);
+                RemoveAt(i);
             }
         }
 
@@ -160,39 +199,35 @@ namespace ProjectCook.Cooking
 
         protected virtual void FixedUpdate()
         {
-            if (foodItems.Count == 0) return;
+            if (contents.Count == 0) return;
 
-            // วนรอบเดียวแบบย้อนกลับ ทำทั้งการล้างรายการที่หมดอายุและการประมวลผลวัตถุดิบในคราวเดียว
-            for (int i = foodItems.Count - 1; i >= 0; i--)
+            // วนย้อนกลับรอบเดียว ทั้งล้างรายการที่ถูกทำลายไปแล้วและประมวลผลวัตถุดิบ
+            for (int i = contents.Count - 1; i >= 0; i--)
             {
-                FoodItemData item = foodItems[i];
+                ContainedIngredient entry = contents[i];
 
-                if (item == null || item.Rigidbody == null || !item.Rigidbody.gameObject.activeInHierarchy)
+                if (entry.Ingredient == null || !entry.Ingredient.gameObject.activeInHierarchy)
                 {
-                    RemoveFoodItemAt(i);
+                    RemoveAt(i);
                     continue;
                 }
 
-                if (item.Ingredient == null) continue;
+                ProcessIngredient(entry);
 
-                ProcessItem(item);
-
-                // สั่งอัปเดตการแสดงผลจากตรงนี้แทนการให้วัตถุดิบแต่ละชิ้นมี Update() ของตัวเอง
-                // ลดจำนวนการเรียก Update() ของ Unity ลงเหลือศูนย์เมื่อมีวัตถุดิบหลายชิ้นพร้อมกัน
-                item.Ingredient.TickVisuals();
+                // ภาชนะเป็นคนสั่งอัปเดตภาพ วัตถุดิบจึงไม่ต้องมี Update() ของตัวเอง
+                entry.Ingredient.TickVisuals();
             }
         }
 
-        /// <summary>Hook สำหรับให้ภาชนะแต่ละชนิดประมวลผลวัตถุดิบตามความสามารถของตัวเอง</summary>
-        protected virtual void ProcessItem(FoodItemData item)
+        /// <summary>Hook ให้ภาชนะแต่ละชนิดประมวลผลวัตถุดิบตามความสามารถของตัวเอง</summary>
+        protected virtual void ProcessIngredient(ContainedIngredient entry)
         {
         }
 
-        /// <summary>Hook สำหรับการตรวจสอบว่าวัตถุดิบกำลังอยู่ในสภาวะทอด/ต้มจริงในภาชนะหรือไม่</summary>
-        public virtual bool IsItemBeingProcessed(FoodItemData item)
+        /// <summary>วัตถุดิบนี้กำลังได้รับความร้อนจริงอยู่หรือไม่ ใช้ตัดสินว่าควรมีเสียงทอด</summary>
+        public virtual bool IsReceivingHeat(ContainedIngredient entry)
         {
             return true;
         }
-
     }
 }

@@ -95,7 +95,6 @@ namespace ProjectCook.Cooking
         public float CookTime => cookTime;
         public float BurnTime => burnTime;
         public Material CookingMaterial => cookingMaterial;
-        public Material RawMaterial => cookingMaterial;
         public Material BurntMaterial => burntMaterial;
         public float TintIntensity => tintIntensity;
         public Color BurntColor => burntColor;

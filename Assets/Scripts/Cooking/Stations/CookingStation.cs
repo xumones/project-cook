@@ -9,7 +9,7 @@ using Unity.Cinemachine;
 namespace ProjectCook.Cooking
 {
     /// <summary>Abstract Base Class สำหรับสถานีทำอาหารทุกประเภทในเกม (กระทะ, หม้อ, เตาอบ ฯลฯ)</summary>
-    public abstract class CookingStation : MonoBehaviour, IInteractable
+    public abstract class CookingStation : MonoBehaviour, IInteractable, IAimHintProvider
     {
         [Header("Camera Settings")]
         [Tooltip("Cinemachine Virtual Camera ประจำสถานีทำอาหารนี้")]
@@ -87,6 +87,14 @@ namespace ProjectCook.Cooking
         protected virtual void OnDisable()
         {
             exitAction?.action?.Disable();
+        }
+
+        // เงื่อนไขเดียวกับ Interact: มือไม่ว่าง = เข้าไม่ได้ จึงไม่ต้องบอกว่าใช้ได้
+        public virtual AimHint GetAimHint()
+        {
+            EquipmentManager equipment = EquipmentManager.Instance;
+            bool handsBusy = equipment != null && equipment.IsHoldingAnything;
+            return handsBusy ? AimHint.None : AimHint.Use;
         }
 
         /// <summary>สถานีที่ต้องการเงื่อนไขพิเศษก่อนเข้าใช้งานให้ Override เมธอดนี้</summary>

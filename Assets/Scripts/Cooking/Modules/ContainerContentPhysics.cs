@@ -51,8 +51,8 @@ namespace ProjectCook.Cooking
         {
             if (foodContainer == null || containerTransform == null) return;
 
-            var items = foodContainer.GetContainedFoodItems();
-            if (items == null || items.Count == 0)
+            var items = foodContainer.Contents;
+            if (items.Count == 0)
             {
                 // ไม่มีวัตถุดิบในภาชนะ แต่ยังต้องอัปเดตตำแหน่งอ้างอิงไว้
                 // เพื่อไม่ให้คำนวณความเร็วผิดพลาดเป็นค่ามหาศาลตอนมีวัตถุดิบชิ้นแรกตกลงมา
@@ -68,34 +68,44 @@ namespace ProjectCook.Cooking
             Vector3 containerCenter = containerTransform.position;
             Vector3 slopeDirection = Vector3.ProjectOnPlane(Physics.gravity, containerUp);
 
+            Vector3 inertiaForce = -containerVelocity * momentumMultiplier;
+            Vector3 slopeForce = slopeDirection * slopeForceMultiplier;
+
             for (int i = 0; i < items.Count; i++)
             {
-                var item = items[i];
-                if (item == null || item.Rigidbody == null || item.Rigidbody.isKinematic) continue;
+                IngredientInstance ingredient = items[i].Ingredient;
+                if (ingredient == null) continue;
 
-                // หากถูกคีบจับอยู่ ให้ข้ามแรงของภาชนะ (เพื่อไม่ให้แย่งแรงกับ IngredientDragController)
-                if (item.Ingredient != null && item.Ingredient.IsGripped) continue;
-
-                // --- รวมแรงทั้งหมดแล้วส่งครั้งเดียว (Batching Forces) ---
-                Vector3 inertiaForce = -containerVelocity * momentumMultiplier;
-                Vector3 slopeForce = slopeDirection * slopeForceMultiplier;
-                Vector3 toCenterDir = (containerCenter - item.Rigidbody.position);
-                toCenterDir.y = 0f;
-                Vector3 attractionForce = toCenterDir * bowlAttractionForce;
-
-                Vector3 combinedForce = inertiaForce + slopeForce + attractionForce;
-                if (combinedForce.sqrMagnitude > 0.0001f)
+                var bodies = ingredient.Bodies;
+                for (int b = 0; b < bodies.Count; b++)
                 {
-                    item.Rigidbody.AddForce(combinedForce, ForceMode.Acceleration);
-                }
+                    // ชิ้นที่ถูกคีบอยู่ปล่อยให้ IngredientDragController คุมแรงคนเดียว
+                    if (bodies[b] == ingredient.GrippedBody) continue;
 
-                // แรงหมุนตัว/กลิ้งของวัตถุดิบ (Rolling & Tumbling Torque)
-                Vector3 foodVelocity = item.Rigidbody.linearVelocity;
-                if (foodVelocity.sqrMagnitude > 0.01f)
-                {
-                    Vector3 rollAxis = Vector3.Cross(containerUp, foodVelocity.normalized);
-                    item.Rigidbody.AddTorque(rollAxis * (foodVelocity.magnitude * rollTorqueMultiplier), ForceMode.Acceleration);
+                    ApplyForces(bodies[b], inertiaForce, slopeForce, containerCenter, containerUp);
                 }
+            }
+        }
+
+        private void ApplyForces(Rigidbody body, Vector3 inertiaForce, Vector3 slopeForce, Vector3 containerCenter, Vector3 containerUp)
+        {
+            if (body == null || body.isKinematic) return;
+
+            Vector3 toCenterDir = containerCenter - body.position;
+            toCenterDir.y = 0f;
+
+            Vector3 combinedForce = inertiaForce + slopeForce + toCenterDir * bowlAttractionForce;
+            if (combinedForce.sqrMagnitude > 0.0001f)
+            {
+                body.AddForce(combinedForce, ForceMode.Acceleration);
+            }
+
+            // แรงกลิ้ง/พลิกตัวตามทิศที่ไถล
+            Vector3 velocity = body.linearVelocity;
+            if (velocity.sqrMagnitude > 0.01f)
+            {
+                Vector3 rollAxis = Vector3.Cross(containerUp, velocity.normalized);
+                body.AddTorque(rollAxis * (velocity.magnitude * rollTorqueMultiplier), ForceMode.Acceleration);
             }
         }
     }

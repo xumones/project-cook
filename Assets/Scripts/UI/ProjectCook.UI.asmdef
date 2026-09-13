@@ -1,7 +1,10 @@
 {
     "name": "ProjectCook.UI",
     "rootNamespace": "ProjectCook.UI",
-    "references": [],
+    "references": [
+        "ProjectCook.Core",
+        "UnityEngine.UI"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

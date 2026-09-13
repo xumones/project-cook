@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>สคริปต์หลักควบคุมวัตถุดิบแต่ละชิ้นในฉาก (Runtime State & Main Facade Coordinator)</summary>
+    /// <summary>ตัวตนของวัตถุดิบหนึ่งหน่วย (นับ/สุก/เข้าสูตร) ซึ่งมีชิ้นฟิสิกส์ได้หลายชิ้น เช่น ผักหั่นหรือเนื้อเต๋า</summary>
+    // กติกา prefab: root มี IngredientInstance + IngredientVisuals, ชิ้น (Rigidbody + Collider) อยู่ที่ root เองหรือเป็นลูก
+    // ห้ามมี Rigidbody ที่ root ถ้ามีชิ้นลูก เพราะ Rigidbody ซ้อนกันจะสู้กันเอง
     [DisallowMultipleComponent]
     [RequireComponent(typeof(IngredientVisuals))]
     public class IngredientInstance : MonoBehaviour
@@ -12,8 +15,11 @@ namespace ProjectCook.Cooking
         [Tooltip("ScriptableObject ข้อมูลและค่าตั้งต้นของวัตถุดิบนี้")]
         [SerializeField] private IngredientDataSO data;
 
-        // Sub Component References (Auto-initialized)
         private IngredientVisuals visualsComponent;
+        private Rigidbody[] bodies;
+
+        /// <summary>ชิ้นฟิสิกส์ทั้งหมดของวัตถุดิบนี้ ระบบภายนอกต้องอ่านจากตรงนี้แทนการหา Rigidbody เอง</summary>
+        public IReadOnlyList<Rigidbody> Bodies => bodies;
 
         /// <summary>Callback Event แจ้งเตือนเมื่อสถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)</summary>
         public event Action<CookingState> OnStateChanged;
@@ -45,22 +51,19 @@ namespace ProjectCook.Cooking
 
         private void Awake()
         {
-            EnsureSubComponents();
-
-            visualsComponent.Init(GetComponent<Renderer>());
-            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
-        }
-
-        private void EnsureSubComponents()
-        {
-            if (visualsComponent == null)
+            bodies = GetComponentsInChildren<Rigidbody>(true);
+            if (bodies.Length == 0)
             {
-                visualsComponent = GetComponent<IngredientVisuals>();
-                if (visualsComponent == null)
-                {
-                    visualsComponent = gameObject.AddComponent<IngredientVisuals>();
-                }
+                Debug.LogError($"[IngredientInstance] {name} ไม่มี Rigidbody เลย ภาชนะและคีมจะมองไม่เห็นวัตถุดิบนี้", this);
             }
+            else if (bodies.Length > 1 && GetComponent<Rigidbody>() != null)
+            {
+                Debug.LogError($"[IngredientInstance] {name} มี Rigidbody ที่ root ซ้อนกับชิ้นลูก ต้องเอาของ root ออก", this);
+            }
+
+            visualsComponent = GetComponent<IngredientVisuals>();
+            visualsComponent.Init();
+            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
         }
 
         /// <summary>อัปเดตการแสดงผลหากมีการเปลี่ยนแปลง ถูกเรียกจากภาชนะที่วัตถุดิบชิ้นนี้อยู่</summary>
@@ -215,7 +218,9 @@ namespace ProjectCook.Cooking
             OnStateChanged?.Invoke(currentCookingState);
         }
 
-        /// <summary>สถานะว่าวัตถุดิบนี้กำลังถูกคีบจับอยู่หรือไม่</summary>
-        public bool IsGripped { get; set; } = false;
+        /// <summary>ชิ้นที่คีมกำลังจับอยู่ null = ไม่ได้ถูกจับ ชิ้นอื่นยังเป็นอิสระตามฟิสิกส์</summary>
+        public Rigidbody GrippedBody { get; set; }
+
+        public bool IsGripped => GrippedBody != null;
     }
 }

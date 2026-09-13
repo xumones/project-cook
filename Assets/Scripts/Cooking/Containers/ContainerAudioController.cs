@@ -180,22 +180,22 @@ namespace ProjectCook.Cooking
 
         private void EvaluateCookingAudioState()
         {
-            var foodItems = foodContainer.GetContainedFoodItems();
+            var items = foodContainer.Contents;
             clipCounts.Clear();
 
-            if (foodItems != null && foodContainer.IsHeating)
+            if (foodContainer.IsHeating)
             {
-                for (int i = 0; i < foodItems.Count; i++)
+                for (int i = 0; i < items.Count; i++)
                 {
-                    var item = foodItems[i];
-                    if (item == null || item.Rigidbody == null || !item.Rigidbody.gameObject.activeInHierarchy) continue;
-                    if (item.Ingredient == null || item.Ingredient.IsBurnt) continue;
+                    var entry = items[i];
+                    IngredientInstance ingredient = entry.Ingredient;
+                    if (ingredient == null || !ingredient.gameObject.activeInHierarchy || ingredient.IsBurnt) continue;
 
-                    var data = item.Ingredient.Data;
+                    var data = ingredient.Data;
                     // นับเฉพาะชิ้นที่มีเสียงซู่ซ่าให้เล่นจริง วัตถุดิบที่ยังไม่ได้ตั้งค่า SizzleSFX จะไม่ถูกนับ
                     if (data == null || data.SizzleSFX == null) continue;
 
-                    if (!foodContainer.IsItemBeingProcessed(item)) continue;
+                    if (!foodContainer.IsReceivingHeat(entry)) continue;
 
                     AddClipCount(data.SizzleSFX);
                 }

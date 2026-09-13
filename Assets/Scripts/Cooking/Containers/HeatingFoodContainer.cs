@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>Abstract Class สำหรับภาชนะที่แผ่ความร้อนให้วัตถุดิบ (กระทะ, หม้อต้ม, เตาอบ, หม้อทอด)</summary>
+    /// <summary>ภาชนะที่แผ่ความร้อนให้วัตถุดิบ (กระทะ, หม้อต้ม, เตาอบ, หม้อทอด)</summary>
     public abstract class HeatingFoodContainer : FoodContainer
     {
         [Header("Cooking Heat Settings")]
@@ -14,14 +14,14 @@ namespace ProjectCook.Cooking
 
         public override bool IsHeating => isHeating;
 
-        protected override void ProcessItem(FoodItemData item)
+        protected override void ProcessIngredient(ContainedIngredient entry)
         {
-            if (!isHeating || item.Ingredient.IsBurnt) return;
+            if (!isHeating || entry.Ingredient.IsBurnt) return;
 
-            ApplyHeatToItem(item);
+            ApplyHeat(entry);
         }
 
-        /// <summary>Abstract Method ที่ภาชนะให้ความร้อนแต่ละชนิดต้องกำหนดเงื่อนไขการส่งผ่านความร้อนของตัวเอง</summary>
-        protected abstract void ApplyHeatToItem(FoodItemData item);
+        /// <summary>ภาชนะให้ความร้อนแต่ละชนิดกำหนดเงื่อนไขการส่งผ่านความร้อนของตัวเอง</summary>
+        protected abstract void ApplyHeat(ContainedIngredient entry);
     }
 }

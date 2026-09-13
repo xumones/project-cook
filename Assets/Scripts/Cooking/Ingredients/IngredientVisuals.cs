@@ -2,11 +2,12 @@ using UnityEngine;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>สคริปต์ย่อยจัดการการแสดงผลทางสายตาของวัตถุดิบ (Material Property Block, Color & Shader Progress Blending)</summary>
+    /// <summary>แสดงผลความสุกของวัตถุดิบลงทุก Renderer ในตัว (Material Property Block, Color & Shader Progress Blending)</summary>
     [DisallowMultipleComponent]
     public class IngredientVisuals : MonoBehaviour
     {
-        private Renderer meshRenderer;
+        // ทุกชิ้นของวัตถุดิบเดียวกันใช้ material และค่าเดียวกันเสมอ จึงใช้ block เดียวส่งให้ทุกตัว
+        private Renderer[] renderers;
         private MaterialPropertyBlock propertyBlock;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
@@ -33,19 +34,20 @@ namespace ProjectCook.Cooking
         private float cachedBaseSmoothness = -1f;
         private bool isMaterialCached = false;
 
-        public void Init(Renderer renderer)
+        public void Init()
         {
-            meshRenderer = renderer;
-            if (meshRenderer == null)
-            {
-                meshRenderer = GetComponent<Renderer>();
-                if (meshRenderer == null)
-                {
-                    meshRenderer = GetComponentInChildren<Renderer>();
-                }
-            }
-
+            renderers = GetComponentsInChildren<Renderer>(true);
             propertyBlock = new MaterialPropertyBlock();
+        }
+
+        private bool HasRenderers => renderers != null && renderers.Length > 0;
+
+        private void SetSharedMaterial(Material material)
+        {
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                renderers[i].sharedMaterial = material;
+            }
         }
 
         /// <summary>ตั้งค่าการแสดงผลใหม่ทั้งชุดตามข้อมูลวัตถุดิบที่ได้รับ</summary>
@@ -71,9 +73,9 @@ namespace ProjectCook.Cooking
 
         private void ApplyInitialMaterial(IngredientDataSO data)
         {
-            if (meshRenderer != null && data != null && data.RawMaterial != null)
+            if (HasRenderers && data != null && data.CookingMaterial != null)
             {
-                meshRenderer.sharedMaterial = data.RawMaterial;
+                SetSharedMaterial(data.CookingMaterial);
             }
         }
 
@@ -137,24 +139,16 @@ namespace ProjectCook.Cooking
         /// <summary>สลับ Material ตามสภาวะความสุก (Raw -> Cooked -> Burnt)</summary>
         public void UpdateMaterialForState(CookingState state, IngredientDataSO data)
         {
-            if (meshRenderer == null || data == null) return;
+            if (!HasRenderers || data == null) return;
 
-            Material targetMat = null;
+            // ดิบ→สุกให้ Shader ของ CookingMaterial ไล่ Texture เอง สลับ Material เฉพาะตอนไหม้
+            Material targetMat = state == CookingState.Burnt && data.BurntMaterial != null
+                ? data.BurntMaterial
+                : data.CookingMaterial;
 
-            // ทั้งการทอดแยกด้าน (Two-Sided) และทอดรอบทิศทาง (Omni) ให้ยึด RawMaterial (ที่ใช้ Shader CookingMaterial) ไว้ก่อน
-            // เพื่อให้ Shader ทำการ Lerp Texture จากดิบ -> สุก ได้อย่างนุ่มนวล และสลับเป็น BurntMaterial เมื่อไหม้เท่านั้น
-            if (state == CookingState.Burnt && data.BurntMaterial != null)
+            if (targetMat != null && renderers[0].sharedMaterial != targetMat)
             {
-                targetMat = data.BurntMaterial;
-            }
-            else if (data.RawMaterial != null)
-            {
-                targetMat = data.RawMaterial;
-            }
-
-            if (targetMat != null && meshRenderer.sharedMaterial != targetMat)
-            {
-                meshRenderer.sharedMaterial = targetMat;
+                SetSharedMaterial(targetMat);
                 ResetAppliedStates();
             }
         }
@@ -162,7 +156,7 @@ namespace ProjectCook.Cooking
         /// <summary>อัปเดตสีและ Texture ของ Material แบบ Smooth Transition ด้วย MaterialPropertyBlock</summary>
         public void ApplyVisuals(IngredientDataSO data, float sideACookTime, float sideBCookTime, float omniCookTime)
         {
-            if (meshRenderer == null || data == null) return;
+            if (!HasRenderers || data == null) return;
 
             Color targetColor = CalculateCurrentColor(data, sideACookTime, sideBCookTime, omniCookTime);
 
@@ -180,7 +174,7 @@ namespace ProjectCook.Cooking
                 normSideB = normOmni;
             }
 
-            Material targetMat = data.CookingMaterial != null ? data.CookingMaterial : meshRenderer.sharedMaterial;
+            Material targetMat = data.CookingMaterial != null ? data.CookingMaterial : renderers[0].sharedMaterial;
 
             if (!isMaterialCached || cachedCookingMat != targetMat)
             {
@@ -247,7 +241,10 @@ namespace ProjectCook.Cooking
 
             propertyBlock.SetFloat(SmoothnessId, currentSmoothness);
 
-            meshRenderer.SetPropertyBlock(propertyBlock);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                renderers[i].SetPropertyBlock(propertyBlock);
+            }
         }
 
         private Color CalculateCurrentColor(IngredientDataSO data, float sideACookTime, float sideBCookTime, float omniCookTime)

@@ -33,48 +33,33 @@ namespace ProjectCook.Cooking
             public LayerSnapshot Layers;
         }
 
+        // ยึดเป็นรายชิ้น เพราะแต่ละชิ้นมี pose ของตัวเอง แต่จะยึด/ปล่อยพร้อมกันทั้งวัตถุดิบเสมอ
         private readonly Dictionary<Rigidbody, FrozenState> frozenStates = new Dictionary<Rigidbody, FrozenState>();
-        private Collider triggerCollider;
+        private readonly List<Rigidbody> placementBuffer = new List<Rigidbody>();
         private bool isFrozen;
 
         /// <summary>รับของเพิ่มไม่ได้แล้ว</summary>
-        public bool IsFull => foodItems.Count >= capacity;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            Collider[] colliders = GetComponentsInChildren<Collider>(true);
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].isTrigger)
-                {
-                    triggerCollider = colliders[i];
-                    break;
-                }
-            }
-
-            if (triggerCollider == null)
-            {
-                Debug.LogError($"[ServingFoodContainer] {name} ไม่มี Trigger Collider จะตรวจจับวัตถุดิบไม่ได้เลย", this);
-            }
-        }
+        public bool IsFull => contents.Count >= capacity;
 
         /// <summary>รับวัตถุดิบที่ระบบอื่นยื่นให้โดยตรง วางลงผิวทันทีไม่ต้องรอ trigger คืน false ถ้าเต็มหรือไม่ใช่วัตถุดิบ</summary>
         public bool TryReceive(GameObject item)
         {
             if (item == null || IsFull) return false;
 
-            Rigidbody body = item.GetComponentInChildren<Rigidbody>();
             IngredientInstance ingredient = item.GetComponentInChildren<IngredientInstance>();
-            if (body == null || ingredient == null) return false;
+            if (ingredient == null || ingredient.Bodies.Count == 0) return false;
 
-            if (!AddFoodItem(body, ingredient)) return false;
+            ContainedIngredient entry = RegisterWhole(ingredient);
+            if (entry == null) return false;
 
-            PlaceOnSurface(body);
+            placementBuffer.Clear();
+            placementBuffer.AddRange(ingredient.Bodies);
+            PlaceOnSurface(placementBuffer);
+
+            RecountBodiesInside(entry);
             if (isFrozen)
             {
-                Freeze(body);
+                FreezeBodiesInside(entry);
             }
             return true;
         }
@@ -87,9 +72,9 @@ namespace ProjectCook.Cooking
 
             if (frozen)
             {
-                for (int i = 0; i < foodItems.Count; i++)
+                for (int i = 0; i < contents.Count; i++)
                 {
-                    Freeze(foodItems[i]?.Rigidbody);
+                    FreezeBodiesInside(contents[i]);
                 }
                 return;
             }
@@ -100,17 +85,36 @@ namespace ProjectCook.Cooking
             }
             frozenStates.Clear();
 
-            DropItemsOutsideTrigger();
+            DropIngredientsOutsideTrigger();
         }
 
-        protected override void ProcessItem(FoodItemData item)
+        protected override void ProcessIngredient(ContainedIngredient entry)
         {
-            // ของที่ตกเข้ามาเองระหว่างถืออยู่ (ตักจากกระทะ) ต้องถูกจัดวางแล้วยึดทันที
-            // ไม่งั้นมันจะเป็น dynamic กระเด้งอยู่บนภาชนะที่ขยับตามมือแล้วร่วง
-            if (!isFrozen || frozenStates.ContainsKey(item.Rigidbody)) return;
+            if (!isFrozen) return;
 
-            PlaceOnSurface(item.Rigidbody);
-            Freeze(item.Rigidbody);
+            // ชิ้นที่ตกเข้ามาเองระหว่างถืออยู่ (ตักจากกระทะ) ต้องถูกจัดวางแล้วยึดทันที
+            // ไม่งั้นมันจะเป็น dynamic กระเด้งอยู่บนภาชนะที่ขยับตามมือแล้วร่วง
+            placementBuffer.Clear();
+            foreach (Rigidbody body in entry.BodiesInside)
+            {
+                if (!frozenStates.ContainsKey(body)) placementBuffer.Add(body);
+            }
+            if (placementBuffer.Count == 0) return;
+
+            PlaceOnSurface(placementBuffer);
+            for (int i = 0; i < placementBuffer.Count; i++)
+            {
+                Freeze(placementBuffer[i]);
+            }
+        }
+
+        // ยึดเฉพาะชิ้นที่อยู่ในภาชนะจริง ชิ้นของวัตถุดิบเดียวกันที่อยู่ข้างนอกต้องไม่ถูกลากติดมา
+        private void FreezeBodiesInside(ContainedIngredient entry)
+        {
+            foreach (Rigidbody body in entry.BodiesInside)
+            {
+                Freeze(body);
+            }
         }
 
         // เขียนตำแหน่งเองแทนการ parent เพราะ Rigidbody ซ้อนใน Rigidbody จะโดนฟิสิกส์เขียนทับกลับทุกสเต็ป
@@ -140,32 +144,52 @@ namespace ProjectCook.Cooking
             body.rotation = rotation;
         }
 
-        /// <summary>วางของลงบนผิวภาชนะที่จุดสุ่มซึ่งไม่ทับของเดิม หมุนสุ่ม และยกให้ก้นแตะผิวพอดี</summary>
-        private void PlaceOnSurface(Rigidbody body)
+        /// <summary>วางกลุ่มชิ้นลงผิวภาชนะที่จุดว่าง หมุนสุ่ม คงรูปทรงการกระจายของชิ้นไว้ และยกให้ทุกชิ้นแตะผิวพอดี</summary>
+        private void PlaceOnSurface(List<Rigidbody> bodies)
         {
+            if (bodies.Count == 0) return;
+
             Vector3 up = transform.up;
-            Vector3 surfacePoint = transform.TransformPoint(PickFreeLocalSpot(body));
-            Quaternion rotation = Quaternion.AngleAxis(Random.Range(0f, 360f), up) * Quaternion.FromToRotation(Vector3.up, up);
+            Vector3 surfacePoint = transform.TransformPoint(PickFreeLocalSpot(bodies));
+            Quaternion targetRotation = Quaternion.AngleAxis(Random.Range(0f, 360f), up) * Quaternion.FromToRotation(Vector3.up, up);
 
-            SetPose(body, surfacePoint, rotation);
-
-            // แต่ละชิ้นหนาไม่เท่ากัน ต้องวัดจากของจริงว่าก้นอยู่ต่ำกว่า pivot เท่าไหร่
-            Renderer renderer = body.GetComponentInChildren<Renderer>();
-            if (renderer != null)
+            // ใช้ชิ้นแรกเป็นกรอบอ้างอิง จะได้ย้ายทั้งกลุ่มโดยไม่เสียการจัดวางเดิมของโมเดล
+            Vector3 centroid = Vector3.zero;
+            for (int i = 0; i < bodies.Count; i++)
             {
-                float belowPivot = Vector3.Dot(body.position - renderer.bounds.min, up);
-                SetPose(body, surfacePoint + up * belowPivot, rotation);
+                centroid += bodies[i].position;
             }
+            centroid /= bodies.Count;
+            Quaternion inverseReference = Quaternion.Inverse(bodies[0].rotation);
 
-            body.linearVelocity = Vector3.zero;
-            body.angularVelocity = Vector3.zero;
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                Rigidbody body = bodies[i];
+                Vector3 offset = inverseReference * (body.position - centroid);
+                offset.y = 0f;
+                Quaternion rotation = targetRotation * (inverseReference * body.rotation);
+                Vector3 position = surfacePoint + targetRotation * offset;
+
+                SetPose(body, position, rotation);
+
+                // แต่ละชิ้นหนาไม่เท่ากัน ต้องวัดจากของจริงว่าก้นอยู่ต่ำกว่า pivot เท่าไหร่
+                Renderer renderer = body.GetComponentInChildren<Renderer>();
+                if (renderer != null)
+                {
+                    float belowPivot = Vector3.Dot(body.position - renderer.bounds.min, up);
+                    SetPose(body, position + up * belowPivot, rotation);
+                }
+
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+            }
         }
 
         private Vector3 SurfaceCenterLocal =>
             contentAnchor != null ? transform.InverseTransformPoint(contentAnchor.position) : Vector3.up * 0.05f;
 
-        // สุ่มจุดในวงกลมแล้วเช็คระยะจากของทุกชิ้นที่มีอยู่ ไม่ว่าจะเข้ามาทางไหน ถ้าหาจุดว่างไม่ได้ก็เอาจุดที่ห่างที่สุด
-        private Vector3 PickFreeLocalSpot(Rigidbody placing)
+        // สุ่มจุดในวงกลมแล้วเช็คระยะจากชิ้นอื่นที่อยู่ในภาชนะ ถ้าหาจุดว่างไม่ได้ก็เอาจุดที่ห่างที่สุด
+        private Vector3 PickFreeLocalSpot(List<Rigidbody> placing)
         {
             Vector3 center = SurfaceCenterLocal;
             Vector3 best = center;
@@ -176,7 +200,7 @@ namespace ProjectCook.Cooking
                 Vector2 offset = Random.insideUnitCircle * placementRadius;
                 Vector3 candidate = center + new Vector3(offset.x, 0f, offset.y);
 
-                float nearest = NearestItemDistance(candidate, placing);
+                float nearest = NearestBodyDistance(candidate, placing);
                 if (nearest >= minSpacing) return candidate;
 
                 if (nearest > bestDistance)
@@ -188,18 +212,20 @@ namespace ProjectCook.Cooking
             return best;
         }
 
-        private float NearestItemDistance(Vector3 localPoint, Rigidbody ignored)
+        private float NearestBodyDistance(Vector3 localPoint, List<Rigidbody> ignored)
         {
             float nearest = float.MaxValue;
 
-            for (int i = 0; i < foodItems.Count; i++)
+            for (int i = 0; i < contents.Count; i++)
             {
-                Rigidbody body = foodItems[i]?.Rigidbody;
-                if (body == null || body == ignored) continue;
+                foreach (Rigidbody body in contents[i].BodiesInside)
+                {
+                    if (ignored.Contains(body)) continue;
 
-                Vector3 local = transform.InverseTransformPoint(body.position);
-                local.y = localPoint.y;
-                nearest = Mathf.Min(nearest, Vector3.Distance(local, localPoint));
+                    Vector3 local = transform.InverseTransformPoint(body.position);
+                    local.y = localPoint.y;
+                    nearest = Mathf.Min(nearest, Vector3.Distance(local, localPoint));
+                }
             }
             return nearest;
         }
@@ -238,21 +264,21 @@ namespace ProjectCook.Cooking
             body.useGravity = state.SavedUseGravity;
         }
 
-        // ตอนยึด การสลับ isKinematic ทำให้ Exit ถูกยิงออกมาแล้วเราเมินไป ถ้าของหลุดออกนอกภาชนะจริง
-        // จะไม่มี Exit รอบสองมาแก้บัญชีให้อีก จึงต้องมาตรวจเองตอนปล่อย ไม่งั้นรายการจะเพี้ยนค้างยาว
-        private void DropItemsOutsideTrigger()
+        // ตอนยึด การสลับ isKinematic ทำให้ Exit ถูกยิงออกมาแล้วเราเมินไป ถ้าชิ้นหลุดออกนอกภาชนะจริง
+        // จะไม่มี Exit รอบสองมาแก้บัญชีให้อีก จึงต้องมานับใหม่เองตอนปล่อย
+        private void DropIngredientsOutsideTrigger()
         {
-            if (triggerCollider == null) return;
+            if (TriggerCollider == null) return;
 
-            for (int i = foodItems.Count - 1; i >= 0; i--)
+            for (int i = contents.Count - 1; i >= 0; i--)
             {
-                Rigidbody body = foodItems[i]?.Rigidbody;
-                if (body == null) continue;
+                ContainedIngredient entry = contents[i];
+                if (entry.Ingredient == null) continue;
 
-                Vector3 point = body.worldCenterOfMass;
-                if ((triggerCollider.ClosestPoint(point) - point).sqrMagnitude > 1e-6f)
+                RecountBodiesInside(entry);
+                if (entry.BodiesInside.Count == 0)
                 {
-                    RemoveFoodItemAt(i);
+                    RemoveAt(i);
                 }
             }
         }
@@ -267,19 +293,22 @@ namespace ProjectCook.Cooking
             base.OnTriggerExit(other);
         }
 
-        protected override void RemoveFoodItemAt(int index)
+        protected override void RemoveAt(int index)
         {
-            if (index >= 0 && index < foodItems.Count)
+            if (index >= 0 && index < contents.Count && contents[index].Ingredient != null)
             {
-                Rigidbody body = foodItems[index]?.Rigidbody;
-                if (body != null && frozenStates.TryGetValue(body, out FrozenState state))
+                IReadOnlyList<Rigidbody> bodies = contents[index].Ingredient.Bodies;
+                for (int b = 0; b < bodies.Count; b++)
                 {
-                    Release(body, state);
-                    frozenStates.Remove(body);
+                    if (frozenStates.TryGetValue(bodies[b], out FrozenState state))
+                    {
+                        Release(bodies[b], state);
+                        frozenStates.Remove(bodies[b]);
+                    }
                 }
             }
 
-            base.RemoveFoodItemAt(index);
+            base.RemoveAt(index);
         }
     }
 }

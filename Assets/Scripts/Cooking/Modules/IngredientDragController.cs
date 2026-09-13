@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>สคริปต์ควบคุมการจับ คีบ/ยก และลากเคลื่อนย้ายอาหารด้วยระบบแรงฟิสิกส์ (Physics Velocity-Driven Dragging)</summary>
+    /// <summary>คีบ/ยก และลากวัตถุดิบด้วยแรงฟิสิกส์ จับทีละชิ้น ชิ้นอื่นของวัตถุดิบเดียวกันยังอิสระ</summary>
     public class IngredientDragController : MonoBehaviour
     {
         [Header("Layer Settings")]
@@ -57,10 +57,9 @@ namespace ProjectCook.Cooking
         private Camera cachedCamera = null;
         private Vector3 localGripPoint = Vector3.zero;
         private float initialGripDistance = 0f;
-        private float originalLinearDamping = 0.05f;
-        private float originalAngularDamping = 0.05f;
-        private RigidbodyInterpolation originalInterpolation = RigidbodyInterpolation.None;
-        private RigidbodyConstraints originalConstraints = RigidbodyConstraints.None;
+        private float originalLinearDamping;
+        private float originalAngularDamping;
+        private RigidbodyInterpolation originalInterpolation;
 
         private Camera GetEffectiveCamera()
         {
@@ -115,7 +114,7 @@ namespace ProjectCook.Cooking
             Camera cam = GetEffectiveCamera();
             if (cam == null) return;
 
-            Rigidbody rb = grippedRigidbody != null ? grippedRigidbody : currentGrippedIngredient.GetComponent<Rigidbody>();
+            Rigidbody rb = grippedRigidbody;
             if (rb == null) return;
 
             // 1. คำนวณตำแหน่งเป้าหมายบน Ray และส่งแรงดึงจุดคีบ (Grip Point Drive)
@@ -196,77 +195,58 @@ namespace ProjectCook.Cooking
                 RaycastHit hit = raycastHitBuffer[i];
                 if (hit.collider == null) continue;
 
+                Rigidbody body = hit.collider.attachedRigidbody;
                 IngredientInstance ingredient = hit.collider.GetComponentInParent<IngredientInstance>();
-                if (ingredient == null)
-                {
-                    ingredient = hit.collider.GetComponent<IngredientInstance>();
-                }
+                if (ingredient == null || body == null || hit.distance >= closestDistance) continue;
 
-                if (ingredient != null && hit.distance < closestDistance)
-                {
-                    closestDistance = hit.distance;
-                    closestIngredient = ingredient;
-                    closestHitPoint = hit.point;
-                    closestRb = ingredient.GetComponent<Rigidbody>();
-                }
+                closestDistance = hit.distance;
+                closestIngredient = ingredient;
+                closestHitPoint = hit.point;
+                closestRb = body;
             }
 
-            if (closestIngredient != null)
-            {
-                currentGrippedIngredient = closestIngredient;
-                currentGrippedIngredient.IsGripped = true;
-                grippedRigidbody = closestRb;
+            if (closestIngredient == null) return;
 
-                if (grippedRigidbody != null)
-                {
-                    originalLinearDamping = grippedRigidbody.linearDamping;
-                    originalAngularDamping = grippedRigidbody.angularDamping;
-                    originalInterpolation = grippedRigidbody.interpolation;
-                    originalConstraints = grippedRigidbody.constraints;
+            currentGrippedIngredient = closestIngredient;
+            grippedRigidbody = closestRb;
+            currentGrippedIngredient.GrippedBody = grippedRigidbody;
 
-                    // เปิดใช้ Physics Velocity Drive (non-kinematic) โดยอนุญาตให้หมุนและทิ้งตัวตามแรงโน้มถ่วง
-                    grippedRigidbody.isKinematic = false;
-                    grippedRigidbody.useGravity = true;
-                    grippedRigidbody.linearDamping = grippingDamping;
-                    grippedRigidbody.angularDamping = grippingAngularDamping;
-                    grippedRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-                    grippedRigidbody.constraints = originalConstraints;
+            originalLinearDamping = grippedRigidbody.linearDamping;
+            originalAngularDamping = grippedRigidbody.angularDamping;
+            originalInterpolation = grippedRigidbody.interpolation;
 
-                    // บันทึกตำแหน่งจุดที่คลิกโดนใน Local Space ของ Rigidbody
-                    localGripPoint = grippedRigidbody.transform.InverseTransformPoint(closestHitPoint);
-                }
+            // ขับด้วยแรง (non-kinematic) ให้ยังหมุนและทิ้งตัวตามแรงโน้มถ่วงได้
+            grippedRigidbody.isKinematic = false;
+            grippedRigidbody.useGravity = true;
+            grippedRigidbody.linearDamping = grippingDamping;
+            grippedRigidbody.angularDamping = grippingAngularDamping;
+            grippedRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
-                // บันทึกระยะห่างความลึกคงที่ (Fixed Distance) ระหว่างกล้องกับจุดที่คลิกโดน
-                // Clamp เข้าช่วง min/max ทันทีตอนคีบ (ไม่ใช่แค่ตอน Scroll) กันคีบของที่อยู่ไกลสุด Raycast
-                // แล้วโดนลากติดมือทันทีข้ามระยะทางไกลๆ ตอนนี้ใช้งานได้ทั่วฉากแล้วไม่ได้จำกัดแค่มุมกล้องสถานีระยะประชิดอีกต่อไป
-                initialGripDistance = Mathf.Clamp(closestDistance, minGripDistance, maxGripDistance);
-            }
+            localGripPoint = grippedRigidbody.transform.InverseTransformPoint(closestHitPoint);
+
+            // Clamp ระยะทันทีตอนคีบ กันคีบของไกลสุด Raycast แล้วโดนลากติดมือข้ามระยะทางไกล
+            initialGripDistance = Mathf.Clamp(closestDistance, minGripDistance, maxGripDistance);
         }
 
         private void ReleaseIngredient()
         {
-            if (currentGrippedIngredient != null)
+            if (currentGrippedIngredient == null) return;
+
+            currentGrippedIngredient.GrippedBody = null;
+
+            if (grippedRigidbody != null)
             {
-                currentGrippedIngredient.IsGripped = false;
+                grippedRigidbody.linearDamping = originalLinearDamping;
+                grippedRigidbody.angularDamping = originalAngularDamping;
+                grippedRigidbody.interpolation = originalInterpolation;
 
-                Rigidbody rb = grippedRigidbody != null ? grippedRigidbody : currentGrippedIngredient.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.isKinematic = false;
-                    rb.useGravity = true;
-                    rb.linearDamping = originalLinearDamping;
-                    rb.angularDamping = originalAngularDamping;
-                    rb.interpolation = originalInterpolation;
-                    rb.constraints = originalConstraints;
-
-                    // จำกัดความเร็วขณะปล่อยเพื่อวางลงบนกระทะอย่างนุ่มนวล
-                    rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, 2f);
-                    rb.angularVelocity = Vector3.ClampMagnitude(rb.angularVelocity, 2f);
-                }
-
-                currentGrippedIngredient = null;
-                grippedRigidbody = null;
+                // จำกัดความเร็วขณะปล่อยเพื่อวางลงบนกระทะอย่างนุ่มนวล
+                grippedRigidbody.linearVelocity = Vector3.ClampMagnitude(grippedRigidbody.linearVelocity, 2f);
+                grippedRigidbody.angularVelocity = Vector3.ClampMagnitude(grippedRigidbody.angularVelocity, 2f);
             }
+
+            currentGrippedIngredient = null;
+            grippedRigidbody = null;
         }
 
         private static bool IsLeftClickPressedThisFrame()

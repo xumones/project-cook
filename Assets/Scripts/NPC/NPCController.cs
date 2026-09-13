@@ -9,7 +9,7 @@ using ProjectCook.Dialogue.Conditions;
 namespace ProjectCook.NPC
 {
     /// <summary>NPC ที่ผู้เล่นคุยด้วยได้ เลือกบทสนทนาตามเงื่อนไขแล้วส่งต่อให้ DialogueManager</summary>
-    public class NPCController : MonoBehaviour, IInteractable, IDialogueTarget
+    public class NPCController : MonoBehaviour, IInteractable, IDialogueTarget, IAimHintProvider
     {
         [Header("NPC Profile")]
         [SerializeField] private string npcID;
@@ -46,6 +46,8 @@ namespace ProjectCook.NPC
 
         /// <summary>รหัสประจำ NPC ใช้เป็นส่วนหนึ่งของชื่อ flag ที่ผูกกับ NPC ตัวนี้</summary>
         public string NpcID => npcID;
+
+        public AimHint GetAimHint() => AimHint.Talk;
 
         public void Interact()
         {

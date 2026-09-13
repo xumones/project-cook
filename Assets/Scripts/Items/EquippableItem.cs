@@ -25,7 +25,7 @@ namespace ProjectCook.Items
     /// <summary>ทำให้ไอเทมถือเข้ามือได้ — เป็นทั้ง "สิทธิ์" และ "กลไก" ในตัวเดียวกัน</summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Item))]
-    public class EquippableItem : MonoBehaviour
+    public class EquippableItem : MonoBehaviour, IAimHintProvider
     {
         [Header("Hold")]
         [Tooltip("ท่าถือเทียบกับ Hand Anchor")]
@@ -58,6 +58,8 @@ namespace ProjectCook.Items
             cachedRigidbody = GetComponent<Rigidbody>();
             contents = GetComponentInChildren<IItemContents>(true);
         }
+
+        public AimHint GetAimHint() => CanBePickedUp(out _) ? AimHint.PickUp : AimHint.None;
 
         /// <summary>ยกไอเทมชิ้นนี้ได้ตอนนี้หรือไม่ พร้อมเหตุผลไว้ log ตอนยกไม่ได้</summary>
         public bool CanBePickedUp(out string reason)

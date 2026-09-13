@@ -10,16 +10,31 @@ namespace ProjectCook.Player
         [Header("Movement Settings")]
         [SerializeField] private float walkSpeed = 2f;
         [SerializeField] private float sprintSpeed = 3f;
+        [SerializeField] private float crouchSpeed = 1.2f;
         [SerializeField] private float gravity = -9.81f;
+
+        [Header("Crouch Settings")]
+        [SerializeField] private float crouchHeight = 1.0f;
+        [Tooltip("ความเร็วการย่อ/ลุก (สูง = เร็ว)")]
+        [SerializeField] private float crouchTransitionSpeed = 10f;
+        [Tooltip("ชั้นที่ถือว่าเป็นเพดานตอนเช็คก่อนลุก")]
+        [SerializeField] private LayerMask ceilingMask = ~0;
 
         [Header("References")]
         [SerializeField] private Transform orientation;
+        [Tooltip("Transform แม่ของ Head และ Hand Anchor ที่จะเลื่อนลงตอนย่อ")]
+        [SerializeField] private Transform mainBody;
 
         [Header("Input Settings")]
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference sprintAction;
+        [SerializeField] private InputActionReference crouchAction;
 
         private CharacterController controller;
+        private float standHeight;
+        private Vector3 mainBodyDefaultPos;
+        private bool isCrouching;
+        private readonly Collider[] ceilingHits = new Collider[8];
 
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance คืน null ไปแล้ว แต่ยังต้องถอน event ให้ครบ
         private GameModeManager gameMode;
@@ -35,6 +50,7 @@ namespace ProjectCook.Player
             if (!active)
             {
                 velocity = Vector3.zero;
+                isCrouching = false;
 
                 // CharacterController.velocity สะท้อนการขยับจากการเรียก Move() ครั้งล่าสุดเท่านั้น
                 // ถ้าหยุดเรียก Move() กลางคันตอนผู้เล่นกำลังเดินอยู่ ค่านี้จะค้างไม่เป็นศูนย์ไปเรื่อยๆ
@@ -49,6 +65,11 @@ namespace ProjectCook.Player
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
+            standHeight = controller.height;
+            if (mainBody != null)
+            {
+                mainBodyDefaultPos = mainBody.localPosition;
+            }
         }
 
         private void Start()
@@ -80,16 +101,21 @@ namespace ProjectCook.Player
         {
             moveAction?.action?.Enable();
             sprintAction?.action?.Enable();
+            crouchAction?.action?.Enable();
         }
 
         private void OnDisable()
         {
             moveAction?.action?.Disable();
             sprintAction?.action?.Disable();
+            crouchAction?.action?.Disable();
         }
 
         private void Update()
         {
+            // ปล่อยให้ลุกจนสุดได้แม้ตอนถูกปิดการควบคุม (เช่นเข้าบทสนทนาตอนย่ออยู่)
+            UpdateStance();
+
             if (!isControlActive) return;
 
             // 1. อ่านค่า Input การเดิน (Vector2: WASD / Left Stick)
@@ -106,8 +132,16 @@ namespace ProjectCook.Player
                 isSprinting = sprintAction.action.IsPressed();
             }
 
-            // 3. เลือกความเร็วระหว่าง เดิน (walkSpeed) หรือ วิ่ง (sprintSpeed)
-            float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
+            // 3. เลือกความเร็ว ย่อชนะวิ่งเสมอ
+            if (crouchAction?.action != null)
+            {
+                bool wantCrouch = crouchAction.action.IsPressed();
+                if (wantCrouch || CanStandUp())
+                {
+                    isCrouching = wantCrouch;
+                }
+            }
+            float currentSpeed = isCrouching ? crouchSpeed : (isSprinting ? sprintSpeed : walkSpeed);
 
             // 4. คำนวณทิศทางการเคลื่อนที่บนระนาบ XZ ตามทิศของ orientation หรือ transform (เพื่อไม่ให้การก้ม-เงยกล้องกระทบความเร็วเคลื่อนที่)
             Transform refTransform = orientation != null ? orientation : transform;
@@ -126,6 +160,42 @@ namespace ProjectCook.Player
             Vector3 finalVelocity = horizontalMove + new Vector3(0, velocity.y, 0);
 
             controller.Move(finalVelocity * Time.deltaTime);
+        }
+
+        /// <summary>ค่อยๆ ปรับความสูง CharacterController และเลื่อน mainBody ลงตามสัดส่วนที่ย่อ</summary>
+        private void UpdateStance()
+        {
+            float targetHeight = isCrouching ? crouchHeight : standHeight;
+            if (controller.height == targetHeight) return;
+
+            float t = 1f - Mathf.Exp(-crouchTransitionSpeed * Time.deltaTime);
+            float height = Mathf.Lerp(controller.height, targetHeight, t);
+            if (Mathf.Abs(height - targetHeight) < 0.001f) height = targetHeight;
+
+            // center = height/2 เพื่อให้เท้าอยู่ที่เดิม
+            controller.height = height;
+            controller.center = new Vector3(0f, height * 0.5f, 0f);
+
+            if (mainBody != null)
+            {
+                mainBody.localPosition = mainBodyDefaultPos + Vector3.down * (standHeight - height);
+            }
+        }
+
+        /// <summary>เช็คว่ามีอะไรขวางเหนือหัวในช่วงที่จะยืดขึ้นไปหรือไม่</summary>
+        private bool CanStandUp()
+        {
+            float radius = controller.radius;
+            Vector3 bottom = transform.position + Vector3.up * (controller.height - radius);
+            Vector3 top = transform.position + Vector3.up * (standHeight - radius);
+            int count = Physics.OverlapCapsuleNonAlloc(bottom, top, radius - 0.01f, ceilingHits, ceilingMask, QueryTriggerInteraction.Ignore);
+
+            // ผู้เล่นอยู่ layer เดียวกับฉาก จึงกรอง collider ตัวเองออกแทนการใช้ mask
+            for (int i = 0; i < count; i++)
+            {
+                if (ceilingHits[i] != controller) return false;
+            }
+            return true;
         }
     }
 }
