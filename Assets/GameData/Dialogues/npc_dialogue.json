@@ -6,56 +6,54 @@
     {
       "nodeID": "start",
       "speakerNameOverride": "",
-      "dialogueText": "Hey there.",
-      "audioEvent": "",
+      "dialogueText": "{greeting}",
       "nextNodeID": "hub",
       "choices": []
     },
     {
       "nodeID": "hub",
       "speakerNameOverride": "",
-      "dialogueText": "What can I do for you?",
-      "audioEvent": "",
+      "dialogueText": "{hub}",
       "nextNodeID": "",
       "choices": [
         {
-          "choiceText": "Anything I can do for you?",
+          "choiceText": "{choice_ask_quest}",
           "nextNodeID": "quest_offer",
           "actionID": "ACCEPT_QUEST",
           "conditionFlag": "quest_available"
         },
         {
-          "choiceText": "Anything I can do for you?",
+          "choiceText": "{choice_ask_quest}",
           "nextNodeID": "quest_locked",
           "actionID": "",
           "conditionFlag": "quest_locked"
         },
         {
-          "choiceText": "About that order...",
+          "choiceText": "{choice_quest_reminder}",
           "nextNodeID": "quest_reminder",
           "actionID": "",
           "conditionFlag": "quest_active"
         },
         {
-          "choiceText": "Here's your order.",
+          "choiceText": "{choice_deliver}",
           "nextNodeID": "quest_delivered",
           "actionID": "DELIVER_QUEST",
           "conditionFlag": "quest_deliverable"
         },
         {
-          "choiceText": "Can I get some ingredients?",
+          "choiceText": "{choice_ask_ingredients}",
           "nextNodeID": "ask_menu",
           "actionID": "",
           "conditionFlag": "holding_dish_with_space,ingredients_open"
         },
         {
-          "choiceText": "Just passing by.",
+          "choiceText": "{choice_chat}",
           "nextNodeID": "chat",
           "actionID": "",
           "conditionFlag": ""
         },
         {
-          "choiceText": "Bye.",
+          "choiceText": "{choice_bye}",
           "nextNodeID": "",
           "actionID": "",
           "conditionFlag": ""
@@ -66,7 +64,6 @@
       "nodeID": "quest_offer",
       "speakerNameOverride": "",
       "dialogueText": "{quest_offer}",
-      "audioEvent": "",
       "nextNodeID": "hub",
       "choices": []
     },
@@ -74,7 +71,6 @@
       "nodeID": "quest_locked",
       "speakerNameOverride": "",
       "dialogueText": "{quest_locked}",
-      "audioEvent": "",
       "nextNodeID": "hub",
       "choices": []
     },
@@ -82,7 +78,6 @@
       "nodeID": "quest_reminder",
       "speakerNameOverride": "",
       "dialogueText": "{quest_reminder}",
-      "audioEvent": "",
       "nextNodeID": "hub",
       "choices": []
     },
@@ -90,55 +85,53 @@
       "nodeID": "quest_delivered",
       "speakerNameOverride": "",
       "dialogueText": "{quest_result}",
-      "audioEvent": "",
       "nextNodeID": "hub",
       "choices": []
     },
     {
       "nodeID": "ask_menu",
       "speakerNameOverride": "",
-      "dialogueText": "What will it be?",
-      "audioEvent": "",
+      "dialogueText": "{ask_menu}",
       "nextNodeID": "",
       "choices": [
         {
-          "choiceText": "Some bacon, please.",
+          "choiceText": "{choice_request_bacon}",
           "nextNodeID": "end_give",
           "actionID": "GIVE_ITEM:bacon_1",
           "conditionFlag": "holding_dish_with_space,can_request_bacon_1"
         },
         {
-          "choiceText": "An egg, please.",
+          "choiceText": "{choice_request_egg}",
           "nextNodeID": "end_give",
           "actionID": "GIVE_ITEM:egg_1",
           "conditionFlag": "holding_dish_with_space,can_request_egg_1"
         },
         {
-          "choiceText": "A sausage, please.",
+          "choiceText": "{choice_request_sausage}",
           "nextNodeID": "end_give",
           "actionID": "GIVE_ITEM:sausage_1",
           "conditionFlag": "holding_dish_with_space,can_request_sausage_1"
         },
         {
-          "choiceText": "A steak, please.",
+          "choiceText": "{choice_request_steak}",
           "nextNodeID": "end_give",
           "actionID": "GIVE_ITEM:steak_1",
           "conditionFlag": "holding_dish_with_space,can_request_steak_1"
         },
         {
-          "choiceText": "A fish, please.",
+          "choiceText": "{choice_request_fish}",
           "nextNodeID": "end_give",
           "actionID": "GIVE_ITEM:fish_1",
           "conditionFlag": "holding_dish_with_space,can_request_fish_1"
         },
         {
-          "choiceText": "Some lettuce, please.",
+          "choiceText": "{choice_request_lettuce}",
           "nextNodeID": "end_give",
           "actionID": "GIVE_ITEM:lettuce_1",
           "conditionFlag": "holding_dish_with_space,can_request_lettuce_1"
         },
         {
-          "choiceText": "Never mind.",
+          "choiceText": "{choice_never_mind}",
           "nextNodeID": "",
           "actionID": "",
           "conditionFlag": ""
@@ -148,8 +141,7 @@
     {
       "nodeID": "end_give",
       "speakerNameOverride": "",
-      "dialogueText": "Here you go.",
-      "audioEvent": "",
+      "dialogueText": "{give_item}",
       "nextNodeID": "ask_more",
       "branches": [
         {
@@ -162,8 +154,7 @@
     {
       "nodeID": "ask_more",
       "speakerNameOverride": "",
-      "dialogueText": "Want some more?",
-      "audioEvent": "",
+      "dialogueText": "{ask_more}",
       "nextNodeID": "",
       "choicesFrom": "ask_menu",
       "choices": []
@@ -171,8 +162,7 @@
     {
       "nodeID": "chat",
       "speakerNameOverride": "",
-      "dialogueText": "Nice day for it.",
-      "audioEvent": "",
+      "dialogueText": "{chat}",
       "nextNodeID": "hub",
       "choices": []
     }

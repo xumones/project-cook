@@ -17,7 +17,12 @@ MonoBehaviour:
   prerequisites:
   - {fileID: 11400000, guid: 2d66065f52e9d6a49beeb4d4034eed49, type: 2}
   lockedText: Let's see that bacon first.
-  offerText: That bacon hit the spot. Now I'm craving a cooked egg.
-  reminderText: One egg. Cooked. I believe in you.
-  exactText: Now that's a proper egg. Thank you.
-  extraText: You brought a feast for one egg. I won't complain.
+  offerText: Yes please, just egg on a plate that should be enough.
+  reminderText: Is there really anything better than a crispy fried egg with a runny
+    yolk on a freezing day? I guess there probably is... I just can't think of a
+    single thing right now.
+  exactText: It really does taste better than any other day, doesn't it? I wonder
+    why... Why did it never taste this good before?
+  extraText: You know what came before the chicken or the egg? It's the fact that
+    neither of them existed, and there was never any meaning to convey in the first
+    place.

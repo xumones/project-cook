@@ -120,12 +120,12 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>แสดงผลปุ่มตัวเลือกคำตอบแบบ Dynamic (เลือกด้วย W/S/E ผ่าน DialogueManager ไม่ใช้เมาส์คลิกแล้ว)</summary>
-        public void DisplayChoices(List<DialogueChoice> choices)
+        /// <summary>แสดงผลปุ่มตัวเลือกคำตอบจากข้อความที่เติม placeholder แล้ว (เลือกด้วย W/S/E ผ่าน DialogueManager)</summary>
+        public void DisplayChoices(List<string> choiceTexts)
         {
             HideChoices();
 
-            if (choices == null || choices.Count == 0 || choiceButtonContainer == null || choiceButtonPrefab == null)
+            if (choiceTexts == null || choiceTexts.Count == 0 || choiceButtonContainer == null || choiceButtonPrefab == null)
             {
                 return;
             }
@@ -135,10 +135,9 @@ namespace ProjectCook.Dialogue.UI
                 continuePrompt.SetActive(false);
             }
 
-            for (int i = 0; i < choices.Count; i++)
+            for (int i = 0; i < choiceTexts.Count; i++)
             {
-                DialogueChoice choice = choices[i];
-                string baseText = $"{i + 1}. {choice.choiceText}";
+                string baseText = $"{i + 1}. {choiceTexts[i]}";
                 choiceBaseTexts.Add(baseText);
 
                 GameObject btnObj = GetChoiceButtonFromPool(i);

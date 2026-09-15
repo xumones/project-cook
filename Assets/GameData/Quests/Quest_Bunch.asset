@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0ee4ed81ae40846a282084bffd2fe2, type: 3}
+  m_Name: Quest_Bunch
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
+  questId: Bunch
+  recipe: {fileID: 11400000, guid: 872bdb1233c27eb4395192a580442441, type: 2}
+  prerequisites:
+  - {fileID: 11400000, guid: a9ba1d2272fec5f49a0b7f21fcd5516d, type: 2}
+  lockedText: Maybe you missing something?.
+  offerText: Last one ,A bit of meat, an egg, and some bacon... that doesn't sound
+    like too much for you right now, does it?
+  reminderText: So this is really the end, Just meat, egg and bacon basic things
+    isn't it?
+  exactText: Thank you so much for staying with me all the way to this point. Thank
+    you for making it through life this far, for being right here. You're seriously,
+    damn incredible.
+  extraText: Thank you so much for staying with me all the way to this point. Thank
+    you for making it through life this far, for being right here. You're seriously,
+    damn incredible.

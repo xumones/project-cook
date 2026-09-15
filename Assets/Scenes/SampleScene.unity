@@ -4424,7 +4424,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
   npcID: NPC#1
-  npcName: name:1
+  npcName: someone?
+  lines: {fileID: 11400000, guid: 3ca0a69efd0e4f29b096ba9dc9af9435, type: 2}
   defaultDialogue: {fileID: 0}
   defaultJsonDialogue: {fileID: 4900000, guid: 584c1898185d06a4caa2ff7d411949da, type: 3}
   conditionalDialogues: []
@@ -5173,7 +5174,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
   npcID: NPC#2
-  npcName: name:2
+  npcName: someperson?
+  lines: {fileID: 11400000, guid: fa7877577e094e0a9f24b02deeec17ab, type: 2}
   defaultDialogue: {fileID: 0}
   defaultJsonDialogue: {fileID: 4900000, guid: 584c1898185d06a4caa2ff7d411949da, type: 3}
   conditionalDialogues: []
@@ -5421,7 +5423,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
   npcID: NPC#3
-  npcName: name:3
+  npcName: somebody?
+  lines: {fileID: 11400000, guid: 2a18aa598b5e43e5ad78a3cf0671923a, type: 2}
   defaultDialogue: {fileID: 0}
   defaultJsonDialogue: {fileID: 4900000, guid: 584c1898185d06a4caa2ff7d411949da, type: 3}
   conditionalDialogues: []
@@ -5544,6 +5547,7 @@ MonoBehaviour:
   quests:
   - {fileID: 11400000, guid: a4a70e21dd7ee714c974055a0a87b6c8, type: 2}
   - {fileID: 11400000, guid: a9ba1d2272fec5f49a0b7f21fcd5516d, type: 2}
+  - {fileID: 11400000, guid: 06e475058482b5f4b980b07f39d66c53, type: 2}
 --- !u!1001 &765298094
 PrefabInstance:
   m_ObjectHideFlags: 0

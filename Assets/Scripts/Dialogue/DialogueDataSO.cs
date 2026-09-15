@@ -111,20 +111,6 @@ namespace ProjectCook.Dialogue
             return false;
         }
 
-        /// <summary>ส่งออกข้อมูลของ ScriptableObject นี้ให้กลายเป็นข้อความ JSON String สำหรับบันทึกลงไฟล์</summary>
-        public string ToJson(bool prettyPrint = true)
-        {
-            DialogueDataDTO dto = new DialogueDataDTO
-            {
-                dialogID = dialogID,
-                defaultSpeakerName = defaultSpeakerName,
-                startNodeID = startNodeID,
-                nodes = nodes
-            };
-
-            return JsonUtility.ToJson(dto, prettyPrint);
-        }
-
         /// <summary>สร้าง DialogueDataSO Instance ใหม่ในความจำจากข้อความ JSON String</summary>
         public static DialogueDataSO FromJson(string jsonText)
         {

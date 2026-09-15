@@ -15,6 +15,9 @@ namespace ProjectCook.NPC
         [SerializeField] private string npcID;
         [SerializeField] private string npcName;
 
+        [Tooltip("คำพูดประจำตัว ใช้เติม {key} ในบทสนทนา NPC แต่ละตัวจึงพูดต่างกันได้จาก JSON ชุดเดียว")]
+        [SerializeField] private DialogueLinesSO lines;
+
         [Header("Dialogues")]
         [Tooltip("บทสนทนาเริ่มต้น กรณีไม่มีเงื่อนไขใดๆ ผ่านเลย")]
         [FormerlySerializedAs("defaultDialog")]
@@ -145,11 +148,12 @@ namespace ProjectCook.NPC
         {
             if (string.IsNullOrEmpty(text) || text.IndexOf('{') < 0) return text;
 
+            // provider ก่อน (เช่น {quest_offer} จากเควส) แล้วค่อยเติมคำพูดประจำตัวที่เหลือ
             foreach (IDialogueTextProvider provider in GetComponents<IDialogueTextProvider>())
             {
                 text = provider.ResolveText(text);
             }
-            return text;
+            return lines != null ? lines.ResolveText(text) : text;
         }
 
         /// <summary>ถูกเรียกจาก DialogueManager เมื่อเล่นบทสนทนาจบลง</summary>

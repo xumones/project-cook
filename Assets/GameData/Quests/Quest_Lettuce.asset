@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: lettuce
   recipe: {fileID: 11400000, guid: 846867b42c8232143b266d95a437c070, type: 2}
-  prerequisites: []
-  lockedText: "Fish first. I've been waiting all week."
-  offerText: "Good fish. Now something green, fresh, no cooking needed."
-  reminderText: "Just lettuce. Fresh. Nothing fancy."
-  exactText: "Crisp and fresh. That's all I needed."
-  extraText: "Lettuce and company. Fine by me."
+  prerequisites:
+  - {fileID: 11400000, guid: a4a70e21dd7ee714c974055a0a87b6c8, type: 2}
+  lockedText: Fish first. I've been waiting all week.
+  offerText: Sometimes I just want to try something a little strange... maybe I'll
+    stick to just vegetables this time.
+  reminderText: Just lettuce.
+  exactText: I know, right? To think that a color like green is what brought us all
+    the way to this very day.
+  extraText: Lettuce and company. Fine by me.

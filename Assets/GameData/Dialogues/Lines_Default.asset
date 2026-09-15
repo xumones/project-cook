@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8223aef8f28f4c119470386020d3c682, type: 3}
+  m_Name: Lines_Default
+  m_EditorClassIdentifier: ProjectCook.Dialogue::ProjectCook.Dialogue.DialogueLinesSO
+  fallback: {fileID: 0}
+  lines:
+  - key: greeting
+    variants:
+    - Hey there.
+    - Oh, hello.
+  - key: hub
+    variants:
+    - What can I do for you?
+    - Anything else?
+  - key: ask_menu
+    variants:
+    - What will it be?
+  - key: give_item
+    variants:
+    - Here you go.
+    - There you are.
+  - key: ask_more
+    variants:
+    - Want some more?
+  - key: chat
+    variants:
+    - Nice day for it.
+    - Busy day, huh?
+  - key: choice_ask_quest
+    variants:
+    - Anything I can do for you?
+  - key: choice_quest_reminder
+    variants:
+    - About that order...
+  - key: choice_deliver
+    variants:
+    - Here's your order.
+  - key: choice_ask_ingredients
+    variants:
+    - Can I get some ingredients?
+  - key: choice_chat
+    variants:
+    - Just passing by.
+  - key: choice_bye
+    variants:
+    - Bye.
+  - key: choice_request_bacon
+    variants:
+    - Some bacon, please.
+  - key: choice_request_egg
+    variants:
+    - An egg, please.
+  - key: choice_request_sausage
+    variants:
+    - A sausage, please.
+  - key: choice_request_steak
+    variants:
+    - A steak, please.
+  - key: choice_request_fish
+    variants:
+    - A fish, please.
+  - key: choice_request_lettuce
+    variants:
+    - Some lettuce, please.
+  - key: choice_never_mind
+    variants:
+    - Never mind.

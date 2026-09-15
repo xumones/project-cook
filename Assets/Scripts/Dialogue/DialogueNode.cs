@@ -15,17 +15,11 @@ namespace ProjectCook.Dialogue
         public string speakerNameOverride;
 
         [TextArea(3, 6)]
-        [Tooltip("ข้อความบทสนทนาที่จะพิมพ์บนหน้าจอ")]
+        [Tooltip("ข้อความบทสนทนาที่จะพิมพ์บนหน้าจอ ใช้ {key} ดึงคำพูดประจำตัวจาก DialogueLinesSO ของผู้พูดได้")]
         public string dialogueText;
 
         [Tooltip("ภาพตัวละคร/พอร์ตเทรตผู้พูด")]
         public Sprite speakerAvatar;
-
-        [Tooltip("เสียงพากย์หรือเสียงประกอบ (ถ้ามี)")]
-        public AudioClip voiceClip;
-
-        [Tooltip("ID หรือ Path ของ Event เสียงพากย์/SFX (สำหรับใช้กับ FMOD/Audio Event System หรือ JSON Data)")]
-        public string audioEvent;
 
         [Tooltip("ID ของโหนดถัดไปอัตโนมัติกรณีไม่มีตัวเลือกคำตอบ ถูก branches ทับได้")]
         public string nextNodeID;

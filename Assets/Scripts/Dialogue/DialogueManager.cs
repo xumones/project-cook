@@ -39,6 +39,7 @@ namespace ProjectCook.Dialogue
 
         // ตัวเลือกคำตอบที่ผ่านเงื่อนไขของโหนดปัจจุบัน และ index ที่กำลังไฮไลต์อยู่ (-1 = ยังไม่ได้เลือก ต้องกด W/S ก่อน)
         private readonly List<DialogueChoice> currentChoices = new List<DialogueChoice>();
+        private readonly List<string> currentChoiceTexts = new List<string>();
         private int selectedChoiceIndex = -1;
 
         private void OnEnable()
@@ -69,17 +70,6 @@ namespace ProjectCook.Dialogue
             if (WasAdvancePressed())
             {
                 OnAdvancePressed();
-            }
-        }
-
-        /// <summary>เริ่มต้นบทสนทนากับ NPC โดยใช้ไฟล์ JSON (TextAsset)</summary>
-        public void StartDialogue(IDialogueTarget target, TextAsset jsonAsset)
-        {
-            if (jsonAsset == null) return;
-            DialogueDataSO data = DialogueDataSO.FromTextAsset(jsonAsset);
-            if (data != null)
-            {
-                StartDialogue(target, data);
             }
         }
 
@@ -128,6 +118,7 @@ namespace ProjectCook.Dialogue
             currentNode = node;
             isWaitingForChoice = false;
             currentChoices.Clear();
+            currentChoiceTexts.Clear();
             selectedChoiceIndex = -1;
 
             if (dialogueUI != null)
@@ -143,12 +134,6 @@ namespace ProjectCook.Dialogue
             if (dialogueUI != null)
             {
                 dialogueUI.SetSpeakerInfo(speakerName, node.speakerAvatar);
-            }
-
-            // เล่นเสียงพากย์ถ้ามี
-            if (node.voiceClip != null)
-            {
-                AudioSource.PlayClipAtPoint(node.voiceClip, UnityEngine.Camera.main != null ? UnityEngine.Camera.main.transform.position : Vector3.zero);
             }
 
             // เติม placeholder ครั้งเดียวตรงนี้ ทั้งตอนพิมพ์และตอนกดข้ามจะได้ข้อความเดียวกัน
@@ -211,14 +196,15 @@ namespace ProjectCook.Dialogue
                 ? currentNode
                 : currentDialogueData.GetNode(currentNode.choicesFrom) ?? currentNode;
 
-            // คัดกรองเฉพาะตัวเลือกที่ผ่านเงื่อนไข
+            // คัดกรองเฉพาะตัวเลือกที่ผ่านเงื่อนไข และเติม placeholder ให้คำพูดผู้เล่นต่างกันตาม NPC ได้เหมือนกัน
             currentChoices.Clear();
+            currentChoiceTexts.Clear();
             foreach (var choice in source.choices)
             {
-                if (choice != null && choice.AreConditionsMet())
-                {
-                    currentChoices.Add(choice);
-                }
+                if (choice == null || !choice.AreConditionsMet()) continue;
+
+                currentChoices.Add(choice);
+                currentChoiceTexts.Add(currentTarget != null ? currentTarget.ResolveText(choice.choiceText) : choice.choiceText);
             }
 
             if (currentChoices.Count > 0)
@@ -226,7 +212,7 @@ namespace ProjectCook.Dialogue
                 isWaitingForChoice = true;
                 // ยังไม่ auto-select คำตอบแรก ต้องรอผู้เล่นกด W/S ก่อนถึงจะมีไฮไลต์ขึ้นมา
                 selectedChoiceIndex = -1;
-                dialogueUI.DisplayChoices(currentChoices);
+                dialogueUI.DisplayChoices(currentChoiceTexts);
             }
             else
             {
@@ -355,6 +341,7 @@ namespace ProjectCook.Dialogue
             isTyping = false;
             isWaitingForChoice = false;
             currentChoices.Clear();
+            currentChoiceTexts.Clear();
             selectedChoiceIndex = -1;
 
             if (typingCoroutine != null)

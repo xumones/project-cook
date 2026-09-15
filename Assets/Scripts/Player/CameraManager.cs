@@ -29,6 +29,9 @@ namespace ProjectCook.Player
         private GameMode currentMode = GameMode.Exploring;
         private CinemachineCamera activeStationCamera;
 
+        // ของในมือยังลอยอยู่ที่ Hand Anchor ระหว่างอยู่สถานี จึงซ่อนทั้ง layer HeldItem จากกล้องหลักแทน
+        private int heldItemLayer = -1;
+
         // บันทึกมุมมองเดิมของผู้เล่นก่อนเข้าสถานี
         private float savedPlayerPan = 0f;
         private float savedPlayerTilt = 0f;
@@ -54,6 +57,17 @@ namespace ProjectCook.Player
             {
                 gameMode.ModeChanged += HandleModeChanged;
             }
+
+            heldItemLayer = LayerMask.NameToLayer(GameLayers.HeldItem);
+        }
+
+        private void SetHeldItemVisible(bool visible)
+        {
+            Camera cam = Camera.main;
+            if (cam == null || heldItemLayer < 0) return;
+
+            int bit = 1 << heldItemLayer;
+            cam.cullingMask = visible ? cam.cullingMask | bit : cam.cullingMask & ~bit;
         }
 
         protected override void OnDestroy()
@@ -124,6 +138,7 @@ namespace ProjectCook.Player
                 playerCamera.Priority = inactivePriority;
             }
 
+            SetHeldItemVisible(false);
         }
 
         private void ExitStation()
@@ -159,6 +174,7 @@ namespace ProjectCook.Player
                 activeStationCamera = null;
             }
 
+            SetHeldItemVisible(true);
         }
 
         /// <summary>กล้องยังหมุนตามเมาส์ได้ แต่จำกัดมุมไว้รอบทิศที่เล็งอยู่ตอนเริ่มคุย</summary>

@@ -16,8 +16,15 @@ MonoBehaviour:
   recipe: {fileID: 11400000, guid: 1c5f1fbb951dcc24ca70956192d1b9c5, type: 2}
   prerequisites:
   - {fileID: 11400000, guid: 72b45d4f6615d1c41945c0617722712f, type: 2}
-  lockedText: "You? Cooking? Go feed the guy next door first, then we'll talk."
-  offerText: "Prove it. Cook me one sausage, properly, and bring it on a plate."
-  reminderText: "Sausage. Cooked through. That's the whole job."
-  exactText: "Now that's properly done. Well cooked."
-  extraText: "Ha, you overdid it. I'm not complaining."
+  lockedText: Do you know how to cook? You're wondering about that too, huh? Well...
+    yeah, it's you we're talking about, so one day you "will" figure it out anyway
+    huh?.
+  offerText: Of course you can... So, how about we try making this pretty useless
+    piece of food look a little better? I can't quite remember what it's called,
+    though...flying? fleeing? 'Frying', was it?.
+  reminderText: "A shiny, oil-glazed red sausage with a nice crispy skin\u2014and
+    of course, the most important part... a plate."
+  exactText: No wonder everyone loves this useless little thing so much. Since when
+    did it start tasting this good? Thanks, that was really delicious.
+  extraText: Look at that, it actually turned out to be useful after all, ha! Thx
+    bud.

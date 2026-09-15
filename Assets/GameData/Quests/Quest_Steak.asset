@@ -15,8 +15,10 @@ MonoBehaviour:
   questId: steak
   recipe: {fileID: 11400000, guid: e8be624dafe910e489ebcae63ccf4c04, type: 2}
   prerequisites: []
-  lockedText: "Sausage first. Then we talk steak."
-  offerText: "Not bad. Now the real test: a cooked steak."
-  reminderText: "The steak. Don't rush it, don't burn it."
-  exactText: "That's a steak worth the name."
-  extraText: "A steak and then some. Alright."
+  lockedText: ...
+  offerText: After eating stuff with zero nutritional value, guess it's time for
+    something actually good... Let's go with cooked steak this time.
+  reminderText: The steak. Don't need to be rush.
+  exactText: Maybe... someday, these familiar feelings and the same old tastes might
+    feel entirely new again.
+  extraText: I wonder when I'll get to eat something like this again...

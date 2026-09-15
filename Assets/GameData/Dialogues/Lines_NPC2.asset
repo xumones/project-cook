@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8223aef8f28f4c119470386020d3c682, type: 3}
+  m_Name: Lines_NPC2
+  m_EditorClassIdentifier: ProjectCook.Dialogue::ProjectCook.Dialogue.DialogueLinesSO
+  fallback: {fileID: 11400000, guid: f6545fc893bb4d7d8252efea3b34539a, type: 2}
+  lines:
+  - key: greeting
+    variants:
+    - Hm? Oh. It's you.
+    - ...Yes?
+  - key: hub
+    variants:
+    - How's the world doing? Is it holding up okay?
+    - Well?
+  - key: chat
+    variants:
+    - Is there anything that could help you out? Hmm... maybe... a record player?
+    - You know how to fry black-fleshed chicken and actually tell when it's cooked
+      or not?
+  - key: give_item
+    variants:
+    - Don't eat too much of it. What, you thought I meant you? Nah, I was talking
+      about myself.
+    - '"I wonder if the pan is big enough to fry all of these together at the same
+      time...'
+  - key: choice_chat
+    variants:
+    - talk
+  - key: choice_bye
+    variants:
+    - Right. Bye then.
