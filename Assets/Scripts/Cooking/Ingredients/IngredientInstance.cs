@@ -220,7 +220,5 @@ namespace ProjectCook.Cooking
 
         /// <summary>ชิ้นที่คีมกำลังจับอยู่ null = ไม่ได้ถูกจับ ชิ้นอื่นยังเป็นอิสระตามฟิสิกส์</summary>
         public Rigidbody GrippedBody { get; set; }
-
-        public bool IsGripped => GrippedBody != null;
     }
 }

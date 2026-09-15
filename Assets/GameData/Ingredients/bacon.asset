@@ -31,5 +31,5 @@ MonoBehaviour:
   sizzlePitch: 1
   pitchRandomness: 0.05
   dropSFX: {fileID: 0}
-  sizzleSFX: {fileID: 8300000, guid: 31cd05c3dd049ea42af3d2721807ed09, type: 3}
+  sizzleSFX: {fileID: 8300000, guid: 59bc8e239b5f1b64f8dcbd33022c7cd6, type: 3}
   cookedDoneSFX: {fileID: 0}

@@ -35,7 +35,7 @@ namespace ProjectCook.Cooking
 
         protected override void ApplyHeat(ContainedIngredient entry)
         {
-            float contact = SurfaceContactFraction(entry.Ingredient);
+            float contact = SurfaceContactFraction(entry);
             if (contact <= 0f) return;
 
             entry.Ingredient.ApplyHeat(Time.fixedDeltaTime * heatRateMultiplier * contact, panTransform.up);
@@ -43,7 +43,7 @@ namespace ProjectCook.Cooking
 
         public override bool IsReceivingHeat(ContainedIngredient entry)
         {
-            return SurfaceContactFraction(entry.Ingredient) > 0f;
+            return SurfaceContactFraction(entry) > 0f;
         }
 
         protected override void RemoveAt(int index)
@@ -56,25 +56,25 @@ namespace ProjectCook.Cooking
             base.RemoveAt(index);
         }
 
-        /// <summary>สัดส่วนชิ้นที่แตะผิวกระทะ (0-1) วัตถุดิบที่วางอยู่เฉย ๆ ถือว่าแตะเต็ม เช็คจริงเฉพาะตอนถูกคีบยกอยู่</summary>
-        private float SurfaceContactFraction(IngredientInstance ingredient)
+        /// <summary>สัดส่วนชิ้นที่แตะผิวกระทะ (0-1) นับเฉพาะชิ้นที่อยู่ใน trigger เทียบกับจำนวนชิ้นทั้งหมด ชิ้นที่ยังอยู่นอกกระทะจึงไม่ทำให้เกิดเสียงหรือความร้อน</summary>
+        private float SurfaceContactFraction(ContainedIngredient entry)
         {
+            IngredientInstance ingredient = entry.Ingredient;
             if (ingredient == null) return 0f;
-            if (!ingredient.IsGripped) return 1f;
 
             if (contactCache.TryGetValue(ingredient, out ContactSample sample) && sample.Frame == Time.frameCount)
             {
                 return sample.Fraction;
             }
 
-            IReadOnlyList<Rigidbody> bodies = ingredient.Bodies;
             int touching = 0;
-            for (int i = 0; i < bodies.Count; i++)
+            foreach (Rigidbody body in entry.BodiesInside)
             {
-                if (IsBodyTouchingSurface(bodies[i], ingredient.transform)) touching++;
+                if (IsBodyTouchingSurface(body, ingredient.transform)) touching++;
             }
 
-            float fraction = bodies.Count > 0 ? (float)touching / bodies.Count : 0f;
+            int totalBodies = ingredient.Bodies.Count;
+            float fraction = totalBodies > 0 ? (float)touching / totalBodies : 0f;
             contactCache[ingredient] = new ContactSample { Frame = Time.frameCount, Fraction = fraction };
             return fraction;
         }
@@ -87,10 +87,22 @@ namespace ProjectCook.Cooking
                 Collider col = raycastHitBuffer[i].collider;
                 if (col == null || col.isTrigger) continue;
 
-                // ชิ้นอื่นของวัตถุดิบเดียวกันไม่นับเป็นพื้นผิว
-                if (col.transform.IsChildOf(ingredientRoot)) continue;
+                if (col.transform.IsChildOf(panTransform)) return true;
 
-                return true;
+                // ชิ้นอื่นของวัตถุดิบเดียวกันไม่นับเป็นพื้นผิว แต่วัตถุดิบตัวอื่นที่อยู่ในกระทะนับ (ของซ้อนกันยังโดนทอด)
+                if (col.transform.IsChildOf(ingredientRoot)) continue;
+                if (IsBodyInside(col.attachedRigidbody)) return true;
+            }
+            return false;
+        }
+
+        private bool IsBodyInside(Rigidbody body)
+        {
+            if (body == null) return false;
+
+            for (int i = 0; i < contents.Count; i++)
+            {
+                if (contents[i].BodiesInside.Contains(body)) return true;
             }
             return false;
         }

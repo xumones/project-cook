@@ -15,7 +15,7 @@ MonoBehaviour:
   ingredientId: lettuce_1
   ingredientName: lettuce
   icon: {fileID: 0}
-  prefab: {fileID: 3854846019755330030, guid: 8e46261ecd4609e47815f73d51d71229, type: 3}
+  prefab: {fileID: 3665548752850000808, guid: 8e46261ecd4609e47815f73d51d71229, type: 3}
   isTwoSidedCooking: 0
   cookTime: 40
   burnTime: 70
@@ -31,5 +31,5 @@ MonoBehaviour:
   sizzlePitch: 1
   pitchRandomness: 0.05
   dropSFX: {fileID: 0}
-  sizzleSFX: {fileID: 0}
+  sizzleSFX: {fileID: 8300000, guid: b8f48e521e2ddee4eab55e9e60bbf8f5, type: 3}
   cookedDoneSFX: {fileID: 0}
