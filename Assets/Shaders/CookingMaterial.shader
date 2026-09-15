@@ -32,7 +32,9 @@ Shader "ProjectCook/Cooking/CookingMaterial"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING _REFLECTION_PROBE_BOX_PROJECTION
+            // ต้องแยกบรรทัดตาม URP Lit ถ้ารวมกัน stripper ตอน build จะตัด variant ทิ้งหมดเพราะไม่มีอันไหนมีครบทั้งคู่
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
             // Forward+ clustered light loop. Without this keyword the additional-light
             // loop is compiled out, so every point/spot light is ignored and the
             // surface is lit only by the main light + ambient (renders dark/tinted).
