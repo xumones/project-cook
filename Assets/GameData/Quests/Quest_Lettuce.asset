@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: lettuce
   recipe: {fileID: 11400000, guid: 846867b42c8232143b266d95a437c070, type: 2}
+  prerequisites: []
+  lockedText: "Fish first. I've been waiting all week."
   offerText: "Good fish. Now something green, fresh, no cooking needed."
   reminderText: "Just lettuce. Fresh. Nothing fancy."
   exactText: "Crisp and fresh. That's all I needed."

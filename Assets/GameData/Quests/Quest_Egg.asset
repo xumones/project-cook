@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: egg
   recipe: {fileID: 11400000, guid: f15ee6b496904bd4a8b19ad6282c7a14, type: 2}
-  offerText: "That bacon hit the spot. Now I'm craving a cooked egg."
-  reminderText: "One egg. Cooked. I believe in you."
-  exactText: "Now that's a proper egg. Thank you."
-  extraText: "You brought a feast for one egg. I won't complain."
+  prerequisites:
+  - {fileID: 11400000, guid: 2d66065f52e9d6a49beeb4d4034eed49, type: 2}
+  lockedText: Let's see that bacon first.
+  offerText: That bacon hit the spot. Now I'm craving a cooked egg.
+  reminderText: One egg. Cooked. I believe in you.
+  exactText: Now that's a proper egg. Thank you.
+  extraText: You brought a feast for one egg. I won't complain.

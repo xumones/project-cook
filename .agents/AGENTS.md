@@ -21,3 +21,8 @@
 - วัตถุดิบหลายชิ้น (หั่น/เต๋า): **ห้าม** มี Rigidbody หรือ Collider ที่ root — Rigidbody ซ้อนกันจะสู้กันเอง `IngredientInstance.Awake` จะ log error ถ้าพบ
 - ชิ้นลูกห้ามมี `IngredientInstance`/`IngredientVisuals` ของตัวเอง ไม่งั้นถูกนับเป็นวัตถุดิบเพิ่ม
 - รูปแบบต่างกัน (whole / diced / ground) = `IngredientDataSO` คนละตัว แต่ละตัวมี prefab ของตัวเอง ไม่ต้องเพิ่ม enum
+
+# Station Convention
+
+จุดที่ผู้เล่นเข้าไปใช้งานแล้วกล้องล็อก (กระทะ เครื่องเล่นแผ่น ฯลฯ) ต้อง derive `ProjectCook.Stations.Station` ไม่ copy ตรรกะกล้อง/โหมด/ปุ่มออกซ้ำ
+ของที่ต้องเปิด/ปิดตามการเข้า-ออก (UI, controller, เสียง) ทำเป็น `IStationModule` แล้ววางเป็นลูกของสถานี หรือใส่ใน `externalModules` — `Station` ไม่ต้องรู้จักมันโดยตรง

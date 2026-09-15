@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: bacon
   recipe: {fileID: 11400000, guid: 877b90c2d8e059e46bca9a3753599d0d, type: 2}
+  prerequisites: []
+  lockedText: "Nothing yet. Come back when I'm hungry."
   offerText: "I'd kill for some cooked bacon. Bring me one on a plate and take whatever you need from me."
   reminderText: "Still waiting on that bacon. Cooked, not burnt, if you can manage."
   exactText: "Perfect. Exactly what I asked for."

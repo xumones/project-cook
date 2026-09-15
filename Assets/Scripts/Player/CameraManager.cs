@@ -4,7 +4,7 @@ using ProjectCook.Core;
 
 namespace ProjectCook.Player
 {
-    /// <summary>ปรับกล้องตามโหมดของเกม สถานีทำอาหารต้องตั้ง StationCamera ก่อนเปลี่ยนโหมด</summary>
+    /// <summary>ปรับกล้องตามโหมดของเกม สถานีต้องตั้ง StationCamera ก่อนเปลี่ยนโหมด</summary>
     public class CameraManager : SceneSingleton<CameraManager>
     {
         [Header("Default Player Camera")]
@@ -29,7 +29,7 @@ namespace ProjectCook.Player
         private GameMode currentMode = GameMode.Exploring;
         private CinemachineCamera activeStationCamera;
 
-        // บันทึกมุมมองเดิมของผู้เล่นก่อนเข้าโหมดทำอาหาร
+        // บันทึกมุมมองเดิมของผู้เล่นก่อนเข้าสถานี
         private float savedPlayerPan = 0f;
         private float savedPlayerTilt = 0f;
 
@@ -39,7 +39,7 @@ namespace ProjectCook.Player
         private bool savedDialoguePanWrap;
         private bool dialogueRangeSaved;
 
-        /// <summary>กล้องของสถานีที่กำลังจะเข้าใช้งาน ตั้งก่อนสั่งเปลี่ยนโหมดเป็น Cooking</summary>
+        /// <summary>กล้องของสถานีที่กำลังจะเข้าใช้งาน ตั้งก่อนสั่งเปลี่ยนโหมดเป็น Station</summary>
         public CinemachineCamera StationCamera { get; set; }
 
         private void Start()
@@ -71,14 +71,14 @@ namespace ProjectCook.Player
             GameMode previous = currentMode;
             currentMode = mode;
 
-            if (previous == GameMode.Cooking) ExitCooking();
+            if (previous == GameMode.Station) ExitStation();
             else if (previous == GameMode.Dialogue) ExitDialogue();
 
-            if (mode == GameMode.Cooking) EnterCooking(StationCamera);
+            if (mode == GameMode.Station) EnterStation(StationCamera);
             else if (mode == GameMode.Dialogue) EnterDialogue();
         }
 
-        private void EnterCooking(CinemachineCamera stationCamera)
+        private void EnterStation(CinemachineCamera stationCamera)
         {
             if (stationCamera == null) return;
 
@@ -101,7 +101,7 @@ namespace ProjectCook.Player
 
             activeStationCamera = stationCamera;
 
-            // 2. รีเซ็ตมุมมอง Pan / Tilt ของกล้องสถานีทำอาหาร
+            // 2. รีเซ็ตมุมมอง Pan / Tilt ของกล้องสถานี (ถ้ามี)
             var panTilt = activeStationCamera.GetComponent<CinemachinePanTilt>();
             if (panTilt != null)
             {
@@ -126,7 +126,7 @@ namespace ProjectCook.Player
 
         }
 
-        private void ExitCooking()
+        private void ExitStation()
         {
             // 4. คืนค่ามุมมองเดิมของผู้เล่น + เปิด Input กล้องผู้เล่นกลับมาทำงาน
             if (playerCamera != null)

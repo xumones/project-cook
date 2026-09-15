@@ -5,6 +5,7 @@
         "ProjectCook.Core",
         "ProjectCook.Items",
         "ProjectCook.Player",
+        "ProjectCook.Stations",
         "Unity.InputSystem",
         "Unity.Cinemachine"
     ],

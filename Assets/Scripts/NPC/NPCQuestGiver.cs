@@ -18,8 +18,12 @@ namespace ProjectCook.NPC
 
         // flag ที่ JSON อ้างได้ ตอบแค่ว่า "ตอนนี้ทำอะไรได้" ไม่บอกว่าเรื่องอยู่ขั้นไหน จำนวนจึงไม่โตตามเนื้อหา
         public const string QuestAvailableFlag = "quest_available";
+        public const string QuestLockedFlag = "quest_locked";
         public const string QuestActiveFlag = "quest_active";
         public const string QuestDeliverableFlag = "quest_deliverable";
+
+        /// <summary>ขอวัตถุดิบได้: ระหว่างทำเควส และหลังเควสจบหมด (โหมดอิสระให้ทดลอง)</summary>
+        public const string IngredientsOpenFlag = "ingredients_open";
 
         private readonly List<IngredientInstance> ingredientBuffer = new List<IngredientInstance>();
 
@@ -53,8 +57,13 @@ namespace ProjectCook.NPC
             QuestSO quest = CurrentQuest;
             QuestState state = quest != null ? QuestLog.GetState(quest.QuestId) : QuestState.Completed;
 
-            flags.SetFlag(QuestAvailableFlag, state == QuestState.NotStarted ? 1 : 0);
+            // ยังไม่เริ่มแยกเป็น 2 กรณี: รับได้เลย หรือติดเควสก่อนหน้าอยู่
+            bool notStarted = state == QuestState.NotStarted;
+            bool unlocked = notStarted && quest.PrerequisitesMet;
+            flags.SetFlag(QuestAvailableFlag, unlocked ? 1 : 0);
+            flags.SetFlag(QuestLockedFlag, notStarted && !unlocked ? 1 : 0);
             flags.SetFlag(QuestActiveFlag, state == QuestState.Active ? 1 : 0);
+            flags.SetFlag(IngredientsOpenFlag, state == QuestState.Active || quest == null ? 1 : 0);
 
             // ส่งได้เมื่อของที่สูตรต้องการมีครบและผ่านขั้นต่ำทุกชิ้น ของเกินไม่ขัด (ต่างกันแค่คำตอบ NPC)
             bool deliverable = state == QuestState.Active && TryEvaluateHeldDish(quest, out RecipeMatch match) && match.IsDeliverable;
@@ -89,7 +98,8 @@ namespace ProjectCook.NPC
 
         private void Accept(QuestSO quest)
         {
-            if (QuestLog.GetState(quest.QuestId) != QuestState.NotStarted) return;
+            // เช็คซ้ำแม้ตัวเลือกจะถูกซ่อนด้วย flag แล้ว กัน JSON ที่ลืมใส่เงื่อนไข
+            if (QuestLog.GetState(quest.QuestId) != QuestState.NotStarted || !quest.PrerequisitesMet) return;
 
             QuestLog.SetState(quest.QuestId, QuestState.Active);
 
@@ -130,7 +140,8 @@ namespace ProjectCook.NPC
             QuestSO quest = CurrentQuest;
             if (quest != null)
             {
-                text = text.Replace("{quest_offer}", quest.OfferText)
+                text = text.Replace("{quest_locked}", quest.LockedText)
+                           .Replace("{quest_offer}", quest.OfferText)
                            .Replace("{quest_reminder}", quest.ReminderText);
             }
 

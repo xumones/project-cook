@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: fish
   recipe: {fileID: 11400000, guid: 21a9aac0430c6864ebae777629005be0, type: 2}
+  prerequisites:
+  - {fileID: 11400000, guid: a2d631d4362878946902ed18e5829303, type: 2}
+  lockedText: "Heard the picky one next door is still testing you. Pass that, then come find me."
   offerText: "I've eaten raw fish all week. Cook one for me, would you? Bring it on a plate."
   reminderText: "Still dreaming of that cooked fish."
   exactText: "That's the one. Couldn't have done it better myself."

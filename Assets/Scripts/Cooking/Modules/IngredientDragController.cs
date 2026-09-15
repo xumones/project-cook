@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ProjectCook.Core;
 
 namespace ProjectCook.Cooking
 {
@@ -211,6 +212,9 @@ namespace ProjectCook.Cooking
             grippedRigidbody = closestRb;
             currentGrippedIngredient.GrippedBody = grippedRigidbody;
 
+            // ระหว่างคีบ crosshair จะสลับ hint ถี่ตามของที่กวาดผ่าน ซ่อนไว้จนกว่าจะปล่อย
+            PlayerAiming.Instance?.SuppressHints(this);
+
             originalLinearDamping = grippedRigidbody.linearDamping;
             originalAngularDamping = grippedRigidbody.angularDamping;
             originalInterpolation = grippedRigidbody.interpolation;
@@ -233,6 +237,7 @@ namespace ProjectCook.Cooking
             if (currentGrippedIngredient == null) return;
 
             currentGrippedIngredient.GrippedBody = null;
+            PlayerAiming.Instance?.ReleaseHintSuppression(this);
 
             if (grippedRigidbody != null)
             {

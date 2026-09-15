@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 using ProjectCook.Cooking;
+using ProjectCook.Core;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>คำขอหนึ่งรายการของ NPC: ต้องส่งอะไร และ NPC พูดว่าอะไรในแต่ละจังหวะ</summary>
+    /// <summary>คำขอหนึ่งรายการของ NPC: ต้องส่งอะไร รับได้เมื่อไหร่ และ NPC พูดว่าอะไรในแต่ละจังหวะ</summary>
     [CreateAssetMenu(fileName = "Quest_", menuName = "ProjectCook/NPC/Quest")]
     public class QuestSO : ScriptableObject
     {
@@ -13,7 +15,13 @@ namespace ProjectCook.NPC
         [Tooltip("สูตรที่ต้องส่ง วัตถุดิบในสูตรจะถูกปลดล็อกให้ขอได้ตอนรับเควส")]
         [SerializeField] private RecipeSO recipe;
 
+        [Tooltip("เควสที่ต้องจบก่อนถึงจะรับอันนี้ได้ จะเป็นของ NPC ไหนก็ได้ เว้นว่าง = รับได้ทันที")]
+        [SerializeField] private List<QuestSO> prerequisites = new List<QuestSO>();
+
         [Header("Lines")]
+        [TextArea(2, 4)] [Tooltip("ตอนยังรับไม่ได้เพราะเควสก่อนหน้ายังไม่จบ ({quest_locked})")]
+        [SerializeField] private string lockedText;
+
         [TextArea(2, 4)] [Tooltip("ตอนผู้เล่นรับเควส ({quest_offer})")]
         [SerializeField] private string offerText;
 
@@ -28,7 +36,24 @@ namespace ProjectCook.NPC
 
         public string QuestId => questId;
         public RecipeSO Recipe => recipe;
+        public string LockedText => lockedText;
         public string OfferText => offerText;
+
+        /// <summary>เควสก่อนหน้าจบครบแล้วหรือยัง</summary>
+        public bool PrerequisitesMet
+        {
+            get
+            {
+                for (int i = 0; i < prerequisites.Count; i++)
+                {
+                    if (prerequisites[i] != null && QuestLog.GetState(prerequisites[i].QuestId) != QuestState.Completed)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         public string ReminderText => reminderText;
 
         public string ResultText(RecipeOutcome outcome) =>

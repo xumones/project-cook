@@ -4,7 +4,8 @@ namespace ProjectCook.Core
     public enum GameMode
     {
         Exploring,
-        Cooking,
+        /// <summary>อยู่ในสถานีใดสถานีหนึ่ง กล้องล็อกกับสถานี</summary>
+        Station,
         Dialogue
     }
 }

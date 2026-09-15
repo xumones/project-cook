@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBlenderSettings
   CustomBlends:
   - From: MainCinemachineCamera
-    To: StationCamera
+    To: '**ANY CAMERA**'
     Blend:
       Style: 2
-      Time: 1
+      Time: 0.7
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 0
-  - From: StationCamera
+  - From: '**ANY CAMERA**'
     To: MainCinemachineCamera
     Blend:
       Style: 3
-      Time: 1
+      Time: 0.7
       CustomCurve:
         serializedVersion: 2
         m_Curve: []

@@ -25,6 +25,12 @@
           "conditionFlag": "quest_available"
         },
         {
+          "choiceText": "Anything I can do for you?",
+          "nextNodeID": "quest_locked",
+          "actionID": "",
+          "conditionFlag": "quest_locked"
+        },
+        {
           "choiceText": "About that order...",
           "nextNodeID": "quest_reminder",
           "actionID": "",
@@ -40,7 +46,7 @@
           "choiceText": "Can I get some ingredients?",
           "nextNodeID": "ask_menu",
           "actionID": "",
-          "conditionFlag": "holding_dish_with_space,quest_active"
+          "conditionFlag": "holding_dish_with_space,ingredients_open"
         },
         {
           "choiceText": "Just passing by.",
@@ -60,6 +66,14 @@
       "nodeID": "quest_offer",
       "speakerNameOverride": "",
       "dialogueText": "{quest_offer}",
+      "audioEvent": "",
+      "nextNodeID": "hub",
+      "choices": []
+    },
+    {
+      "nodeID": "quest_locked",
+      "speakerNameOverride": "",
+      "dialogueText": "{quest_locked}",
       "audioEvent": "",
       "nextNodeID": "hub",
       "choices": []

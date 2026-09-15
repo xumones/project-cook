@@ -1,0 +1,21 @@
+{
+    "name": "ProjectCook.Stations",
+    "rootNamespace": "ProjectCook.Stations",
+    "references": [
+        "ProjectCook.Core",
+        "ProjectCook.Player",
+        "Unity.InputSystem",
+        "Unity.Cinemachine",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

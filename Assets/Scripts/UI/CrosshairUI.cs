@@ -23,11 +23,17 @@ namespace ProjectCook.UI
         }
 
         [Header("Icons")]
-        [Tooltip("จุดกลางจอตอนไม่ได้เล็งอะไรที่ทำอะไรได้ ขนาดใช้ตาม RectTransform ที่ตั้งไว้")]
+        [Tooltip("จุดกลางจอตอนไม่ได้เล็งอะไรที่ทำอะไรได้")]
         [SerializeField] private Sprite defaultSprite;
+
+        [Tooltip("ขนาดจุด default (px) 0 = ใช้ขนาด RectTransform ตอนเริ่ม")]
+        [SerializeField] private Vector2 defaultSize = new Vector2(4f, 4f);
 
         [Tooltip("ไอคอนต่อการกระทำ hint ที่ไม่มีในตารางจะใช้ default")]
         [SerializeField] private HintIcon[] hintIcons;
+
+        [Tooltip("เวลาที่ hint ใหม่ต้องค้างก่อนสลับไอคอน (วินาที) กันกระพริบตอนกวาดผ่านของหลายชิ้น")]
+        [SerializeField] private float hintSwitchDelay = 0.1f;
 
         [Header("References")]
         [Tooltip("Transform ของกล้องหลักสำหรับตรวจจับการหันกล้อง (เว้นว่าง = Camera.main)")]
@@ -53,12 +59,13 @@ namespace ProjectCook.UI
         private CanvasGroup canvasGroup;
         private Image image;
         private RectTransform rectTransform;
-        private Vector2 defaultSize;
 
         // แคช provider ของ collider ล่าสุด จะค้น component ใหม่เฉพาะตอนเล็งเปลี่ยนชิ้น
         private Collider lastTarget;
         private IAimHintProvider lastProvider;
         private AimHint currentHint = AimHint.None;
+        private AimHint pendingHint = AimHint.None;
+        private float pendingSince;
         private float currentHintAlpha;
 
         private Quaternion previousRotation;
@@ -70,7 +77,11 @@ namespace ProjectCook.UI
             canvasGroup = GetComponent<CanvasGroup>();
             image = GetComponent<Image>();
             rectTransform = (RectTransform)transform;
-            defaultSize = rectTransform.sizeDelta;
+            if (defaultSize.sqrMagnitude <= 0f)
+            {
+                defaultSize = rectTransform.sizeDelta;
+            }
+            rectTransform.sizeDelta = defaultSize;
         }
 
         private void Start()
@@ -95,7 +106,7 @@ namespace ProjectCook.UI
 
         private void Update()
         {
-            AimHint hint = ResolveHint();
+            AimHint hint = StableHint(ResolveHint());
             if (hint != currentHint)
             {
                 currentHint = hint;
@@ -114,13 +125,33 @@ namespace ProjectCook.UI
             UpdateDefaultFade();
         }
 
+        // hint ใหม่ต้องค้างครบ hintSwitchDelay ก่อนถึงยอมสลับ กันไอคอนกระพริบตอนกวาดผ่านของหลายชิ้นถี่ ๆ
+        private AimHint StableHint(AimHint candidate)
+        {
+            if (candidate == currentHint)
+            {
+                pendingHint = candidate;
+                return currentHint;
+            }
+
+            if (candidate != pendingHint)
+            {
+                pendingHint = candidate;
+                pendingSince = Time.unscaledTime;
+            }
+
+            return Time.unscaledTime - pendingSince >= hintSwitchDelay ? candidate : currentHint;
+        }
+
         private AimHint ResolveHint()
         {
             // ระหว่างคุยหรืออยู่ในสถานี ไม่มีอะไรให้ทำกับเป้า
             if (!GameModeManager.GameplayInputAllowed) return AimHint.None;
 
             PlayerAiming aiming = PlayerAiming.Instance;
-            Collider target = aiming != null ? aiming.Target : null;
+            if (aiming == null || aiming.HintsSuppressed) return AimHint.None;
+
+            Collider target = aiming.Target;
 
             if (target != lastTarget)
             {
