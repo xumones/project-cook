@@ -34,23 +34,24 @@ namespace ProjectCook.Cooking
         [Range(1, 4)]
         [SerializeField] private int maxConcurrentVoices = 3;
 
-        private struct ClipCount
+        // นับตามชนิดวัตถุดิบ ไม่ใช่ตาม clip เพราะ pitch ต่างกันได้แม้ clip เดียวกัน
+        private struct SizzleGroup
         {
-            public AudioClip Clip;
+            public IngredientDataSO Data;
             public int Count;
         }
 
         private class SizzleVoice
         {
             public AudioSource Source;
-            public AudioClip CurrentClip;
+            public IngredientDataSO CurrentData;
             public float TargetVolume;
             public float FadeSpeed;
         }
 
-        private static readonly Comparison<ClipCount> DescendingByCount = (a, b) => b.Count.CompareTo(a.Count);
+        private static readonly Comparison<SizzleGroup> DescendingByCount = (a, b) => b.Count.CompareTo(a.Count);
 
-        private readonly List<ClipCount> clipCounts = new List<ClipCount>(8);
+        private readonly List<SizzleGroup> groups = new List<SizzleGroup>(8);
         private SizzleVoice[] voices;
         private bool[] voiceMatchedBuffer;
         private bool[] selectedConsumedBuffer;
@@ -61,22 +62,14 @@ namespace ProjectCook.Cooking
         {
             if (foodContainer == null)
             {
-                foodContainer = GetComponent<FoodContainer>();
-                if (foodContainer == null)
-                {
-                    foodContainer = GetComponentInChildren<FoodContainer>();
-                }
-                if (foodContainer == null)
-                {
-                    foodContainer = GetComponentInParent<FoodContainer>();
-                }
+                foodContainer = FoodContainer.FindFor(this);
             }
 
             InitAudioSources();
         }
 
         /// <summary>ค้นหา ตรวจสอบ และสร้าง AudioSource ทั้งหมดให้อัตโนมัติหากยังไม่มี</summary>
-        public void InitAudioSources()
+        private void InitAudioSources()
         {
             if (sfxAudioSource == null)
             {
@@ -143,7 +136,7 @@ namespace ProjectCook.Cooking
             PlayCookedDoneSFX(data);
         }
 
-        public void PlayDropSFX(IngredientDataSO data)
+        private void PlayDropSFX(IngredientDataSO data)
         {
             if (data != null && data.DropSFX != null && sfxAudioSource != null)
             {
@@ -153,7 +146,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        public void PlayCookedDoneSFX(IngredientDataSO data)
+        private void PlayCookedDoneSFX(IngredientDataSO data)
         {
             if (data != null && data.CookedDoneSFX != null && sfxAudioSource != null)
             {
@@ -181,7 +174,7 @@ namespace ProjectCook.Cooking
         private void EvaluateCookingAudioState()
         {
             var items = foodContainer.Contents;
-            clipCounts.Clear();
+            groups.Clear();
 
             if (foodContainer.IsHeating)
             {
@@ -197,13 +190,13 @@ namespace ProjectCook.Cooking
 
                     if (!foodContainer.IsReceivingHeat(entry)) continue;
 
-                    AddClipCount(data.SizzleSFX);
+                    AddToGroup(data);
                 }
             }
 
             // เรียงคลิปตามจำนวนชิ้นที่ใช้เสียงเดียวกัน (มาก -> น้อย) แล้วเลือกมาเล่นพร้อมกันได้สูงสุด maxConcurrentVoices คลิป ที่เหลือไม่เล่น
-            clipCounts.Sort(DescendingByCount);
-            int selectedCount = Mathf.Min(clipCounts.Count, voices.Length);
+            groups.Sort(DescendingByCount);
+            int selectedCount = Mathf.Min(groups.Count, voices.Length);
 
             // เสียงซู่ซ่าหลายชนิดพร้อมกันจะรวมกันดังเกินไป จึงลดความดังต่อเสียงลงตามจำนวนเสียงที่ active พร้อมกัน
             float loudnessScale = selectedCount > 1 ? 1f / Mathf.Sqrt(selectedCount) : 1f;
@@ -215,12 +208,12 @@ namespace ProjectCook.Cooking
             for (int v = 0; v < voices.Length; v++)
             {
                 var voice = voices[v];
-                if (voice.CurrentClip == null) continue;
+                if (voice.CurrentData == null) continue;
 
                 int selIdx = -1;
                 for (int s = 0; s < selectedCount; s++)
                 {
-                    if (!selectedConsumedBuffer[s] && clipCounts[s].Clip == voice.CurrentClip)
+                    if (!selectedConsumedBuffer[s] && groups[s].Data == voice.CurrentData)
                     {
                         selIdx = s;
                         break;
@@ -231,7 +224,7 @@ namespace ProjectCook.Cooking
                 {
                     selectedConsumedBuffer[selIdx] = true;
                     voiceMatchedBuffer[v] = true;
-                    voice.TargetVolume = ComputeClipVolume(clipCounts[selIdx].Count, loudnessScale);
+                    voice.TargetVolume = ComputeClipVolume(groups[selIdx].Count, loudnessScale);
                     voice.FadeSpeed = fadeInSpeed;
                 }
                 else
@@ -252,11 +245,12 @@ namespace ProjectCook.Cooking
                 if (nextSelIdx >= selectedCount) break;
 
                 var voice = voices[v];
-                var cc = clipCounts[nextSelIdx];
+                var cc = groups[nextSelIdx];
 
                 voice.Source.Stop();
-                voice.Source.clip = cc.Clip;
-                voice.CurrentClip = cc.Clip;
+                voice.Source.clip = cc.Data.SizzleSFX;
+                voice.Source.pitch = cc.Data.SizzlePitch;
+                voice.CurrentData = cc.Data;
                 voice.TargetVolume = ComputeClipVolume(cc.Count, loudnessScale);
                 voice.FadeSpeed = fadeInSpeed;
 
@@ -265,19 +259,19 @@ namespace ProjectCook.Cooking
             }
         }
 
-        private void AddClipCount(AudioClip clip)
+        private void AddToGroup(IngredientDataSO data)
         {
-            for (int i = 0; i < clipCounts.Count; i++)
+            for (int i = 0; i < groups.Count; i++)
             {
-                if (clipCounts[i].Clip == clip)
+                if (groups[i].Data == data)
                 {
-                    var cc = clipCounts[i];
-                    cc.Count++;
-                    clipCounts[i] = cc;
+                    var group = groups[i];
+                    group.Count++;
+                    groups[i] = group;
                     return;
                 }
             }
-            clipCounts.Add(new ClipCount { Clip = clip, Count = 1 });
+            groups.Add(new SizzleGroup { Data = data, Count = 1 });
         }
 
         private static float ComputeClipVolume(int count, float loudnessScale)

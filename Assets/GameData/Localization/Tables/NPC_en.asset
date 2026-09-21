@@ -1,0 +1,369 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: NPC_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 67d75f3915da58d41a1d291f85b93990, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 283005983412453505
+  m_TableData:
+  - m_Id: 4224512499712
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224755769344
+    m_Localized: I haven't eaten in so long... If it's not too much trouble, could
+      you whip something up for me? I've got a bit of bacon left.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224764157952
+    m_Localized: "Crispy or burnt, it doesn't really matter\u2014and don't forget
+      to bring \"a plate\" so I can share some with you."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224764157953
+    m_Localized: "You did great. It might not be anything fancy, but thank you for
+      making the effort\u2014I'm definitely going to enjoy this."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546560
+    m_Localized: I think I'll be full for a long time now, so thank you so much,
+      truly.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546561
+    m_Localized: Maybe you missing something?.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546562
+    m_Localized: Last one ,A bit of meat, an egg, and some bacon... that doesn't
+      sound like too much for you right now, does it?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546563
+    m_Localized: So this is really the end, Just meat, egg and bacon basic things
+      isn't it?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546564
+    m_Localized: Thank you so much for staying with me all the way to this point.
+      Thank you for making it through life this far, for being right here. You're
+      seriously, damn incredible.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546565
+    m_Localized: Thank you so much for staying with me all the way to this point.
+      Thank you for making it through life this far, for being right here. You're
+      seriously, damn incredible.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546566
+    m_Localized: Let's see that bacon first.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546567
+    m_Localized: Yes please, just egg on a plate that should be enough.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546568
+    m_Localized: Is there really anything better than a crispy fried egg with a runny
+      yolk on a freezing day? I guess there probably is... I just can't think of
+      a single thing right now.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546569
+    m_Localized: It really does taste better than any other day, doesn't it? I wonder
+      why... Why did it never taste this good before?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546570
+    m_Localized: You know what came before the chicken or the egg? It's the fact
+      that neither of them existed, and there was never any meaning to convey in
+      the first place.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546571
+    m_Localized: Maybe you're missing someperson?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546572
+    m_Localized: I've eaten raw fish all week. Cook one for me, would you? Bring
+      it on a plate.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546573
+    m_Localized: (Still dreaming of that cooked fish.)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546574
+    m_Localized: "You know, evil is actually a necessary form of existence, isn't
+      it? But then again, it's not like we have to become better tomorrow, right?
+      Thank you so much\u2014thank you from the very bottom of my heart."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546575
+    m_Localized: I really wish I could go to the beach too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546576
+    m_Localized: Fish first. I've been waiting all week.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546577
+    m_Localized: Sometimes I just want to try something a little strange... maybe
+      I'll stick to just vegetables this time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546578
+    m_Localized: Just lettuce.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546579
+    m_Localized: I know, right? To think that a color like green is what brought
+      us all the way to this very day.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546580
+    m_Localized: Lettuce and company. Fine by me.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546581
+    m_Localized: Do you know how to cook? You're wondering about that too, huh? Well...
+      yeah, it's you we're talking about, so one day you "will" figure it out anyway
+      huh?.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546582
+    m_Localized: Of course you can... So, how about we try making this pretty useless
+      piece of food look a little better? I can't quite remember what it's called,
+      though...flying? fleeing? 'Frying', was it?.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546583
+    m_Localized: "A shiny, oil-glazed red sausage with a nice crispy skin\u2014and
+      of course, the most important part... a plate."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546584
+    m_Localized: No wonder everyone loves this useless little thing so much. Since
+      when did it start tasting this good? Thanks, that was really delicious.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546585
+    m_Localized: Look at that, it actually turned out to be useful after all, ha!
+      Thx bud.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546586
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546587
+    m_Localized: After eating stuff with zero nutritional value, guess it's time
+      for something actually good... Let's go with cooked steak this time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546588
+    m_Localized: The steak. Don't need to be rush.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546589
+    m_Localized: Maybe... someday, these familiar feelings and the same old tastes
+      might feel entirely new again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546590
+    m_Localized: I wonder when I'll get to eat something like this again...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546591
+    m_Localized: someone?
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4224772546592
+    m_Localized: Wait, wasn't I just...?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546593
+    m_Localized: That face really brings back memories... the look of someone trying
+      their best.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546594
+    m_Localized: "You know, maybe everything happened a bit too fast... for you,
+      for me, for all of us. But hey, I\u2019m right here now, and you\u2019re here
+      with us too. So maybe, if you just \"stand still for a moment\", you might
+      figure out what to do next. Or you could just take a \"seat\" somewhere around
+      here and think it over."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546595
+    m_Localized: "You know, it feels like I used to make that exact face you're making
+      so many times, a long, long time ago. A really long time ago\u2014even though
+      I don't even have a face."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546596
+    m_Localized: Honestly, I can't even remember the last time these things actually
+      meant anything. So, just give it everything you've got.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546597
+    m_Localized: Is there really anything better than having someone who is truly
+      ready to do something for you? Right?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546598
+    m_Localized: chat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546599
+    m_Localized: someperson?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546600
+    m_Localized: Hm? Oh. It's you.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546601
+    m_Localized: ...Yes?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546602
+    m_Localized: Is there anything that could help you out? Hmm... maybe... a record
+      player?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546603
+    m_Localized: You know how to fry black-fleshed chicken and actually tell when
+      it's cooked or not?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546604
+    m_Localized: Don't eat too much of it. What, you thought I meant you? Nah, I
+      was talking about myself.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546605
+    m_Localized: '"I wonder if the pan is big enough to fry all of these together
+      at the same time...'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546606
+    m_Localized: talk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546607
+    m_Localized: somebody?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546608
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546609
+    m_Localized: Glad to see you again. Which round is this now... -1, was it?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546610
+    m_Localized: If there's anything you want to do or ask for... just go ahead and
+      ask. Nobody's going to judge you here. At least, not in this place.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546611
+    m_Localized: "We don't have names, but we still feel hunger. We don't really
+      exist, but we still feel. And we won't have any answers\u2014not if we don't
+      even know how to ask the questions."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546612
+    m_Localized: I hope this suffering brings happiness to someone out there. I really
+      want to believe that.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546613
+    m_Localized: Make sure you take a good care of it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546614
+    m_Localized: Speak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546615
+    m_Localized: Anything I can do for you?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546616
+    m_Localized: About that order...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546617
+    m_Localized: Here's your order.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546618
+    m_Localized: '{0}, please.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546619
+    m_Localized: Bye.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546620
+    m_Localized: Bacon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546621
+    m_Localized: Egg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546622
+    m_Localized: Fish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546623
+    m_Localized: Lettuce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546624
+    m_Localized: Sausage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546625
+    m_Localized: Steak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 63091481059328
+    m_Localized: Oh... for me? Thank you.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 63091673997312
+    m_Localized: I'll take it. Thanks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 63091673997313
+    m_Localized: Huh. You didn't have to.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 283005983412453505
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 4224772546591

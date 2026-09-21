@@ -11,9 +11,6 @@ namespace ProjectCook.Core
         // ใช้ HashSet แทนตัวนับเลข เพื่อกันบั๊กนับเกิน/นับขาดกรณีระบบเดิมเรียกซ้ำหรือลืมคืนสิทธิ์
         private readonly HashSet<Object> unlockRequesters = new HashSet<Object>();
 
-        /// <summary>สถานะปัจจุบันว่าเคอร์เซอร์ถูกปลดล็อกให้ใช้งานอยู่หรือไม่</summary>
-        public static bool IsUnlocked => HasInstance && Instance.unlockRequesters.Count > 0;
-
         /// <summary>เรียกให้แน่ใจว่า CursorManager ถูกสร้างและบังคับใช้สถานะเริ่มต้นแล้ว</summary>
         public static void EnsureInitialized()
         {

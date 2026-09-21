@@ -27,9 +27,6 @@ namespace ProjectCook.Core
         /// <summary>เส้นเล็งของเฟรมนี้ ใช้หาทิศที่ผู้เล่นหันอยู่แม้ตอนเล็งไม่โดนอะไร</summary>
         public Ray AimRay { get; private set; }
 
-        /// <summary>ระยะเอื้อมสูงสุดที่ตั้งไว้</summary>
-        public float MaxDistance => maxDistance;
-
         /// <summary>มีระบบใดกำลังขอให้ซ่อน hint การเล็งอยู่หรือไม่ (เช่น ระหว่างคีบอาหาร)</summary>
         public bool HintsSuppressed => hintSuppressors.Count > 0;
 

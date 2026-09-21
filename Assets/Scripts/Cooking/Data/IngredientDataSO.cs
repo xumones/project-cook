@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace ProjectCook.Cooking
 {
@@ -14,10 +15,7 @@ namespace ProjectCook.Cooking
         [SerializeField] private string ingredientId;
 
         [Tooltip("ชื่อวัตถุดิบที่แสดงใน UI")]
-        [SerializeField] private string ingredientName;
-
-        [Tooltip("รูปไอคอนสำหรับ UI")]
-        [SerializeField] private Sprite icon;
+        [SerializeField] private LocalizedString ingredientName;
 
         [Tooltip("Prefab ของวัตถุดิบชิ้นนี้ ทุกระบบที่สร้างวัตถุดิบต้องอ้างจากตรงนี้ที่เดียว")]
         [SerializeField] private GameObject prefab;
@@ -88,8 +86,7 @@ namespace ProjectCook.Cooking
 
         // Public Getters
         public string IngredientId => ingredientId;
-        public string IngredientName => ingredientName;
-        public Sprite Icon => icon;
+        public LocalizedString IngredientName => ingredientName;
         public GameObject Prefab => prefab;
         public bool IsTwoSidedCooking => isTwoSidedCooking;
         public float CookTime => cookTime;

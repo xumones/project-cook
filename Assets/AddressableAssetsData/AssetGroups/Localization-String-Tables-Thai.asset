@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Thai
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Localization-String-Tables-Thai
+  m_GUID: 38cd28ebddf92b041bd4990d5c7359cd
+  m_SerializeEntries:
+  - m_GUID: 30c0aa0d392d8b6468d9875ecc88e632
+    m_Address: NPC_th
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-th
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 094aaaf0d9ebddb44939762ddc6206bb, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 55e7b5a65122ca946b9c78959752d277, type: 2}
+    - {fileID: 11400000, guid: d805eef6bc8f9ce46a3c7cc2c8ae1d11, type: 2}
+    - {fileID: 11400000, guid: bdd27afb66bca3f4baff08607a53ad03, type: 2}

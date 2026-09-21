@@ -28,9 +28,7 @@ namespace ProjectCook.Cooking
         {
             public Vector3 LocalPosition;
             public Quaternion LocalRotation;
-            public bool SavedIsKinematic;
-            public bool SavedUseGravity;
-            public LayerSnapshot Layers;
+            public HeldState Held;
         }
 
         // ยึดเป็นรายชิ้น เพราะแต่ละชิ้นมี pose ของตัวเอง แต่จะยึด/ปล่อยพร้อมกันทั้งวัตถุดิบเสมอ
@@ -235,21 +233,12 @@ namespace ProjectCook.Cooking
             if (body == null || frozenStates.ContainsKey(body)) return;
 
             Transform bodyTransform = body.transform;
-
-            // Layer HeldItem ตัดออกจากการเล็งและไม่ชนกับผู้เล่นผ่าน Collision Matrix ไม่ต้องปิดการชนเอง
             frozenStates[body] = new FrozenState
             {
                 LocalPosition = transform.InverseTransformPoint(bodyTransform.position),
                 LocalRotation = Quaternion.Inverse(transform.rotation) * bodyTransform.rotation,
-                SavedIsKinematic = body.isKinematic,
-                SavedUseGravity = body.useGravity,
-                Layers = LayerSnapshot.Apply(bodyTransform, GameLayers.HeldItem)
+                Held = HeldState.Capture(bodyTransform, body)
             };
-
-            body.linearVelocity = Vector3.zero;
-            body.angularVelocity = Vector3.zero;
-            body.isKinematic = true;
-            body.useGravity = false;
         }
 
         private void Release(Rigidbody body, FrozenState state)
@@ -258,10 +247,7 @@ namespace ProjectCook.Cooking
 
             // ย้ายไปตำแหน่งสุดท้ายบนภาชนะก่อนคืนฟิสิกส์ เพราะ LateUpdate จะไม่ทำงานอีกแล้วหลังเลิกยึด
             ApplyFrozenPose(body, state);
-            state.Layers.Restore();
-
-            body.isKinematic = state.SavedIsKinematic;
-            body.useGravity = state.SavedUseGravity;
+            state.Held.Restore();
         }
 
         // ตอนยึด การสลับ isKinematic ทำให้ Exit ถูกยิงออกมาแล้วเราเมินไป ถ้าชิ้นหลุดออกนอกภาชนะจริง

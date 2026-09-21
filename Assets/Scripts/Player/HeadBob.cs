@@ -17,6 +17,7 @@ namespace ProjectCook.Player
         [SerializeField] private CharacterController controller; // อ้างอิง CharacterController เพื่อเช็คความเร็วและสถานะติดพื้น
         [SerializeField] private Transform headTransform;       // Transform ของ Head Anchor ที่ต้องการให้ขยับไหว
 
+        private PlayerMovement movement;
         private float timer = 0f;
         private Vector3 defaultHeadPos;
 
@@ -26,6 +27,7 @@ namespace ProjectCook.Player
             {
                 controller = GetComponentInParent<CharacterController>();
             }
+            movement = GetComponentInParent<PlayerMovement>();
 
             // หากไม่ได้ระบุ หรือดันระบุไปที่ Main Camera (ซึ่งโดน CinemachineBrain เขียนทับทุกเฟรม) ให้ใช้ transform ของตัวเอง (Head)
             if (headTransform == null || (Camera.main != null && headTransform == Camera.main.transform))
@@ -50,8 +52,7 @@ namespace ProjectCook.Player
                                || GameModeManager.Instance.CurrentMode == GameMode.Exploring;
             if (isExploring && controller.isGrounded && speed > 0.1f)
             {
-                // เช็คว่ากำลังวิ่งเร็วหรือไม่
-                bool isSprinting = speed > 2.5f;
+                bool isSprinting = movement != null && movement.IsSprinting;
                 float currentBobSpeed = isSprinting ? sprintBobSpeed : walkBobSpeed;
                 float currentBobAmount = isSprinting ? sprintBobAmount : walkBobAmount;
 

@@ -7,8 +7,8 @@ using Unity.Cinemachine;
 
 namespace ProjectCook.Stations
 {
-    /// <summary>จุดที่ผู้เล่นเข้าไป "ใช้งาน" แล้วกล้องล็อกอยู่กับที่ (สถานีทำอาหาร เครื่องเล่นแผ่น ฯลฯ) จัดการกล้อง โหมดเกม ปุ่มออก และเปิด/ปิดโมดูล</summary>
-    public abstract class Station : MonoBehaviour, IInteractable, IAimHintProvider
+    /// <summary>จุดที่ผู้เล่นเข้าไป "ใช้งาน" แล้วกล้องล็อกอยู่กับที่ (สถานีทำอาหาร เครื่องเล่นแผ่น ฯลฯ) จัดการกล้อง โหมดเกม เคอร์เซอร์ ปุ่มออก และเปิด/ปิดโมดูล</summary>
+    public class Station : MonoBehaviour, IInteractable, IAimHintProvider
     {
         [Header("Camera Settings")]
         [Tooltip("Cinemachine Virtual Camera ประจำสถานีนี้ ไม่ต้องมี PanTilt/InputAxisController ถ้าไม่อยากให้ผู้เล่นหันกล้องระหว่างใช้งาน")]
@@ -17,6 +17,9 @@ namespace ProjectCook.Stations
         [Header("Input Settings")]
         [Tooltip("Action สำหรับกดออกจากสถานี (เช่น Cancel หรือ Escape)")]
         [SerializeField] private InputActionReference exitAction;
+
+        [Tooltip("สถานีที่ใช้เมาส์กดปุ่ม UI ให้ปลดล็อกเคอร์เซอร์ตลอดที่อยู่ในสถานี")]
+        [SerializeField] private bool unlockCursor;
 
         [Header("Station Modules")]
         [Tooltip("โมดูลที่อยู่นอก GameObject นี้และลูกๆ (ต้อง Implement IStationModule) โดยปกติเว้นว่างไว้ได้")]
@@ -31,16 +34,8 @@ namespace ProjectCook.Stations
         {
             CollectModules();
 
-            // ค่าที่ Save ไว้ใน Scene ของกล้องสถานีจะเป็น enabled เสมอ ปิด Input ไว้ก่อนตั้งแต่เริ่มเกม
-            // กันไม่ให้มันแอบอ่าน mouse look ทั้งที่ยังไม่เคยเข้าใช้งานสถานีนี้ (CameraManager ปิดให้เฉพาะตอนออก)
-            if (stationCamera != null)
-            {
-                var stationInput = stationCamera.GetComponent<CinemachineInputAxisController>();
-                if (stationInput != null)
-                {
-                    stationInput.enabled = false;
-                }
-            }
+            // ค่าที่ Save ไว้ใน Scene ของกล้องสถานีจะเป็น enabled เสมอ ปิดไว้ก่อนกันมันแอบอ่าน mouse look ทั้งที่ยังไม่ได้เข้าสถานี
+            CameraManager.SetLookInput(stationCamera, false);
         }
 
         /// <summary>รวบรวมโมดูลจากตัวเองและลูกๆ พร้อมกับโมดูลภายนอกที่ระบุไว้ใน Inspector</summary>
@@ -79,12 +74,12 @@ namespace ProjectCook.Stations
 
         protected virtual void OnEnable()
         {
-            exitAction?.action?.Enable();
+            exitAction.EnableAction();
         }
 
         protected virtual void OnDisable()
         {
-            exitAction?.action?.Disable();
+            exitAction.DisableAction();
         }
 
         public virtual AimHint GetAimHint() => AimHint.Use;
@@ -93,18 +88,6 @@ namespace ProjectCook.Stations
         public virtual void Interact()
         {
             EnterStation();
-        }
-
-        /// <summary>กล้องที่โมดูลควรอ้างอิงระหว่างอยู่ในสถานี ไม่มีกล้องประจำ = กล้องหลักของผู้เล่น</summary>
-        protected Camera GetStationCamera()
-        {
-            if (stationCamera != null)
-            {
-                Camera cam = stationCamera.GetComponent<Camera>();
-                if (cam != null) return cam;
-            }
-
-            return Camera.main;
         }
 
         /// <summary>สลับกล้องมายังสถานีนี้ เปลี่ยนโหมดเกม แล้วสั่งเปิดโมดูลทั้งหมด</summary>
@@ -117,16 +100,12 @@ namespace ProjectCook.Stations
             {
                 CameraManager.Instance.StationCamera = stationCamera;
             }
+            GameModeManager.Instance.SetMode(GameMode.Station);
+            if (unlockCursor) CursorManager.RequestUnlock(this);
 
-            if (GameModeManager.Instance != null)
-            {
-                GameModeManager.Instance.SetMode(GameMode.Station);
-            }
-
-            Camera stationCam = GetStationCamera();
             for (int i = 0; i < modules.Count; i++)
             {
-                modules[i]?.OnStationEnter(stationCam);
+                modules[i]?.OnStationEnter();
             }
         }
 
@@ -142,31 +121,16 @@ namespace ProjectCook.Stations
                 modules[i]?.OnStationExit();
             }
 
-            if (GameModeManager.Instance != null)
-            {
-                GameModeManager.Instance.SetMode(GameMode.Exploring);
-            }
+            if (unlockCursor) CursorManager.ReleaseUnlock(this);
+            GameModeManager.Instance.SetMode(GameMode.Exploring);
         }
 
         protected virtual void Update()
         {
-            if (isActive && WasExitPressed())
+            if (isActive && exitAction.WasPressedThisFrame())
             {
                 ExitStation();
             }
-        }
-
-        private bool WasExitPressed()
-        {
-            if (exitAction?.action != null)
-            {
-                return exitAction.action.WasPressedThisFrame();
-            }
-            if (Keyboard.current != null)
-            {
-                return Keyboard.current.escapeKey.wasPressedThisFrame;
-            }
-            return false;
         }
     }
 }

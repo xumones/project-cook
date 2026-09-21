@@ -4,6 +4,7 @@
     "references": [
         "ProjectCook.Core",
         "Unity.InputSystem",
+        "Unity.Localization",
         "Unity.TextMeshPro",
         "UnityEngine.UI"
     ],

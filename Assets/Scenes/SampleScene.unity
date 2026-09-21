@@ -624,9 +624,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 45541945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4653df86d8185940a2329faab5ad940, type: 3}
+  m_Script: {fileID: 11500000, guid: 814a9eb6f4cb50b4f9382ddd056fc59b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.PanStation
+  m_EditorClassIdentifier: ProjectCook.Cooking::ProjectCook.Cooking.CookingStation
   stationCamera: {fileID: 1699777268}
   exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   externalModules: []
@@ -1408,59 +1408,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0821513cf43658f4883f21028c1d40e4, type: 3}
---- !u!1 &190882351
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 190882352}
-  - component: {fileID: 190882353}
-  m_Layer: 6
-  m_Name: round-collision (4)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &190882352
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190882351}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.041, y: 0.1267, z: -0.023}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &190882353
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190882351}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.22125459, y: 0.017789364, z: 0.22694063}
-  m_Center: {x: 0.035161614, y: -0.16956055, z: 0.028739214}
 --- !u!1 &198093393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,11 +1540,6 @@ CanvasRenderer:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0356d9264e6547a409c1cdd8e0d5e9c8, type: 3}
   m_PrefabInstance: {fileID: 1155071516}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &216529718 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-  m_PrefabInstance: {fileID: 1458281315}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &216821050
 GameObject:
@@ -3344,9 +3286,9 @@ RectTransform:
   - {fileID: 517068582}
   m_Father: {fileID: 1953355366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 606.9166, y: -47.85}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &466207648
@@ -3520,7 +3462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 501898310}
-  - component: {fileID: 501898309}
+  - component: {fileID: 501898311}
   m_Layer: 0
   m_Name: Dialog Manager
   m_TagString: Untagged
@@ -3528,23 +3470,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &501898309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 501898308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c831cc8767d40548af36ba8e9dde0ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Dialogue.DialogManager
-  typingSpeed: 0.05
-  advanceAction: {fileID: 0}
-  navigateAction: {fileID: -8784545083839296357, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  submitAction: {fileID: 392368643174621059, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  dialogueUI: {fileID: 347662168}
 --- !u!4 &501898310
 Transform:
   m_ObjectHideFlags: 0
@@ -3560,6 +3485,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &501898311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501898308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b395238b5d3ab94cafbf3e331f7caf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Dialogue::ProjectCook.Dialogue.DialogueRunner
+  typingSpeed: 0.05
+  farewellLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.farewell
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  advanceAction: {fileID: 2064916234097673511, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  navigateAction: {fileID: 3710738434707379630, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  submitAction: {fileID: 2064916234097673511, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  dialogueUI: {fileID: 347662168}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &510853228
 GameObject:
   m_ObjectHideFlags: 0
@@ -3881,59 +3835,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44c1873d6dcf5e449ab23ca780e745cd, type: 3}
---- !u!1 &535708404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 535708405}
-  - component: {fileID: 535708406}
-  m_Layer: 6
-  m_Name: ContentTrigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &535708405
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535708404}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.001, y: -0.021, z: -0.007}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &535708406
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535708404}
-  m_Material: {fileID: 116290622}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.2696971, y: 0.083034635, z: 0.26753795}
-  m_Center: {x: -0.0026263148, y: 0.026236713, z: 0.0015183091}
 --- !u!1001 &542091859
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4107,9 +4008,9 @@ RectTransform:
   - {fileID: 735045328}
   m_Father: {fileID: 1953355366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 105.38333, y: -47.85}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &569189623
@@ -4247,59 +4148,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8095579, y: 3.345468, z: 0.35131502}
   m_Center: {x: 3.1181078, y: 1.172734, z: 5.260207}
---- !u!1 &570700026
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 570700027}
-  - component: {fileID: 570700028}
-  m_Layer: 6
-  m_Name: round-collision
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &570700027
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 570700026}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.37047637, y: 0, z: 0, w: 0.9288419}
-  m_LocalPosition: {x: -0.018, y: 0.111, z: 0.037}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 43.49, y: 0, z: 0}
---- !u!65 &570700028
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 570700026}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25704193, y: 0.09543226, z: 0.018075466}
-  m_Center: {x: 0.01384449, y: 0.0047191405, z: 0.14287247}
 --- !u!134 &578475079
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -4378,9 +4226,11 @@ GameObject:
   - component: {fileID: 595181168}
   - component: {fileID: 595181167}
   - component: {fileID: 595181165}
-  - component: {fileID: 595181166}
-  - component: {fileID: 595181170}
+  - component: {fileID: 595181173}
+  - component: {fileID: 595181172}
   - component: {fileID: 595181171}
+  - component: {fileID: 595181170}
+  - component: {fileID: 595181174}
   m_Layer: 6
   m_Name: Test NPC#1
   m_TagString: Npc
@@ -4411,33 +4261,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &595181166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 595181164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08dfb338284c1fe449fd23c80590d923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
-  npcID: NPC#1
-  npcName: someone?
-  lines: {fileID: 11400000, guid: 3ca0a69efd0e4f29b096ba9dc9af9435, type: 2}
-  defaultDialogue: {fileID: 0}
-  defaultJsonDialogue: {fileID: 4900000, guid: 584c1898185d06a4caa2ff7d411949da, type: 3}
-  conditionalDialogues: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onDialogueComplete:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionTriggered:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!23 &595181167
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4519,12 +4342,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 595181164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3ff141feceb3c347a2f8825dead25f0, type: 3}
+  m_Script: {fileID: 11500000, guid: f55d7d0e05732dc4596cd614dea81288, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPCItemGiver
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCIngredientSupplier
   menu:
   - {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
   - {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+  requestLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.request
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &595181171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4534,12 +4369,94 @@ MonoBehaviour:
   m_GameObject: {fileID: 595181164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb11220ace9c0f4b9f1310df4aee06a, type: 3}
+  m_Script: {fileID: 11500000, guid: 86e942c0fa1cb5149b7d9f1009a35ea4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCQuestGiver
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCQuestGiver
   quests:
   - {fileID: 11400000, guid: 2d66065f52e9d6a49beeb4d4034eed49, type: 2}
   - {fileID: 11400000, guid: 72b45d4f6615d1c41945c0617722712f, type: 2}
+  askLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.ask
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  reminderLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &595181172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23fe3e9ebb6c05243b2094aa60212d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCChat
+  chatLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: npc.1.label.chat
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &595181173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d513f25eb22fa1448770210afdf1e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCCharacter
+  profile: {fileID: 11400000, guid: 122a6c5e93d71f34eb62a8e1e11d7842, type: 2}
+--- !u!114 &595181174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90d3fea0719c11a4f8bb76547ccc45a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCReceiver
+  deliverLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.deliver
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!134 &619305618
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -5136,9 +5053,11 @@ GameObject:
   - component: {fileID: 731846102}
   - component: {fileID: 731846101}
   - component: {fileID: 731846100}
-  - component: {fileID: 731846099}
-  - component: {fileID: 731846098}
+  - component: {fileID: 731846107}
+  - component: {fileID: 731846106}
+  - component: {fileID: 731846105}
   - component: {fileID: 731846104}
+  - component: {fileID: 731846108}
   m_Layer: 6
   m_Name: Test NPC#2
   m_TagString: Untagged
@@ -5146,48 +5065,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &731846098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731846097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3ff141feceb3c347a2f8825dead25f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPCItemGiver
-  menu:
-  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
-  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
---- !u!114 &731846099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731846097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08dfb338284c1fe449fd23c80590d923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
-  npcID: NPC#2
-  npcName: someperson?
-  lines: {fileID: 11400000, guid: fa7877577e094e0a9f24b02deeec17ab, type: 2}
-  defaultDialogue: {fileID: 0}
-  defaultJsonDialogue: {fileID: 4900000, guid: 584c1898185d06a4caa2ff7d411949da, type: 3}
-  conditionalDialogues: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onDialogueComplete:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionTriggered:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!136 &731846100
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5292,12 +5169,121 @@ MonoBehaviour:
   m_GameObject: {fileID: 731846097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb11220ace9c0f4b9f1310df4aee06a, type: 3}
+  m_Script: {fileID: 11500000, guid: f55d7d0e05732dc4596cd614dea81288, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCQuestGiver
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCIngredientSupplier
+  menu:
+  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
+  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
+  requestLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.request
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &731846105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731846097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e942c0fa1cb5149b7d9f1009a35ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCQuestGiver
   quests:
   - {fileID: 11400000, guid: bbf516d81abf8cb419b4ea6a6206c0a0, type: 2}
   - {fileID: 11400000, guid: a2d631d4362878946902ed18e5829303, type: 2}
+  askLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.ask
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  reminderLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &731846106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731846097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23fe3e9ebb6c05243b2094aa60212d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCChat
+  chatLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: npc.2.label.chat
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &731846107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731846097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d513f25eb22fa1448770210afdf1e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCCharacter
+  profile: {fileID: 11400000, guid: ddbf681a3fef28243823fe63dd84317a, type: 2}
+--- !u!114 &731846108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731846097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90d3fea0719c11a4f8bb76547ccc45a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCReceiver
+  deliverLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.deliver
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &735045327
 GameObject:
   m_ObjectHideFlags: 0
@@ -5385,9 +5371,11 @@ GameObject:
   - component: {fileID: 750200597}
   - component: {fileID: 750200596}
   - component: {fileID: 750200595}
-  - component: {fileID: 750200594}
-  - component: {fileID: 750200593}
+  - component: {fileID: 750200602}
+  - component: {fileID: 750200601}
+  - component: {fileID: 750200600}
   - component: {fileID: 750200599}
+  - component: {fileID: 750200603}
   m_Layer: 6
   m_Name: Test NPC#3
   m_TagString: Untagged
@@ -5395,48 +5383,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &750200593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750200592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3ff141feceb3c347a2f8825dead25f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPCItemGiver
-  menu:
-  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
-  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
---- !u!114 &750200594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750200592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08dfb338284c1fe449fd23c80590d923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.NPC.NPC
-  npcID: NPC#3
-  npcName: somebody?
-  lines: {fileID: 11400000, guid: 2a18aa598b5e43e5ad78a3cf0671923a, type: 2}
-  defaultDialogue: {fileID: 0}
-  defaultJsonDialogue: {fileID: 4900000, guid: 584c1898185d06a4caa2ff7d411949da, type: 3}
-  conditionalDialogues: []
-  onInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  onDialogueComplete:
-    m_PersistentCalls:
-      m_Calls: []
-  onActionTriggered:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!136 &750200595
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5541,13 +5487,122 @@ MonoBehaviour:
   m_GameObject: {fileID: 750200592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb11220ace9c0f4b9f1310df4aee06a, type: 3}
+  m_Script: {fileID: 11500000, guid: f55d7d0e05732dc4596cd614dea81288, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCQuestGiver
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCIngredientSupplier
+  menu:
+  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+  requestLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.request
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &750200600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750200592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86e942c0fa1cb5149b7d9f1009a35ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCQuestGiver
   quests:
   - {fileID: 11400000, guid: a4a70e21dd7ee714c974055a0a87b6c8, type: 2}
   - {fileID: 11400000, guid: a9ba1d2272fec5f49a0b7f21fcd5516d, type: 2}
   - {fileID: 11400000, guid: 06e475058482b5f4b980b07f39d66c53, type: 2}
+  askLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.ask
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  reminderLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &750200601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750200592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23fe3e9ebb6c05243b2094aa60212d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCChat
+  chatLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: npc.3.label.chat
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &750200602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750200592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d513f25eb22fa1448770210afdf1e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCCharacter
+  profile: {fileID: 11400000, guid: 7e44f9281a9b8894ca160a92074351a3, type: 2}
+--- !u!114 &750200603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750200592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90d3fea0719c11a4f8bb76547ccc45a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCReceiver
+  deliverLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.deliver
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &765298094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5988,59 +6043,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &840098275
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 840098276}
-  - component: {fileID: 840098277}
-  m_Layer: 6
-  m_Name: round-collision (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &840098276
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840098275}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.26196638, y: -0.65679044, z: 0.26196638, w: 0.65679044}
-  m_LocalPosition: {x: -0.041, y: 0.11099994, z: -0.023}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 43.49, y: -90, z: 0}
---- !u!65 &840098277
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840098275}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25704193, y: 0.09583497, z: 0.01807546}
-  m_Center: {x: 0.01384449, y: 0.0049199215, z: 0.14287305}
 --- !u!1001 &853437090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6230,59 +6232,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.96475685, z: 6.6198864}
   m_Center: {x: 0, y: -0.0037686825, z: -2.7710524}
---- !u!1 &891490247
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 891490248}
-  - component: {fileID: 891490249}
-  m_Layer: 6
-  m_Name: round-collision (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &891490248
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 891490247}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.26196638, y: 0.65679044, z: -0.26196638, w: 0.65679044}
-  m_LocalPosition: {x: 0.031, y: 0.101, z: 0.012}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 43.49, y: 90, z: 0}
---- !u!65 &891490249
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 891490247}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25704193, y: 0.10818782, z: 0.01807546}
-  m_Center: {x: 0.01384449, y: 0.011096429, z: 0.14287305}
 --- !u!1001 &896802116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7166,112 +7115,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3a4de77ca8bce2b49a06be909f19da8c, type: 3}
   m_PrefabInstance: {fileID: 1542014302}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1043270344
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1043270345}
-  - component: {fileID: 1043270349}
-  - component: {fileID: 1043270348}
-  - component: {fileID: 1043270347}
-  - component: {fileID: 1043270346}
-  m_Layer: 5
-  m_Name: '[playtest] helper'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1043270345
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1043270344}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1175389277}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 115, y: -85.99999}
-  m_SizeDelta: {x: 200, y: 292}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1043270346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1043270344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 062cfedb187431241aa9a35a480b0754, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1043270347
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1043270344}
-  m_CullTransparentMesh: 1
---- !u!114 &1043270348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1043270344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e8c38875cd62a74dab733c4b3995cd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Playtest::ProjectCook.Playtest.ControlHintUI
-  player: {fileID: 1597820347}
-  idleDelay: 3
-  fadeInDuration: 2
-  fadeOutDuration: 2
-  moveSpeedThreshold: 0.1
---- !u!225 &1043270349
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1043270344}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &1044259508
 GameObject:
   m_ObjectHideFlags: 0
@@ -7573,11 +7416,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1063095465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75a28734c73afba44b98c830bd0dd209, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c78b56c3df0cdc4ba29bb8490d219a4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Stations::ProjectCook.Stations.DiscPlayerStation
+  m_EditorClassIdentifier: ProjectCook.Stations::ProjectCook.Stations.Station
   stationCamera: {fileID: 2121374917}
   exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  unlockCursor: 1
   externalModules:
   - {fileID: 807895003}
 --- !u!114 &1063095469
@@ -7675,85 +7519,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.9197982, y: 0.7852063, z: 2.4265192}
   m_Center: {x: 0.040100902, y: -0.09354395, z: -0.7132591}
---- !u!1 &1079114473 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-  m_PrefabInstance: {fileID: 1458281315}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1079114476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079114473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec808334ebd9f634fb13fed3aa7e6875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Cooking::ProjectCook.Cooking.ServingFoodContainer
-  capacity: 4
-  contentAnchor: {fileID: 1364867451}
-  placementRadius: 0.1
-  minSpacing: 0.07
---- !u!114 &1079114477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079114473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ca5cab592c561b4ca70b7de6e3abfa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.EquippableItem
-  holdPose:
-    localPosition: {x: 0, y: 0, z: 0}
-    localEulerAngles: {x: 0, y: 0, z: 0}
-  overrideHandRole: 0
-  handRoleOverride: 1
-  contentsPolicy: 1
---- !u!114 &1079114478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079114473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98b4046b4cf2bb4a9172481fa25d2d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.Item
-  category: 1
---- !u!54 &1079114480
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1079114473}
-  serializedVersion: 5
-  m_Mass: 5
-  m_LinearDamping: 0
-  m_AngularDamping: 5
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 2
 --- !u!1001 &1099887170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8325,7 +8090,6 @@ RectTransform:
   - {fileID: 1033929135}
   - {fileID: 242342650}
   - {fileID: 807895002}
-  - {fileID: 1043270345}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8367,9 +8131,9 @@ RectTransform:
   - {fileID: 356674700}
   m_Father: {fileID: 1953355366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 356.15, y: -47.85}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1186173912
@@ -9720,37 +9484,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 94f29d2d5a2fadb45b58777558c58184, type: 3}
   m_PrefabInstance: {fileID: 285961503}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1364867450
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1364867451}
-  m_Layer: 6
-  m_Name: center
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1364867451
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364867450}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0019, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1375311521
 GameObject:
   m_ObjectHideFlags: 0
@@ -10479,116 +10212,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b3ffc0f5e62157b468bf32f88d5d1516, type: 3}
   m_PrefabInstance: {fileID: 1454402751}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1458281315
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.121
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.249
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 4.695
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_CastShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_StaticShadowCaster
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_Name
-      value: bowl
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 535708405}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 570700027}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 891490248}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1473811927}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 840098276}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 190882352}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1364867451}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1079114480}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1079114478}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1079114477}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1079114476}
-  m_SourcePrefab: {fileID: 100100000, guid: a74c56504009518449a9d31ef433c5e5, type: 3}
 --- !u!1001 &1465487932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10713,59 +10336,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.18330908, y: 3.4023638, z: 17.276634}
   m_Center: {x: 0.0019843578, y: 2.0942974, z: -2.1485193}
---- !u!1 &1473811926
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1473811927}
-  - component: {fileID: 1473811928}
-  m_Layer: 6
-  m_Name: round-collision (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1473811927
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473811926}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.9288419, z: 0.37047637, w: 0}
-  m_LocalPosition: {x: 0.013, y: 0.111, z: -0.0266}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 216529718}
-  m_LocalEulerAnglesHint: {x: 43.49, y: -180, z: 0}
---- !u!65 &1473811928
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473811926}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25704193, y: 0.09370403, z: 0.018075466}
-  m_Center: {x: 0.01384449, y: 0.0038547672, z: 0.14287284}
 --- !u!1 &1493031768
 GameObject:
   m_ObjectHideFlags: 0
@@ -11842,10 +11412,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148cff07071ff3845a3bcfb0860c8db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Interaction.IngredientDragController
-  ingredientLayerMask:
-    serializedVersion: 2
-    m_Bits: 384
-  maxRaycastDistance: 1.2
+  gripAction: {fileID: 3001919216989983466, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  distanceAction: {fileID: 6240969308177333660, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dragForceMultiplier: 20
   maxDragSpeed: 4
   grippingDamping: 3
@@ -12992,6 +12560,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747971945}
   m_CullTransparentMesh: 1
+--- !u!1 &1763093736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1763093738}
+  - component: {fileID: 1763093737}
+  m_Layer: 0
+  m_Name: '[GameProgress]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1763093737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763093736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bbf04897051aef46bca016b4ef65305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.GameProgress
+--- !u!4 &1763093738
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763093736}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1770519666
 GameObject:
   m_ObjectHideFlags: 0
@@ -14673,50 +14285,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 250390960}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1963729576
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1963729578}
-  - component: {fileID: 1963729577}
-  m_Layer: 0
-  m_Name: '[Playtest]'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1963729577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1963729576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81ba17b56ee151c4e92b51274dacc0cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Playtest::ProjectCook.Playtest.PlaytestReset
---- !u!4 &1963729578
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1963729576}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1964375337 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f51bc459c3f27d64daab304d192f45a5, type: 3}
@@ -15792,11 +15360,10 @@ SceneRoots:
   - {fileID: 1175389277}
   - {fileID: 2091241470}
   - {fileID: 1806267979}
-  - {fileID: 1458281315}
   - {fileID: 948092440}
   - {fileID: 1303184225}
   - {fileID: 1871497978}
   - {fileID: 1063095467}
   - {fileID: 1623701042}
-  - {fileID: 1963729578}
   - {fileID: 563566694}
+  - {fileID: 1763093738}

@@ -13,18 +13,85 @@ MonoBehaviour:
   m_Name: Quest_Sausage
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: sausage
-  recipe: {fileID: 11400000, guid: 1c5f1fbb951dcc24ca70956192d1b9c5, type: 2}
+  objective: {fileID: 11400000, guid: 5da2ebbf98538b04da87c9adef4fbdba, type: 2}
   prerequisites:
   - {fileID: 11400000, guid: 72b45d4f6615d1c41945c0617722712f, type: 2}
-  lockedText: Do you know how to cook? You're wondering about that too, huh? Well...
-    yeah, it's you we're talking about, so one day you "will" figure it out anyway
-    huh?.
-  offerText: Of course you can... So, how about we try making this pretty useless
-    piece of food look a little better? I can't quite remember what it's called,
-    though...flying? fleeing? 'Frying', was it?.
-  reminderText: "A shiny, oil-glazed red sausage with a nice crispy skin\u2014and
-    of course, the most important part... a plate."
-  exactText: No wonder everyone loves this useless little thing so much. Since when
-    did it start tasting this good? Thanks, that was really delicious.
-  extraText: Look at that, it actually turned out to be useful after all, ha! Thx
-    bud.
+  lockedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.sausage.locked
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  offerText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.sausage.offer
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  reminderText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.sausage.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  resultTexts:
+  - m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.sausage.a
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.sausage.s
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

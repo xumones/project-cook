@@ -23,9 +23,6 @@ namespace ProjectCook.Items
         [Tooltip("ประเภทของไอเทม ใช้ตัดสินมือที่จะไปอยู่เป็นค่าเริ่มต้น")]
         [SerializeField] private ItemCategory category = ItemCategory.Tool;
 
-        /// <summary>ประเภทของไอเทมชิ้นนี้</summary>
-        public ItemCategory Category => category;
-
         /// <summary>ไอเทมชิ้นนี้อยู่ที่ไหนในตอนนี้</summary>
         public ItemLocation Location { get; private set; } = ItemLocation.World;
 

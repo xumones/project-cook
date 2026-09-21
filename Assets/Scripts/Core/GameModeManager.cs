@@ -12,12 +12,15 @@ namespace ProjectCook.Core
 
         public event Action<GameMode> ModeChanged;
 
-        /// <summary>เฟรมที่เพิ่งออกจากโหมดอื่นยังนับปุ่มที่กดออกมาค้างอยู่ จึงต้องกันไว้หนึ่งเฟรม</summary>
-        public bool AcceptsGameplayInput =>
-            CurrentMode == GameMode.Exploring && Time.frameCount != lastChangeFrame;
+        /// <summary>อินพุตตอนเดินสำรวจเท่านั้น (หยิบ/วาง/interact) ปิดทั้งในสถานีและตอนคุย</summary>
+        public static bool GameplayInputAllowed => Instance == null || Instance.AcceptsInput(GameMode.Exploring);
 
-        /// <summary>เช็คแบบกัน null สำหรับระบบที่ทำงานได้แม้ไม่มี Manager ใน Scene</summary>
-        public static bool GameplayInputAllowed => Instance == null || Instance.AcceptsGameplayInput;
+        /// <summary>อินพุตที่ใช้กับของในโลกได้ทั้งตอนเดินและในสถานี (เช่น คีบวัตถุดิบ) ปิดเฉพาะตอนคุย</summary>
+        public static bool WorldInputAllowed => Instance == null || Instance.AcceptsInput(GameMode.Exploring, GameMode.Station);
+
+        // เฟรมที่เพิ่งออกจากโหมดอื่นยังนับปุ่มที่กดออกมาค้างอยู่ จึงต้องกันไว้หนึ่งเฟรม
+        private bool AcceptsInput(GameMode a, GameMode b = GameMode.Exploring) =>
+            (CurrentMode == a || CurrentMode == b) && Time.frameCount != lastChangeFrame;
 
         public void SetMode(GameMode mode)
         {

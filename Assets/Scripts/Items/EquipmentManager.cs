@@ -74,33 +74,33 @@ namespace ProjectCook.Items
 
         private void OnEnable()
         {
-            pickUpAction?.action?.Enable();
-            placeAction?.action?.Enable();
+            pickUpAction.EnableAction();
+            placeAction.EnableAction();
         }
 
         private void OnDisable()
         {
-            pickUpAction?.action?.Disable();
-            placeAction?.action?.Disable();
+            pickUpAction.DisableAction();
+            placeAction.DisableAction();
         }
 
         private void Update()
         {
             if (!GameModeManager.GameplayInputAllowed) return;
 
-            if (WasPressed(pickUpAction))
+            if (pickUpAction.WasPressedThisFrame())
             {
                 TryPickUpAimed();
             }
 
-            if (WasPressed(placeAction))
+            if (placeAction.WasPressedThisFrame())
             {
                 TryPlaceHeld();
             }
         }
 
         /// <summary>ยกไอเทมที่กำลังเล็งอยู่ขึ้นถือ</summary>
-        public bool TryPickUpAimed()
+        private bool TryPickUpAimed()
         {
             Collider target = PlayerAiming.Instance != null ? PlayerAiming.Instance.Target : null;
             if (target == null) return false;
@@ -112,7 +112,7 @@ namespace ProjectCook.Items
         }
 
         /// <summary>สวมไอเทมเข้ามือตามบทบาทของมัน</summary>
-        public bool TryEquip(EquippableItem equippable)
+        private bool TryEquip(EquippableItem equippable)
         {
             if (equippable == null) return false;
 
@@ -144,7 +144,7 @@ namespace ProjectCook.Items
         }
 
         /// <summary>วางไอเทมที่ถืออยู่ลง โดยเลือกมือที่หยิบล่าสุดก่อน ถ้ามือนั้นว่างแล้วจึงใช้อีกมือ</summary>
-        public bool TryPlaceHeld()
+        private bool TryPlaceHeld()
         {
             if (Get(lastEquippedRole) != null)
             {
@@ -156,7 +156,7 @@ namespace ProjectCook.Items
         }
 
         /// <summary>วางไอเทมจากมือที่ระบุลงตรงจุดที่เล็ง</summary>
-        public bool TryPlace(HandRole role)
+        private bool TryPlace(HandRole role)
         {
             EquippableItem equippable = Get(role);
             if (equippable == null) return false;
@@ -216,12 +216,6 @@ namespace ProjectCook.Items
 
             // ไม่เจอพื้นผิว: ปล่อยไว้ข้างหน้าใกล้ ๆ แล้วให้ฟิสิกส์จัดการต่อ
             position = ray.GetPoint(placeMaxDistance * 0.6f);
-        }
-
-        private static bool WasPressed(InputActionReference reference)
-        {
-            InputAction action = reference != null ? reference.action : null;
-            return action != null && action.enabled && action.WasPressedThisFrame();
         }
     }
 }

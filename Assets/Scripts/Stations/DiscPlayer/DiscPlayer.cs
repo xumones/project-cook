@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using ProjectCook.Core;
 
 namespace ProjectCook.Stations
 {
@@ -114,7 +113,7 @@ namespace ProjectCook.Stations
             source.clip = discs[index] != null ? discs[index].Clip : null;
         }
 
-        public void OnStationEnter(Camera stationCamera)
+        public void OnStationEnter()
         {
             targetSpatialBlend = 0f;
         }

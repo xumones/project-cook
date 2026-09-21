@@ -13,7 +13,15 @@ MonoBehaviour:
   m_Name: sausage
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientDataSO
   ingredientId: sausage_1
-  ingredientName: sausage
+  ingredientName:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ingredient.sausage_1
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   prefab: {fileID: 4364906637940363381, guid: 7c7d9c14844ce6c4cafaa045bee8f71b, type: 3}
   isTwoSidedCooking: 0
@@ -33,3 +41,6 @@ MonoBehaviour:
   dropSFX: {fileID: 0}
   sizzleSFX: {fileID: 8300000, guid: baaddaca065e3b9419c490bff1a0fcd3, type: 3}
   cookedDoneSFX: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

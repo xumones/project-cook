@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using ProjectCook.Core;
 
 namespace ProjectCook.Stations
 {
-    /// <summary>หน้าจอเครื่องเล่นแผ่น: ปกกลางจอ + แถวปุ่มด้านล่าง แสดงเฉพาะตอนอยู่ในสถานี (เคอร์เซอร์เป็นหน้าที่ของ DiscPlayerStation)</summary>
+    /// <summary>หน้าจอเครื่องเล่นแผ่น: ปกกลางจอ + แถวปุ่มด้านล่าง แสดงเฉพาะตอนอยู่ในสถานี (เคอร์เซอร์เป็นหน้าที่ของ Station)</summary>
     public class DiscPlayerUI : MonoBehaviour, IStationModule
     {
         [Header("Source")]
@@ -37,7 +36,7 @@ namespace ProjectCook.Stations
             nextButton.onClick.AddListener(() => discPlayer.Next());
         }
 
-        public void OnStationEnter(Camera stationCamera)
+        public void OnStationEnter()
         {
             discPlayer.StateChanged += Refresh;
             Refresh();

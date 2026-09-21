@@ -37,8 +37,14 @@ namespace ProjectCook.Dialogue.UI
         // ข้อความดิบของแต่ละตัวเลือก (ไม่รวม prefix ไฮไลต์) เก็บไว้ใช้สร้างข้อความใหม่ตอนสลับไฮไลต์
         private List<string> choiceBaseTexts = new List<string>();
 
+        // font ของผู้พูดคนปัจจุบัน เก็บไว้ใส่ให้ปุ่มที่เพิ่งสร้างใหม่ใน pool ด้วย
+        private TMP_FontAsset currentFont;
+        private TMP_FontAsset defaultFont;
+
         private void Awake()
         {
+            if (dialogueText != null) defaultFont = dialogueText.font;
+
             if (dialoguePanel != null)
             {
                 dialoguePanel.SetActive(false);
@@ -63,6 +69,29 @@ namespace ProjectCook.Dialogue.UI
                 dialoguePanel.SetActive(false);
             }
             HideChoices();
+        }
+
+        /// <summary>ใช้ font ประจำตัวผู้พูดกับทุกข้อความในหน้าต่าง ส่ง null เพื่อกลับไปใช้ font ของ prefab</summary>
+        public void SetFont(TMP_FontAsset font)
+        {
+            currentFont = font != null ? font : defaultFont;
+            if (currentFont == null) return;
+
+            if (speakerNameText != null) speakerNameText.font = currentFont;
+            if (dialogueText != null) dialogueText.font = currentFont;
+
+            foreach (GameObject btnObj in buttonPool)
+            {
+                ApplyFont(btnObj);
+            }
+        }
+
+        private void ApplyFont(GameObject btnObj)
+        {
+            if (currentFont == null || btnObj == null) return;
+
+            TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (btnText != null) btnText.font = currentFont;
         }
 
         /// <summary>กำหนดข้อมูลผู้พูดและภาพตัวละคร</summary>
@@ -120,7 +149,7 @@ namespace ProjectCook.Dialogue.UI
             }
         }
 
-        /// <summary>แสดงผลปุ่มตัวเลือกคำตอบจากข้อความที่เติม placeholder แล้ว (เลือกด้วย W/S/E ผ่าน DialogueManager)</summary>
+        /// <summary>แสดงปุ่มตัวเลือก (เลื่อน/ยืนยันผ่าน DialogueRunner)</summary>
         public void DisplayChoices(List<string> choiceTexts)
         {
             HideChoices();
@@ -196,6 +225,7 @@ namespace ProjectCook.Dialogue.UI
             }
 
             GameObject newBtn = Instantiate(choiceButtonPrefab, choiceButtonContainer);
+            ApplyFont(newBtn);
             buttonPool.Add(newBtn);
             return newBtn;
         }

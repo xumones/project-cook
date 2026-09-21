@@ -37,16 +37,11 @@ namespace ProjectCook.Cooking
         // Getters
         public IngredientDataSO Data => data;
         public CookingState CurrentCookingState => currentCookingState;
-        public CookingSide CurrentActiveSide => currentActiveSide;
 
         public float CookProgress => data != null && data.CookTime > 0 
             ? (data.IsTwoSidedCooking ? Mathf.Clamp01((sideACookTime + sideBCookTime) / (data.CookTime * 2f)) : Mathf.Clamp01(omniCookTime / data.CookTime)) 
             : 0f;
 
-        public float SideAProgress => data != null && data.CookTime > 0 ? Mathf.Clamp01(sideACookTime / data.CookTime) : 0f;
-        public float SideBProgress => data != null && data.CookTime > 0 ? Mathf.Clamp01(sideBCookTime / data.CookTime) : 0f;
-
-        public bool IsFullyCooked => currentCookingState == CookingState.Cooked;
         public bool IsBurnt => currentCookingState == CookingState.Burnt;
 
         private void Awake()
@@ -139,12 +134,6 @@ namespace ProjectCook.Cooking
             }
 
             isVisualsDirty = true;
-        }
-
-        /// <summary>overload สำหรับการเรียกทอดแบบ Omni-directional โดยไม่ต้องระบุ Vector ทิศทาง</summary>
-        public void ApplyHeat(float deltaHeatTime)
-        {
-            ApplyHeat(deltaHeatTime, Vector3.up);
         }
 
         /// <summary>ตรวจสอบการหันของวัตถุดิบเทียบกับกระทะด้วย Vector Dot Product (Zero Allocation)</summary>

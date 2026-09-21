@@ -45,9 +45,7 @@ namespace ProjectCook.Items
         private Rigidbody cachedRigidbody;
         private IItemContents contents;
 
-        private LayerSnapshot heldLayers;
-        private bool savedIsKinematic;
-        private bool savedUseGravity;
+        private HeldState heldState;
 
         /// <summary>มือที่ไอเทมชิ้นนี้จะไปอยู่</summary>
         public HandRole HandRole => overrideHandRole ? handRoleOverride : item.PreferredHandRole;
@@ -88,16 +86,7 @@ namespace ProjectCook.Items
                 contents?.SetFrozen(true);
             }
 
-            if (cachedRigidbody != null)
-            {
-                savedIsKinematic = cachedRigidbody.isKinematic;
-                savedUseGravity = cachedRigidbody.useGravity;
-                cachedRigidbody.isKinematic = true;
-                cachedRigidbody.useGravity = false;
-            }
-
-            // Layer HeldItem ถูกตัดออกจากการเล็งและไม่ชนกับผู้เล่นผ่าน Collision Matrix ไม่ต้องจัดการการชนเองอีก
-            heldLayers = LayerSnapshot.Apply(transform, GameLayers.HeldItem);
+            heldState = HeldState.Capture(transform, cachedRigidbody);
 
             transform.SetParent(anchor, false);
             transform.localPosition = holdPose.localPosition;
@@ -112,15 +101,7 @@ namespace ProjectCook.Items
             transform.SetParent(null, true);
             transform.SetPositionAndRotation(worldPosition, worldRotation);
 
-            heldLayers.Restore();
-
-            if (cachedRigidbody != null)
-            {
-                cachedRigidbody.isKinematic = savedIsKinematic;
-                cachedRigidbody.useGravity = savedUseGravity;
-                cachedRigidbody.linearVelocity = Vector3.zero;
-                cachedRigidbody.angularVelocity = Vector3.zero;
-            }
+            heldState.Restore();
 
             // ปล่อยของข้างในเป็นขั้นสุดท้าย ตอนภาชนะอยู่ตำแหน่งสุดท้ายแล้ว ของจะได้ตกลงถูกที่
             if (contentsPolicy == ContentsPolicy.Freeze)

@@ -229,5 +229,16 @@ namespace ProjectCook.Cooking
         {
             return true;
         }
+
+        /// <summary>หา FoodContainer จากตัวเอง ลูก แล้วจึงพ่อ ตามลำดับ ใช้แทนการเขียน fallback chain นี้ซ้ำในแต่ละ component ที่ต้องพ่วงกับภาชนะ</summary>
+        public static FoodContainer FindFor(Component host)
+        {
+            if (host == null) return null;
+
+            FoodContainer container = host.GetComponent<FoodContainer>();
+            if (container == null) container = host.GetComponentInChildren<FoodContainer>();
+            if (container == null) container = host.GetComponentInParent<FoodContainer>();
+            return container;
+        }
     }
 }

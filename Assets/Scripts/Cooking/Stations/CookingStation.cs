@@ -6,7 +6,7 @@ using ProjectCook.Stations;
 namespace ProjectCook.Cooking
 {
     /// <summary>สถานีทำอาหาร (กระทะ หม้อ เตาอบ ฯลฯ) เข้าได้เฉพาะตอนมือว่าง</summary>
-    public abstract class CookingStation : Station
+    public class CookingStation : Station
     {
         // เงื่อนไขเดียวกับ Interact: มือไม่ว่าง = เข้าไม่ได้ จึงไม่ต้องบอกว่าใช้ได้
         public override AimHint GetAimHint() => IsHoldingAnything ? AimHint.None : AimHint.Use;

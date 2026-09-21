@@ -1,7 +1,9 @@
 {
     "name": "ProjectCook.Core",
     "rootNamespace": "ProjectCook.Core",
-    "references": [],
+    "references": [
+        "Unity.InputSystem"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

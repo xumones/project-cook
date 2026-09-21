@@ -12,12 +12,12 @@ namespace ProjectCook.Player
 
         private void OnEnable()
         {
-            interactAction?.action?.Enable();
+            interactAction.EnableAction();
         }
 
         private void OnDisable()
         {
-            interactAction?.action?.Disable();
+            interactAction.DisableAction();
         }
 
         private void Start()
@@ -36,19 +36,13 @@ namespace ProjectCook.Player
         private void Update()
         {
             if (!GameModeManager.GameplayInputAllowed) return;
-            if (!WasInteractPressed()) return;
+            if (!interactAction.WasPressedThisFrame()) return;
 
             // ค้นหา component เฉพาะตอนกดปุ่ม ไม่ใช่ทุกเฟรม จึงไม่ต้องแคชผลไว้เอง
             Collider target = PlayerAiming.Instance != null ? PlayerAiming.Instance.Target : null;
             if (target == null) return;
 
             target.GetComponentInParent<IInteractable>()?.Interact();
-        }
-
-        private bool WasInteractPressed()
-        {
-            InputAction action = interactAction != null ? interactAction.action : null;
-            return action != null && action.enabled && action.WasPressedThisFrame();
         }
     }
 }

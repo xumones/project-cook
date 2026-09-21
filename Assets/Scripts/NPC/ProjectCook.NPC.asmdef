@@ -5,7 +5,9 @@
         "ProjectCook.Core",
         "ProjectCook.Dialogue",
         "ProjectCook.Items",
-        "ProjectCook.Cooking"
+        "ProjectCook.Cooking",
+        "Unity.Localization",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

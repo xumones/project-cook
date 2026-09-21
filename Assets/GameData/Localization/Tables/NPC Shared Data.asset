@@ -1,0 +1,320 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: NPC Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: NPC
+  m_TableCollectionNameGuidString: 67d75f3915da58d41a1d291f85b93990
+  m_Entries:
+  - m_Id: 4224512499712
+    m_Key: quest.bacon.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224755769344
+    m_Key: quest.bacon.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224764157952
+    m_Key: quest.bacon.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224764157953
+    m_Key: quest.bacon.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546560
+    m_Key: quest.bacon.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546561
+    m_Key: quest.bunch.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546562
+    m_Key: quest.bunch.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546563
+    m_Key: quest.bunch.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546564
+    m_Key: quest.bunch.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546565
+    m_Key: quest.bunch.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546566
+    m_Key: quest.egg.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546567
+    m_Key: quest.egg.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546568
+    m_Key: quest.egg.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546569
+    m_Key: quest.egg.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546570
+    m_Key: quest.egg.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546571
+    m_Key: quest.fish.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546572
+    m_Key: quest.fish.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546573
+    m_Key: quest.fish.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546574
+    m_Key: quest.fish.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546575
+    m_Key: quest.fish.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546576
+    m_Key: quest.lettuce.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546577
+    m_Key: quest.lettuce.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546578
+    m_Key: quest.lettuce.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546579
+    m_Key: quest.lettuce.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546580
+    m_Key: quest.lettuce.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546581
+    m_Key: quest.sausage.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546582
+    m_Key: quest.sausage.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546583
+    m_Key: quest.sausage.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546584
+    m_Key: quest.sausage.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546585
+    m_Key: quest.sausage.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546586
+    m_Key: quest.steak.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546587
+    m_Key: quest.steak.offer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546588
+    m_Key: quest.steak.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546589
+    m_Key: quest.steak.s
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546590
+    m_Key: quest.steak.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546591
+    m_Key: npc.1.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546592
+    m_Key: npc.1.greeting.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546593
+    m_Key: npc.1.greeting.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546594
+    m_Key: npc.1.chat.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546595
+    m_Key: npc.1.chat.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546596
+    m_Key: npc.1.thanks.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546597
+    m_Key: npc.1.thanks.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546598
+    m_Key: npc.1.label.chat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546599
+    m_Key: npc.2.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546600
+    m_Key: npc.2.greeting.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546601
+    m_Key: npc.2.greeting.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546602
+    m_Key: npc.2.chat.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546603
+    m_Key: npc.2.chat.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546604
+    m_Key: npc.2.thanks.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546605
+    m_Key: npc.2.thanks.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546606
+    m_Key: npc.2.label.chat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546607
+    m_Key: npc.3.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546608
+    m_Key: npc.3.greeting.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546609
+    m_Key: npc.3.greeting.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546610
+    m_Key: npc.3.chat.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546611
+    m_Key: npc.3.chat.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546612
+    m_Key: npc.3.thanks.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546613
+    m_Key: npc.3.thanks.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546614
+    m_Key: npc.3.label.chat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546615
+    m_Key: ui.label.ask
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546616
+    m_Key: ui.label.reminder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546617
+    m_Key: ui.label.deliver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546618
+    m_Key: ui.label.request
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546619
+    m_Key: ui.label.farewell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546620
+    m_Key: ingredient.bacon_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546621
+    m_Key: ingredient.egg_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546622
+    m_Key: ingredient.fish_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546623
+    m_Key: ingredient.lettuce_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546624
+    m_Key: ingredient.sausage_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4224772546625
+    m_Key: ingredient.steak_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 63091481059328
+    m_Key: npc.1.received.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 63091673997312
+    m_Key: npc.2.received.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 63091673997313
+    m_Key: npc.3.received.0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 283005983412453464
+  references:
+    version: 2
+    RefIds:
+    - rid: 283005983412453464
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1789990672636

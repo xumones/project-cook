@@ -41,7 +41,8 @@ namespace ProjectCook.Player
         private Vector3 velocity;
         private bool isControlActive = true;
 
-        public bool IsControlActive => isControlActive;
+        /// <summary>กำลังกดวิ่งอยู่ ให้ระบบอื่น (เช่น HeadBob) อ่านแทนเดาจากความเร็ว</summary>
+        public bool IsSprinting { get; private set; }
 
         /// <summary>เปิด/ปิด การควบคุมการเคลื่อนที่ของผู้เล่น</summary>
         public void SetControlActive(bool active)
@@ -51,6 +52,7 @@ namespace ProjectCook.Player
             {
                 velocity = Vector3.zero;
                 isCrouching = false;
+                IsSprinting = false;
 
                 // CharacterController.velocity สะท้อนการขยับจากการเรียก Move() ครั้งล่าสุดเท่านั้น
                 // ถ้าหยุดเรียก Move() กลางคันตอนผู้เล่นกำลังเดินอยู่ ค่านี้จะค้างไม่เป็นศูนย์ไปเรื่อยๆ
@@ -99,16 +101,16 @@ namespace ProjectCook.Player
 
         private void OnEnable()
         {
-            moveAction?.action?.Enable();
-            sprintAction?.action?.Enable();
-            crouchAction?.action?.Enable();
+            moveAction.EnableAction();
+            sprintAction.EnableAction();
+            crouchAction.EnableAction();
         }
 
         private void OnDisable()
         {
-            moveAction?.action?.Disable();
-            sprintAction?.action?.Disable();
-            crouchAction?.action?.Disable();
+            moveAction.DisableAction();
+            sprintAction.DisableAction();
+            crouchAction.DisableAction();
         }
 
         private void Update()
@@ -118,44 +120,30 @@ namespace ProjectCook.Player
 
             if (!isControlActive) return;
 
-            // 1. อ่านค่า Input การเดิน (Vector2: WASD / Left Stick)
-            Vector2 input = Vector2.zero;
-            if (moveAction?.action != null)
-            {
-                input = moveAction.action.ReadValue<Vector2>();
-            }
+            Vector2 input = moveAction.ReadValue<Vector2>();
+            IsSprinting = sprintAction.IsPressed();
 
-            // 2. เช็คว่ากำลังกดปุ่มวิ่งเร็ว (Sprint: Shift / Left Stick Press) หรือไม่
-            bool isSprinting = false;
-            if (sprintAction?.action != null)
+            // ย่อชนะวิ่งเสมอ
+            bool wantCrouch = crouchAction.IsPressed();
+            if (wantCrouch || CanStandUp())
             {
-                isSprinting = sprintAction.action.IsPressed();
+                isCrouching = wantCrouch;
             }
+            float currentSpeed = isCrouching ? crouchSpeed : (IsSprinting ? sprintSpeed : walkSpeed);
 
-            // 3. เลือกความเร็ว ย่อชนะวิ่งเสมอ
-            if (crouchAction?.action != null)
-            {
-                bool wantCrouch = crouchAction.action.IsPressed();
-                if (wantCrouch || CanStandUp())
-                {
-                    isCrouching = wantCrouch;
-                }
-            }
-            float currentSpeed = isCrouching ? crouchSpeed : (isSprinting ? sprintSpeed : walkSpeed);
-
-            // 4. คำนวณทิศทางการเคลื่อนที่บนระนาบ XZ ตามทิศของ orientation หรือ transform (เพื่อไม่ให้การก้ม-เงยกล้องกระทบความเร็วเคลื่อนที่)
+            // คำนวณทิศทางการเคลื่อนที่บนระนาบ XZ ตามทิศของ orientation หรือ transform (เพื่อไม่ให้การก้ม-เงยกล้องกระทบความเร็วเคลื่อนที่)
             Transform refTransform = orientation != null ? orientation : transform;
             Vector3 forward = Vector3.ProjectOnPlane(refTransform.forward, Vector3.up).normalized;
             Vector3 right = Vector3.ProjectOnPlane(refTransform.right, Vector3.up).normalized;
             Vector3 moveDir = (forward * input.y) + (right * input.x);
-            // 5. คำนวณแรงโน้มถ่วง (Gravity)
+            // แรงโน้มถ่วง
             if (controller.isGrounded && velocity.y < 0)
             {
                 velocity.y = -2f; // แรงกดพื้นเล็กน้อยเพื่อความเสถียร
             }
             velocity.y += gravity * Time.deltaTime;
 
-            // 6. รวมการเคลื่อนที่แกน XZ และแกน Y เข้าด้วยกัน แล้วสั่ง Move เพียงครั้งเดียวในแต่ละเฟรม
+            // รวมการเคลื่อนที่แกน XZ และแกน Y เข้าด้วยกัน แล้วสั่ง Move เพียงครั้งเดียวในแต่ละเฟรม
             Vector3 horizontalMove = moveDir.sqrMagnitude > 0.001f ? moveDir.normalized * currentSpeed : Vector3.zero;
             Vector3 finalVelocity = horizontalMove + new Vector3(0, velocity.y, 0);
 
