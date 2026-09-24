@@ -158,14 +158,38 @@ namespace ProjectCook.Items
         /// <summary>วางไอเทมจากมือที่ระบุลงตรงจุดที่เล็ง</summary>
         private bool TryPlace(HandRole role)
         {
-            EquippableItem equippable = Get(role);
-            if (equippable == null) return false;
+            if (Get(role) == null) return false;
 
             GetPlaceTarget(out Vector3 position, out Quaternion rotation);
+            Place(role, position, rotation);
+            return true;
+        }
 
+        /// <summary>ให้ระบบอื่น (เช่น สถานี) วางไอเทมที่ผู้เล่นถืออยู่ลงที่จุดที่กำหนด คืน false ถ้าไม่ได้ถือชิ้นนั้น</summary>
+        public bool TryPlaceHeld(EquippableItem equippable, Vector3 position, Quaternion rotation)
+        {
+            if (equippable == null) return false;
+
+            if (primaryItem == equippable)
+            {
+                Place(HandRole.Primary, position, rotation);
+                return true;
+            }
+
+            if (secondaryItem == equippable)
+            {
+                Place(HandRole.Secondary, position, rotation);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void Place(HandRole role, Vector3 position, Quaternion rotation)
+        {
+            EquippableItem equippable = Get(role);
             SetSlot(role, null);
             equippable.NotifyPlaced(position, rotation);
-            return true;
         }
 
         private void SetSlot(HandRole role, EquippableItem equippable)

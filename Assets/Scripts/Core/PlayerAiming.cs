@@ -80,7 +80,11 @@ namespace ProjectCook.Core
                 return;
             }
 
-            AimRay = new Ray(origin.position, origin.forward);
+            // เคอร์เซอร์ปลดล็อกอยู่ (เช่น สถานีจัดจาน) ให้เล็งตามเมาส์แทนกลางจอ
+            Camera aimCamera = origin.GetComponent<Camera>();
+            AimRay = aimCamera != null && CursorManager.TryGetPointerPosition(out Vector2 pointer)
+                ? aimCamera.ScreenPointToRay(pointer)
+                : new Ray(origin.position, origin.forward);
             Target = Physics.Raycast(AimRay, out hit, maxDistance, queryMask, QueryTriggerInteraction.Ignore)
                 ? hit.collider
                 : null;

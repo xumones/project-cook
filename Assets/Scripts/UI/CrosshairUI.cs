@@ -106,6 +106,13 @@ namespace ProjectCook.UI
 
         private void Update()
         {
+            // ตอนใช้เคอร์เซอร์ ตัวเคอร์เซอร์เป็นเป้าอยู่แล้ว จุดกลางจอจะทำให้สับสน
+            if (CursorManager.TryGetPointerPosition(out _))
+            {
+                canvasGroup.alpha = 0f;
+                return;
+            }
+
             AimHint hint = StableHint(ResolveHint());
             if (hint != currentHint)
             {
