@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProjectCook.Core
@@ -27,26 +26,9 @@ namespace ProjectCook.Core
         /// <summary>เส้นเล็งของเฟรมนี้ ใช้หาทิศที่ผู้เล่นหันอยู่แม้ตอนเล็งไม่โดนอะไร</summary>
         public Ray AimRay { get; private set; }
 
-        /// <summary>มีระบบใดกำลังขอให้ซ่อน hint การเล็งอยู่หรือไม่ (เช่น ระหว่างคีบอาหาร)</summary>
-        public bool HintsSuppressed => hintSuppressors.Count > 0;
-
         private RaycastHit hit;
         private Camera cachedCamera;
         private int queryMask;
-
-        // ใช้ชุดผู้ขอแทนตัวนับ กันเคสเรียกซ้ำหรือลืมถอนแล้วนับเพี้ยน
-        private readonly HashSet<Object> hintSuppressors = new HashSet<Object>();
-
-        /// <summary>ขอซ่อน hint ระหว่างทำอย่างอื่นอยู่ ต้องเรียก ReleaseHintSuppression คู่กันเสมอ</summary>
-        public void SuppressHints(Object requester)
-        {
-            if (requester != null) hintSuppressors.Add(requester);
-        }
-
-        public void ReleaseHintSuppression(Object requester)
-        {
-            if (requester != null) hintSuppressors.Remove(requester);
-        }
 
         protected override void Awake()
         {

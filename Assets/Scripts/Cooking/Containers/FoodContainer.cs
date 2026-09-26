@@ -27,8 +27,8 @@ namespace ProjectCook.Cooking
         /// <summary>Trigger ที่ใช้นับของเข้า/ออก หาจาก collider ตัวแรกที่เป็น trigger ในตัวหรือลูก</summary>
         protected Collider TriggerCollider { get; private set; }
 
-        /// <summary>ภาชนะนี้กำลังแผ่ความร้อนอยู่หรือไม่</summary>
-        public virtual bool IsHeating => false;
+        /// <summary>ความร้อนของภาชนะตอนนี้ 0-1 (0 = เย็น)</summary>
+        public virtual float Heat => 0f;
 
         public IReadOnlyList<ContainedIngredient> Contents => contents;
 

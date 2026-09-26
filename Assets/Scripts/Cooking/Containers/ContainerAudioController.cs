@@ -176,7 +176,8 @@ namespace ProjectCook.Cooking
             var items = foodContainer.Contents;
             groups.Clear();
 
-            if (foodContainer.IsHeating)
+            float heat = foodContainer.Heat;
+            if (heat > 0f)
             {
                 for (int i = 0; i < items.Count; i++)
                 {
@@ -198,8 +199,8 @@ namespace ProjectCook.Cooking
             groups.Sort(DescendingByCount);
             int selectedCount = Mathf.Min(groups.Count, voices.Length);
 
-            // เสียงซู่ซ่าหลายชนิดพร้อมกันจะรวมกันดังเกินไป จึงลดความดังต่อเสียงลงตามจำนวนเสียงที่ active พร้อมกัน
-            float loudnessScale = selectedCount > 1 ? 1f / Mathf.Sqrt(selectedCount) : 1f;
+            // เสียงซู่ซ่าหลายชนิดพร้อมกันจะรวมกันดังเกินไป จึงลดความดังต่อเสียงลงตามจำนวนเสียงที่ active พร้อมกัน แล้วคูณความร้อนของภาชนะ
+            float loudnessScale = (selectedCount > 1 ? 1f / Mathf.Sqrt(selectedCount) : 1f) * heat;
 
             Array.Clear(voiceMatchedBuffer, 0, voiceMatchedBuffer.Length);
             Array.Clear(selectedConsumedBuffer, 0, selectedConsumedBuffer.Length);

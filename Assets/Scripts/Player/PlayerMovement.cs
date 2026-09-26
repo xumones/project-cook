@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ProjectCook.Core;
@@ -41,6 +42,9 @@ namespace ProjectCook.Player
         private Vector3 velocity;
         private bool isControlActive = true;
 
+        // ใช้ชุดผู้ขอแทนตัวนับ กันเคสเรียกซ้ำหรือลืมคืนแล้วนับเพี้ยน
+        private readonly HashSet<Object> movementLocks = new HashSet<Object>();
+
         /// <summary>กำลังกดวิ่งอยู่ ให้ระบบอื่น (เช่น HeadBob) อ่านแทนเดาจากความเร็ว</summary>
         public bool IsSprinting { get; private set; }
 
@@ -50,17 +54,31 @@ namespace ProjectCook.Player
             isControlActive = active;
             if (!active)
             {
-                velocity = Vector3.zero;
                 isCrouching = false;
-                IsSprinting = false;
+                StopMotion();
+            }
+        }
 
-                // CharacterController.velocity สะท้อนการขยับจากการเรียก Move() ครั้งล่าสุดเท่านั้น
-                // ถ้าหยุดเรียก Move() กลางคันตอนผู้เล่นกำลังเดินอยู่ ค่านี้จะค้างไม่เป็นศูนย์ไปเรื่อยๆ
-                // (ทำให้ระบบอื่นที่อ่านค่านี้ เช่น HeadBob เข้าใจผิดว่ายังเดินอยู่) เลยต้อง Move(zero) เพื่อรีเซ็ตค่าทันที
-                if (controller != null)
-                {
-                    controller.Move(Vector3.zero);
-                }
+        /// <summary>ขอหยุดเดินชั่วคราว (เช่น ระหว่างบิดลูกบิด) ต้องเรียก ReleaseMovementLock คู่กันเสมอ</summary>
+        public void RequestMovementLock(Object requester)
+        {
+            if (requester != null && movementLocks.Add(requester)) StopMotion();
+        }
+
+        public void ReleaseMovementLock(Object requester)
+        {
+            if (requester != null) movementLocks.Remove(requester);
+        }
+
+        private void StopMotion()
+        {
+            velocity = Vector3.zero;
+            IsSprinting = false;
+
+            // CharacterController.velocity ค้างค่าจาก Move() ครั้งล่าสุด ต้อง Move(zero) ไม่งั้น HeadBob เข้าใจว่ายังเดินอยู่
+            if (controller != null)
+            {
+                controller.Move(Vector3.zero);
             }
         }
 
@@ -118,7 +136,7 @@ namespace ProjectCook.Player
             // ปล่อยให้ลุกจนสุดได้แม้ตอนถูกปิดการควบคุม (เช่นเข้าบทสนทนาตอนย่ออยู่)
             UpdateStance();
 
-            if (!isControlActive) return;
+            if (!isControlActive || movementLocks.Count > 0) return;
 
             Vector2 input = moveAction.ReadValue<Vector2>();
             IsSprinting = sprintAction.IsPressed();

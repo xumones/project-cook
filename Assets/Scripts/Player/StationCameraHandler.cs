@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Unity.Cinemachine;
 
 namespace ProjectCook.Player
@@ -13,6 +15,7 @@ namespace ProjectCook.Player
         private readonly Action<bool> setHeldItemVisible;
 
         private CinemachineCamera activeStationCamera;
+        private readonly Dictionary<CinemachinePanTilt, Vector2> initialAngles = new Dictionary<CinemachinePanTilt, Vector2>();
         private float savedPlayerPan;
         private float savedPlayerTilt;
 
@@ -43,18 +46,7 @@ namespace ProjectCook.Player
                 CameraManager.SetLookInput(playerCamera, false);
             }
 
-            activeStationCamera = stationCamera;
-
-            // รีเซ็ตมุมมอง Pan / Tilt ของกล้องสถานี (ถ้ามี)
-            var panTilt = activeStationCamera.GetComponent<CinemachinePanTilt>();
-            if (panTilt != null)
-            {
-                panTilt.PanAxis.Value = 0f;
-                panTilt.TiltAxis.Value = 40f;
-            }
-            CameraManager.SetLookInput(activeStationCamera, true);
-
-            activeStationCamera.Priority = activePriority;
+            Activate(stationCamera);
             if (playerCamera != null)
             {
                 playerCamera.Priority = inactivePriority;
@@ -78,14 +70,47 @@ namespace ProjectCook.Player
                 playerCamera.Priority = activePriority;
             }
 
-            if (activeStationCamera != null)
+            Deactivate();
+            setHeldItemVisible(true);
+        }
+
+        /// <summary>สลับกล้องระหว่างยังอยู่ในสถานี (เช่น จากมุมรวมของเตาไปมุมกระทะ)</summary>
+        public void SwitchTo(CinemachineCamera camera)
+        {
+            if (camera == null || camera == activeStationCamera) return;
+
+            Deactivate();
+            Activate(camera);
+        }
+
+        private void Activate(CinemachineCamera camera)
+        {
+            activeStationCamera = camera;
+
+            // คืนมุม Pan/Tilt เป็นค่าที่ตั้งไว้ใน Scene ซึ่งจำไว้ตอนเปิดใช้กล้องครั้งแรก
+            var panTilt = camera.GetComponent<CinemachinePanTilt>();
+            if (panTilt != null)
             {
-                CameraManager.SetLookInput(activeStationCamera, false);
-                activeStationCamera.Priority = inactivePriority;
-                activeStationCamera = null;
+                if (!initialAngles.TryGetValue(panTilt, out Vector2 angles))
+                {
+                    angles = new Vector2(panTilt.PanAxis.Value, panTilt.TiltAxis.Value);
+                    initialAngles[panTilt] = angles;
+                }
+                panTilt.PanAxis.Value = angles.x;
+                panTilt.TiltAxis.Value = angles.y;
             }
 
-            setHeldItemVisible(true);
+            CameraManager.SetLookInput(camera, true);
+            camera.Priority = activePriority;
+        }
+
+        private void Deactivate()
+        {
+            if (activeStationCamera == null) return;
+
+            CameraManager.SetLookInput(activeStationCamera, false);
+            activeStationCamera.Priority = inactivePriority;
+            activeStationCamera = null;
         }
     }
 }

@@ -156,7 +156,7 @@ namespace ProjectCook.UI
             if (!GameModeManager.GameplayInputAllowed) return AimHint.None;
 
             PlayerAiming aiming = PlayerAiming.Instance;
-            if (aiming == null || aiming.HintsSuppressed) return AimHint.None;
+            if (aiming == null) return AimHint.None;
 
             Collider target = aiming.Target;
 

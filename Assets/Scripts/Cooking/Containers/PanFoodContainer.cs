@@ -6,10 +6,6 @@ namespace ProjectCook.Cooking
     /// <summary>กระทะ: ส่งความร้อนตามสัดส่วนชิ้นที่แตะผิวกระทะ และบอกทิศ up ให้วัตถุดิบตัดสินด้านที่โดนทอด</summary>
     public class PanFoodContainer : HeatingFoodContainer
     {
-        [Header("Pan Specific References")]
-        [Tooltip("Transform ของกระทะ (หากไม่ใส่จะอ้างอิงจาก Transform ตัวเอง)")]
-        [SerializeField] private Transform panTransform;
-
         private const float SurfaceContactDistance = 0.03f;
 
         private static readonly RaycastHit[] raycastHitBuffer = new RaycastHit[8];
@@ -23,22 +19,12 @@ namespace ProjectCook.Cooking
         // ทั้งการทอดและเสียงถามค่านี้ในเฟรมเดียวกัน จึงยิง Raycast ครั้งเดียวต่อวัตถุดิบต่อเฟรม
         private readonly Dictionary<IngredientInstance, ContactSample> contactCache = new Dictionary<IngredientInstance, ContactSample>();
 
-        protected override void Awake()
-        {
-            if (panTransform == null)
-            {
-                panTransform = transform;
-            }
-
-            base.Awake();
-        }
-
         protected override void ApplyHeat(ContainedIngredient entry)
         {
             float contact = SurfaceContactFraction(entry);
             if (contact <= 0f) return;
 
-            entry.Ingredient.ApplyHeat(Time.fixedDeltaTime * heatRateMultiplier * contact, panTransform.up);
+            entry.Ingredient.ApplyHeat(Time.fixedDeltaTime * heatRateMultiplier * Heat * contact, transform.up);
         }
 
         public override bool IsReceivingHeat(ContainedIngredient entry)
@@ -81,13 +67,13 @@ namespace ProjectCook.Cooking
 
         private bool IsBodyTouchingSurface(Rigidbody body, Transform ingredientRoot)
         {
-            int hitCount = Physics.RaycastNonAlloc(body.position, -panTransform.up, raycastHitBuffer, SurfaceContactDistance);
+            int hitCount = Physics.RaycastNonAlloc(body.position, -transform.up, raycastHitBuffer, SurfaceContactDistance);
             for (int i = 0; i < hitCount; i++)
             {
                 Collider col = raycastHitBuffer[i].collider;
                 if (col == null || col.isTrigger) continue;
 
-                if (col.transform.IsChildOf(panTransform)) return true;
+                if (col.transform.IsChildOf(transform)) return true;
 
                 // ชิ้นอื่นของวัตถุดิบเดียวกันไม่นับเป็นพื้นผิว แต่วัตถุดิบตัวอื่นที่อยู่ในกระทะนับ (ของซ้อนกันยังโดนทอด)
                 if (col.transform.IsChildOf(ingredientRoot)) continue;

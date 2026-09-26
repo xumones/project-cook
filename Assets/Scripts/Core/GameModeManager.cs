@@ -15,7 +15,7 @@ namespace ProjectCook.Core
         /// <summary>อินพุตตอนเดินสำรวจเท่านั้น (หยิบ/วาง/interact) ปิดทั้งในสถานีและตอนคุย</summary>
         public static bool GameplayInputAllowed => Instance == null || Instance.AcceptsInput(GameMode.Exploring);
 
-        /// <summary>อินพุตที่ใช้กับของในโลกได้ทั้งตอนเดินและในสถานี (เช่น คีบวัตถุดิบ) ปิดเฉพาะตอนคุย</summary>
+        /// <summary>อินพุตที่ใช้กับของในโลกได้ทั้งตอนเดินและในสถานี (เช่น บิดลูกบิด) ปิดเฉพาะตอนคุย</summary>
         public static bool WorldInputAllowed => Instance == null || Instance.AcceptsInput(GameMode.Exploring, GameMode.Station);
 
         // เฟรมที่เพิ่งออกจากโหมดอื่นยังนับปุ่มที่กดออกมาค้างอยู่ จึงต้องกันไว้หนึ่งเฟรม

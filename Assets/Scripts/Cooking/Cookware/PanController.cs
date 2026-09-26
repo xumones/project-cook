@@ -6,12 +6,9 @@ using ProjectCook.Stations;
 namespace ProjectCook.Cooking
 {
     /// <summary>โมดูลรับอินพุตเพื่อเคลื่อนที่และเอียงกระทะบนเตาในโหมดทำอาหาร</summary>
+    [RequireComponent(typeof(Rigidbody))]
     public class PanController : MonoBehaviour, IStationModule
     {
-        [Header("Pan References")]
-        [Tooltip("Transform ของตัวกระทะ (หากไม่ใส่จะใช้ Transform ของ GameObject นี้)")]
-        [SerializeField] private Transform panTransform;
-
         [Header("Movement Settings")]
         [Tooltip("ความเร็วในการเคลื่อนที่สไลด์ของกระทะ")]
         [SerializeField] private float moveSpeed = 1.5f;
@@ -60,23 +57,13 @@ namespace ProjectCook.Cooking
 
         private void Awake()
         {
-            if (panTransform == null)
-            {
-                panTransform = transform;
-            }
-
-            panRigidbody = panTransform.GetComponent<Rigidbody>();
-            if (panRigidbody == null)
-            {
-                panRigidbody = panTransform.gameObject.AddComponent<Rigidbody>();
-            }
-
+            panRigidbody = GetComponent<Rigidbody>();
             panRigidbody.isKinematic = true;
             panRigidbody.useGravity = false;
             panRigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
-            initialLocalPosition = panTransform.localPosition;
-            initialLocalRotation = panTransform.localRotation;
+            initialLocalPosition = transform.localPosition;
+            initialLocalRotation = transform.localRotation;
 
             targetLocalPosition = initialLocalPosition;
             targetLocalRotation = initialLocalRotation;
@@ -126,8 +113,6 @@ namespace ProjectCook.Cooking
 
         private void Update()
         {
-            if (panTransform == null) return;
-
             if (isControllerActive)
             {
                 Vector2 input = ReadMoveInput();
@@ -143,8 +128,8 @@ namespace ProjectCook.Cooking
                     // สไลด์ตำแหน่งแบบ Camera-Relative
                     Vector3 worldMoveDir = (forward * input.y) + (right * input.x);
 
-                    Vector3 localMoveDir = panTransform.parent != null
-                        ? panTransform.parent.InverseTransformDirection(worldMoveDir)
+                    Vector3 localMoveDir = transform.parent != null
+                        ? transform.parent.InverseTransformDirection(worldMoveDir)
                         : worldMoveDir;
 
                     Vector3 moveDelta = localMoveDir * (moveSpeed * Time.deltaTime);
@@ -167,7 +152,7 @@ namespace ProjectCook.Cooking
                     Quaternion tiltWorldRot = Quaternion.AngleAxis(input.y * maxTiltAngle, right) *
                                               Quaternion.AngleAxis(-input.x * maxTiltAngle, forward);
 
-                    Transform parentTrans = panTransform.parent;
+                    Transform parentTrans = transform.parent;
                     Quaternion initialWorldRot = parentTrans != null ? parentTrans.rotation * initialLocalRotation : initialLocalRotation;
                     Quaternion targetWorldRot = tiltWorldRot * initialWorldRot;
 
@@ -185,20 +170,18 @@ namespace ProjectCook.Cooking
 
         private void FixedUpdate()
         {
-            if (panTransform == null) return;
-
             if (isControllerActive)
             {
                 // เลื่อนตำแหน่งกระทะอย่างนุ่มนวลผ่านทางฟิสิกส์
                 Vector3 newLocalPos = Vector3.Lerp(
-                    panTransform.localPosition,
+                    transform.localPosition,
                     targetLocalPosition,
                     Time.fixedDeltaTime * smoothSpeed
                 );
 
                 // หมุนเอียงองศากระทะอย่างนุ่มนวลผ่านทางฟิสิกส์
                 Quaternion newLocalRot = Quaternion.Slerp(
-                    panTransform.localRotation,
+                    transform.localRotation,
                     targetLocalRotation,
                     Time.fixedDeltaTime * tiltSmoothSpeed
                 );
@@ -209,21 +192,21 @@ namespace ProjectCook.Cooking
             {
                 // สไลด์ตำแหน่งและหมุนคืนค่าตั้งต้นแบบนุ่มนวลเมื่อออกจากสถานี
                 Vector3 newLocalPos = Vector3.Lerp(
-                    panTransform.localPosition,
+                    transform.localPosition,
                     initialLocalPosition,
                     Time.fixedDeltaTime * smoothSpeed
                 );
 
                 Quaternion newLocalRot = Quaternion.Slerp(
-                    panTransform.localRotation,
+                    transform.localRotation,
                     initialLocalRotation,
                     Time.fixedDeltaTime * tiltSmoothSpeed
                 );
 
                 ApplyPhysicsTransform(newLocalPos, newLocalRot);
 
-                bool posReached = Vector3.SqrMagnitude(panTransform.localPosition - initialLocalPosition) < 0.00001f;
-                bool rotReached = Quaternion.Angle(panTransform.localRotation, initialLocalRotation) < 0.1f;
+                bool posReached = Vector3.SqrMagnitude(transform.localPosition - initialLocalPosition) < 0.00001f;
+                bool rotReached = Quaternion.Angle(transform.localRotation, initialLocalRotation) < 0.1f;
 
                 if (posReached && rotReached)
                 {
@@ -236,20 +219,12 @@ namespace ProjectCook.Cooking
         /// <summary>ใช้ MovePosition และ MoveRotation เพื่อย้ายกระทะผ่าน PhysX engine สำหรับ Kinematic Rigidbody</summary>
         private void ApplyPhysicsTransform(Vector3 localPos, Quaternion localRot)
         {
-            Transform parentTrans = panTransform.parent;
+            Transform parentTrans = transform.parent;
             Vector3 worldPos = parentTrans != null ? parentTrans.TransformPoint(localPos) : localPos;
             Quaternion worldRot = parentTrans != null ? parentTrans.rotation * localRot : localRot;
 
-            if (panRigidbody != null && panRigidbody.isKinematic)
-            {
-                panRigidbody.MovePosition(worldPos);
-                panRigidbody.MoveRotation(worldRot);
-            }
-            else
-            {
-                panTransform.localPosition = localPos;
-                panTransform.localRotation = localRot;
-            }
+            panRigidbody.MovePosition(worldPos);
+            panRigidbody.MoveRotation(worldRot);
         }
 
         private Vector2 ReadMoveInput() => moveAction.ReadValue<Vector2>();

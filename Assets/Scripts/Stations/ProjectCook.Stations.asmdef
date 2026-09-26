@@ -3,6 +3,7 @@
     "rootNamespace": "ProjectCook.Stations",
     "references": [
         "ProjectCook.Core",
+        "ProjectCook.Items",
         "ProjectCook.Player",
         "Unity.InputSystem",
         "Unity.Cinemachine",

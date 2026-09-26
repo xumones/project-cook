@@ -75,7 +75,7 @@ namespace ProjectCook.Cooking
                 var bodies = ingredient.Bodies;
                 for (int b = 0; b < bodies.Count; b++)
                 {
-                    // ชิ้นที่ถูกคีบอยู่ปล่อยให้ IngredientDragController คุมแรงคนเดียว
+                    // ชิ้นที่ถูกคีบอยู่ปล่อยให้ IngredientGrabber คุมแรงคนเดียว
                     if (bodies[b] == ingredient.GrippedBody) continue;
 
                     ApplyForces(bodies[b], inertiaForce, slopeForce, containerCenter, containerUp);

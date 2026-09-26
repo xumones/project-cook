@@ -1,14 +1,14 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ProjectCook.Core;
+using ProjectCook.Items;
 using ProjectCook.Player;
 using Unity.Cinemachine;
 
 namespace ProjectCook.Stations
 {
     /// <summary>จุดที่ผู้เล่นเข้าไป "ใช้งาน" แล้วกล้องล็อกอยู่กับที่ (สถานีทำอาหาร เครื่องเล่นแผ่น ฯลฯ) จัดการกล้อง โหมดเกม เคอร์เซอร์ ปุ่มออก และเปิด/ปิดโมดูล</summary>
-    public class Station : MonoBehaviour, IInteractable, IAimHintProvider
+    public class Station : MonoBehaviour, IInteractable, IAimHintProvider, IStationModuleOwner
     {
         [Header("Camera Settings")]
         [Tooltip("Cinemachine Virtual Camera ประจำสถานีนี้ ไม่ต้องมี PanTilt/InputAxisController ถ้าไม่อยากให้ผู้เล่นหันกล้องระหว่างใช้งาน")]
@@ -19,57 +19,25 @@ namespace ProjectCook.Stations
         [SerializeField] private InputActionReference exitAction;
 
         [Tooltip("สถานีที่ใช้เมาส์กดปุ่ม UI ให้ปลดล็อกเคอร์เซอร์ตลอดที่อยู่ในสถานี")]
-        [SerializeField] private bool unlockCursor;
+        [SerializeField] protected bool unlockCursor;
+
+        [Tooltip("ต้องวางของในมือก่อนถึงจะเข้าได้ (ชั่วคราว รอระบบ Inventory)")]
+        [SerializeField] private bool requireEmptyHands;
 
         [Header("Station Modules")]
         [Tooltip("โมดูลที่อยู่นอก GameObject นี้และลูกๆ (ต้อง Implement IStationModule) โดยปกติเว้นว่างไว้ได้")]
         [SerializeField] private MonoBehaviour[] externalModules;
 
-        // โมดูลทั้งหมดที่สถานีนี้ต้องสั่งเปิด/ปิด (รวบรวมอัตโนมัติตอน Awake)
-        private readonly List<IStationModule> modules = new List<IStationModule>();
+        private readonly StationModuleGroup modules = new StationModuleGroup();
 
         protected bool isActive;
 
         protected virtual void Awake()
         {
-            CollectModules();
+            modules.Collect(this, externalModules);
 
             // ค่าที่ Save ไว้ใน Scene ของกล้องสถานีจะเป็น enabled เสมอ ปิดไว้ก่อนกันมันแอบอ่าน mouse look ทั้งที่ยังไม่ได้เข้าสถานี
             CameraManager.SetLookInput(stationCamera, false);
-        }
-
-        /// <summary>รวบรวมโมดูลจากตัวเองและลูกๆ พร้อมกับโมดูลภายนอกที่ระบุไว้ใน Inspector</summary>
-        private void CollectModules()
-        {
-            modules.Clear();
-
-            IStationModule[] localModules = GetComponentsInChildren<IStationModule>(true);
-            for (int i = 0; i < localModules.Length; i++)
-            {
-                if (localModules[i] != null && !modules.Contains(localModules[i]))
-                {
-                    modules.Add(localModules[i]);
-                }
-            }
-
-            if (externalModules == null) return;
-
-            for (int i = 0; i < externalModules.Length; i++)
-            {
-                if (externalModules[i] == null) continue;
-
-                if (externalModules[i] is IStationModule module)
-                {
-                    if (!modules.Contains(module))
-                    {
-                        modules.Add(module);
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning($"[{GetType().Name}] '{externalModules[i].GetType().Name}' ไม่ได้ Implement IStationModule จึงถูกข้ามไป", this);
-                }
-            }
         }
 
         protected virtual void OnEnable()
@@ -82,12 +50,29 @@ namespace ProjectCook.Stations
             exitAction.DisableAction();
         }
 
-        public virtual AimHint GetAimHint() => AimHint.Use;
+        // เงื่อนไขเดียวกับ Interact: เข้าไม่ได้ก็ไม่ต้องบอกว่าใช้ได้
+        public virtual AimHint GetAimHint() => IsBlockedByHeldItem ? AimHint.None : AimHint.Use;
 
         /// <summary>สถานีที่มีเงื่อนไขก่อนเข้าใช้งานให้ Override แล้วเรียก EnterStation เอง</summary>
         public virtual void Interact()
         {
+            // ของในมือบังกล้องและใช้ในสถานีไม่ได้ (โหมด Station ปิดการหยิบอยู่แล้ว จึงกันแค่ตอนเข้าพอ)
+            if (IsBlockedByHeldItem)
+            {
+                Debug.Log($"[{GetType().Name}] เข้า {name} ไม่ได้: ต้องวางของในมือก่อน");
+                return;
+            }
+
             EnterStation();
+        }
+
+        private bool IsBlockedByHeldItem
+        {
+            get
+            {
+                EquipmentManager equipment = EquipmentManager.Instance;
+                return requireEmptyHands && equipment != null && equipment.IsHoldingAnything;
+            }
         }
 
         /// <summary>สลับกล้องมายังสถานีนี้ เปลี่ยนโหมดเกม แล้วสั่งเปิดโมดูลทั้งหมด</summary>
@@ -98,15 +83,12 @@ namespace ProjectCook.Stations
             isActive = true;
             if (CameraManager.Instance != null)
             {
-                CameraManager.Instance.StationCamera = stationCamera;
+                CameraManager.Instance.SetStationCamera(stationCamera);
             }
             GameModeManager.Instance.SetMode(GameMode.Station);
             if (unlockCursor) CursorManager.RequestUnlock(this);
 
-            for (int i = 0; i < modules.Count; i++)
-            {
-                modules[i]?.OnStationEnter();
-            }
+            modules.EnterAll();
         }
 
         /// <summary>สั่งปิดโมดูลทั้งหมด แล้วคืนโหมดเกมให้กล้องกลับมุมมองผู้เล่น</summary>
@@ -116,10 +98,7 @@ namespace ProjectCook.Stations
 
             isActive = false;
 
-            for (int i = 0; i < modules.Count; i++)
-            {
-                modules[i]?.OnStationExit();
-            }
+            modules.ExitAll();
 
             if (unlockCursor) CursorManager.ReleaseUnlock(this);
             GameModeManager.Instance.SetMode(GameMode.Exploring);
@@ -129,8 +108,14 @@ namespace ProjectCook.Stations
         {
             if (isActive && exitAction.WasPressedThisFrame())
             {
-                ExitStation();
+                OnExitPressed();
             }
+        }
+
+        /// <summary>สถานีที่มีหลายชั้น (เช่น เตาที่เลือกภาชนะอยู่) Override เพื่อถอยทีละชั้น</summary>
+        protected virtual void OnExitPressed()
+        {
+            ExitStation();
         }
     }
 }

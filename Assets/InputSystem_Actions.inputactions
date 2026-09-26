@@ -113,6 +113,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "RotateHold",
+                    "type": "Button",
+                    "id": "c4f2a8e1-9d3b-4e6a-b7c5-1a8f3d2e9b40",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -520,6 +529,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "OrbitHold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a3e6f1c-2b9d-4c7e-a5f0-6d1b8e4c3a72",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RotateHold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -5,7 +5,7 @@ using ProjectCook.Core;
 
 namespace ProjectCook.Player
 {
-    /// <summary>ปรับกล้องตามโหมดของเกม สถานีต้องตั้ง StationCamera ก่อนเปลี่ยนโหมด</summary>
+    /// <summary>ปรับกล้องตามโหมดของเกม สถานีต้องเรียก SetStationCamera ก่อนเปลี่ยนโหมด</summary>
     public class CameraManager : SceneSingleton<CameraManager>
     {
         [Header("Default Player Camera")]
@@ -35,8 +35,19 @@ namespace ProjectCook.Player
         // ปฏิกิริยาของกล้องต่อแต่ละโหมด เพิ่มโหมดใหม่ = เพิ่ม handler ที่นี่ ไม่ต้องแก้ HandleModeChanged
         private readonly Dictionary<GameMode, ICameraModeHandler> modeHandlers = new Dictionary<GameMode, ICameraModeHandler>();
 
-        /// <summary>กล้องของสถานีที่กำลังจะเข้าใช้งาน ตั้งก่อนสั่งเปลี่ยนโหมดเป็น Station</summary>
-        public CinemachineCamera StationCamera { get; set; }
+        // ผู้ขอล็อกการหันกล้อง และตัวรับ mouse look ที่ถูกปิดไว้ (เพื่อเปิดคืนตัวเดิมตอนปลด)
+        private readonly HashSet<Object> lookLocks = new HashSet<Object>();
+        private CinemachineInputAxisController lockedLookInput;
+
+        private CinemachineCamera stationCamera;
+        private StationCameraHandler stationHandler;
+
+        /// <summary>ตั้งกล้องสถานี เรียกก่อนเข้าโหมด Station หรือระหว่างอยู่ในสถานีเพื่อสลับมุมกล้อง</summary>
+        public void SetStationCamera(CinemachineCamera camera)
+        {
+            stationCamera = camera;
+            if (currentMode == GameMode.Station) stationHandler.SwitchTo(camera);
+        }
 
         /// <summary>เปิด/ปิดการรับ mouse look ของกล้องตัวนั้น กล้องที่ไม่ได้ใช้อยู่ต้องปิดไม่งั้นมันหมุนตามเมาส์อยู่เงียบ ๆ</summary>
         public static void SetLookInput(CinemachineCamera camera, bool enabled)
@@ -52,8 +63,9 @@ namespace ProjectCook.Player
             base.Awake();
             if (Instance != this) return;
 
-            modeHandlers[GameMode.Station] = new StationCameraHandler(playerCamera, activePriority, inactivePriority,
-                () => StationCamera, SetHeldItemVisible);
+            stationHandler = new StationCameraHandler(playerCamera, activePriority, inactivePriority,
+                () => stationCamera, SetHeldItemVisible);
+            modeHandlers[GameMode.Station] = stationHandler;
             modeHandlers[GameMode.Dialogue] = new DialogueCameraHandler(playerCamera, dialoguePanRange, dialogueTiltMin, dialogueTiltMax);
         }
 
@@ -92,10 +104,39 @@ namespace ProjectCook.Player
             base.OnDestroy();
         }
 
+        /// <summary>ขอหยุด mouse look ของกล้องที่ใช้งานอยู่ชั่วคราว ต้องเรียก ReleaseLookLock คู่กันเสมอ</summary>
+        public void RequestLookLock(Object requester)
+        {
+            if (requester != null && lookLocks.Add(requester)) ApplyLookLock();
+        }
+
+        public void ReleaseLookLock(Object requester)
+        {
+            if (requester == null || !lookLocks.Remove(requester) || lookLocks.Count > 0) return;
+
+            if (lockedLookInput != null) lockedLookInput.enabled = true;
+            lockedLookInput = null;
+        }
+
+        private void ApplyLookLock()
+        {
+            if (lockedLookInput != null) return;
+
+            CinemachineCamera live = currentMode == GameMode.Station ? stationCamera : playerCamera;
+            var input = live != null ? live.GetComponent<CinemachineInputAxisController>() : null;
+            if (input == null || !input.enabled) return;
+
+            input.enabled = false;
+            lockedLookInput = input;
+        }
+
         private void HandleModeChanged(GameMode mode)
         {
             GameMode previous = currentMode;
             currentMode = mode;
+
+            // handler ตั้งสถานะ mouse look ใหม่เองทั้งหมด จึงทิ้งตัวที่ล็อกไว้ ไม่งั้นตอนปลดจะไปเปิดกล้องเก่าคืน
+            lockedLookInput = null;
 
             if (modeHandlers.TryGetValue(previous, out ICameraModeHandler previousHandler))
             {
@@ -106,6 +147,8 @@ namespace ProjectCook.Player
             {
                 nextHandler.OnEnter();
             }
+
+            if (lookLocks.Count > 0) ApplyLookLock();
         }
     }
 }

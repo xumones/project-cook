@@ -6,4 +6,9 @@ namespace ProjectCook.Stations
         void OnStationEnter();
         void OnStationExit();
     }
+
+    /// <summary>เจ้าของชุดโมดูล (สถานี, ภาชนะบนเตา) โมดูลเป็นของเจ้าของที่ใกล้ที่สุดเหนือมันเท่านั้น</summary>
+    public interface IStationModuleOwner
+    {
+    }
 }
