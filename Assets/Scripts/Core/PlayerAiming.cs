@@ -17,6 +17,10 @@ namespace ProjectCook.Core
         [Tooltip("Layer ที่เล็งโดนได้ ต้องกว้างพอให้หาพื้นผิวสำหรับวางของได้ด้วย เว้นว่าง = ทุกอย่างที่เป็นของแข็ง")]
         [SerializeField] private LayerMask aimMask;
 
+        [Header("Placing")]
+        [Tooltip("ระยะวางของสูงสุด (เมตร) ต้องไม่เกินระยะเอื้อม")]
+        [SerializeField] private float placeDistance = 1f;
+
         /// <summary>เป้าที่เล็งอยู่ตอนนี้ null = ไม่ได้เล็งโดนอะไร</summary>
         public Collider Target { get; private set; }
 
@@ -70,6 +74,26 @@ namespace ProjectCook.Core
             Target = Physics.Raycast(AimRay, out hit, maxDistance, queryMask, QueryTriggerInteraction.Ignore)
                 ? hit.collider
                 : null;
+        }
+
+        /// <summary>จุดและมุมสำหรับวางของลงฉาก: ตรงจุดที่เล็งถ้าอยู่ในระยะวาง ไม่งั้นลอยไว้ข้างหน้าให้ฟิสิกส์จัดการต่อ</summary>
+        public void GetPlacePose(out Vector3 position, out Quaternion rotation)
+        {
+            // คงมุมหันตามที่ผู้เล่นหันอยู่ ไม่ใช่ปล่อยให้ FromToRotation สุ่มมุมมาให้
+            Vector3 facing = AimRay.direction;
+            facing.y = 0f;
+            rotation = facing.sqrMagnitude > 0.0001f
+                ? Quaternion.LookRotation(facing.normalized, Vector3.up)
+                : Quaternion.identity;
+
+            // ระยะวางสั้นกว่าระยะเอื้อม จึงต้องกรองเป้าที่ไกลเกินออกเอง
+            if (Target != null && hit.distance <= placeDistance)
+            {
+                position = hit.point;
+                return;
+            }
+
+            position = AimRay.GetPoint(placeDistance * 0.6f);
         }
 
         private Transform GetAimOrigin()

@@ -3,7 +3,7 @@
     "rootNamespace": "ProjectCook.Items",
     "references": [
         "ProjectCook.Core",
-        "Unity.InputSystem"
+        "Unity.Localization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

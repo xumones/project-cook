@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d60043bb3f2641d499092b169b1ff6c8, type: 3}
   m_Name: sausage
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientDataSO
-  ingredientId: sausage_1
-  ingredientName:
+  itemId: sausage_1
+  displayName:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
@@ -22,8 +22,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  icon: {fileID: 0}
   prefab: {fileID: 4364906637940363381, guid: 7c7d9c14844ce6c4cafaa045bee8f71b, type: 3}
+  gridSize: {x: 2, y: 1}
   isTwoSidedCooking: 0
   cookTime: 60
   burnTime: 80

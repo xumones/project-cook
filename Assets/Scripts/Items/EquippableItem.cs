@@ -31,12 +31,6 @@ namespace ProjectCook.Items
         [Tooltip("ท่าถือเทียบกับ Hand Anchor")]
         [SerializeField] private HoldPose holdPose;
 
-        [Header("Hand Role")]
-        [Tooltip("ตั้งมือที่จะไปอยู่เองแทนการอนุมานจากประเภทของไอเทม")]
-        [SerializeField] private bool overrideHandRole = false;
-
-        [SerializeField] private HandRole handRoleOverride = HandRole.Secondary;
-
         [Header("Contents")]
         [Tooltip("ของที่อยู่ในภาชนะนี้จะเป็นอย่างไรตอนถูกยกขึ้นถือ")]
         [SerializeField] private ContentsPolicy contentsPolicy = ContentsPolicy.Freeze;
@@ -46,9 +40,6 @@ namespace ProjectCook.Items
         private IItemContents contents;
 
         private HeldState heldState;
-
-        /// <summary>มือที่ไอเทมชิ้นนี้จะไปอยู่</summary>
-        public HandRole HandRole => overrideHandRole ? handRoleOverride : item.PreferredHandRole;
 
         private void Awake()
         {

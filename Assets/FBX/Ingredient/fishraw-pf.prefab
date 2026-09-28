@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 7507107742921156492}
   - component: {fileID: 2686010056098644046}
   - component: {fileID: 2595444235120314316}
+  - component: {fileID: 6513685030314653079}
+  - component: {fileID: 867039056216715363}
   m_Layer: 8
   m_Name: fishraw-pf
   m_TagString: Food
@@ -118,7 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
-  data: {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
 --- !u!54 &2595444235120314316
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -146,6 +147,31 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &6513685030314653079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309654108733917466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98b4046b4cf2bb4a9172481fa25d2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.Item
+  definition: {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+--- !u!114 &867039056216715363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309654108733917466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c829d4fca2fbd834eafca448b7914317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.StorableItem
 --- !u!1 &5009950555003908850
 GameObject:
   m_ObjectHideFlags: 0

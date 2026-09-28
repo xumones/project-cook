@@ -76,6 +76,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8314872173726923496}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7936841418556545911}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4458301652204491140}
   m_SourcePrefab: {fileID: 100100000, guid: e17edb54b0eb3ea4aaab1b74f0d73980, type: 3}
 --- !u!1 &5990088820357481865 stripped
 GameObject:
@@ -142,7 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientInstance
-  data: {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
 --- !u!114 &8314872173726923496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,3 +160,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab0572a7bf2b3143a824c0837df816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Cooking.IngredientVisuals
+--- !u!114 &7936841418556545911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5990088820357481865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98b4046b4cf2bb4a9172481fa25d2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.Item
+  definition: {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+--- !u!114 &4458301652204491140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5990088820357481865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c829d4fca2fbd834eafca448b7914317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.StorableItem

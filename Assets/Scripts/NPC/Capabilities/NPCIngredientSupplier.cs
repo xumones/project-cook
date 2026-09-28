@@ -25,7 +25,7 @@ namespace ProjectCook.NPC.Capabilities
             for (int i = 0; i < menu.Count; i++)
             {
                 IngredientDataSO data = menu[i];
-                if (data == null || !progress.IsIngredientUnlocked(data.IngredientId)) continue;
+                if (data == null || !progress.IsIngredientUnlocked(data.ItemId)) continue;
 
                 Npc.Profile.Thanks.TryPick(out LocalizedString thanks);
                 options.Add(new DialogueOption
@@ -41,7 +41,7 @@ namespace ProjectCook.NPC.Capabilities
         private LocalizedString LabelFor(IngredientDataSO data)
         {
             var label = new LocalizedString(requestLabel.TableReference, requestLabel.TableEntryReference);
-            label.Arguments = new object[] { data.IngredientName.GetLocalizedString() };
+            label.Arguments = new object[] { data.DisplayName.GetLocalizedString() };
             return label;
         }
 
@@ -49,7 +49,7 @@ namespace ProjectCook.NPC.Capabilities
         {
             if (data.Prefab == null)
             {
-                Debug.LogWarning($"[NPCIngredientSupplier] '{data.IngredientId}' ยังไม่ได้ตั้ง Prefab", data);
+                Debug.LogWarning($"[NPCIngredientSupplier] '{data.ItemId}' ยังไม่ได้ตั้ง Prefab", data);
                 return;
             }
 

@@ -1,24 +1,15 @@
 using System;
 using UnityEngine;
-using UnityEngine.Localization;
+using ProjectCook.Items;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>ScriptableObject สำหรับเก็บข้อมูลและค่าคอนฟิกคงที่ของวัตถุดิบ (Data Container)</summary>
+    /// <summary>ข้อมูลประจำชนิดของวัตถุดิบ ต่อยอดจากข้อมูลไอเทม (รหัส ชื่อ prefab ขนาดในกระเป๋า) ด้วยค่าการทำอาหาร</summary>
     [CreateAssetMenu(fileName = "IngredientData_", menuName = "ProjectCook/Cooking/Ingredient Data")]
-    public class IngredientDataSO : ScriptableObject
+    public class IngredientDataSO : ItemDefinitionSO
     {
         /// <summary>Callback Event แจ้งเตือนเมื่อข้อมูลใน ScriptableObject มีการเปลี่ยนแปลง</summary>
         public event Action OnDataChanged;
-        [Header("General Info")]
-        [Tooltip("รหัสอ้างอิงวัตถุดิบ (เช่น pork_chop, french_fries)")]
-        [SerializeField] private string ingredientId;
-
-        [Tooltip("ชื่อวัตถุดิบที่แสดงใน UI")]
-        [SerializeField] private LocalizedString ingredientName;
-
-        [Tooltip("Prefab ของวัตถุดิบชิ้นนี้ ทุกระบบที่สร้างวัตถุดิบต้องอ้างจากตรงนี้ที่เดียว")]
-        [SerializeField] private GameObject prefab;
 
         [Header("Cooking Mode")]
         [Tooltip("เปิดใช้งานโหมดทอดแยกด้าน (เช่น เนื้อสเต๊ก/เบอร์เกอร์ ต้องทอดสุกทั้งด้านหน้าและด้านหลัง)")]
@@ -85,9 +76,6 @@ namespace ProjectCook.Cooking
         [SerializeField] private AudioClip cookedDoneSFX;
 
         // Public Getters
-        public string IngredientId => ingredientId;
-        public LocalizedString IngredientName => ingredientName;
-        public GameObject Prefab => prefab;
         public bool IsTwoSidedCooking => isTwoSidedCooking;
         public float CookTime => cookTime;
         public float BurnTime => burnTime;

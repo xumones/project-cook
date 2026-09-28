@@ -1,17 +1,10 @@
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using ProjectCook.Core;
 
 namespace ProjectCook.Items
 {
-    /// <summary>ด้านถนัดของผู้เล่น ตั้งค่าที่ EquipmentManager เพียงจุดเดียวในเกม</summary>
-    public enum Handedness
-    {
-        RightHanded,
-        LeftHanded
-    }
-
-    /// <summary>จัดการมือทั้งสองของผู้เล่น: ยกไอเทมเข้ามือ และวางกลับลงฉาก</summary>
+    /// <summary>มือทั้งสองของผู้เล่น: ยกไอเทมเข้ามือ และปล่อยไอเทมออกจากมือไปวางที่จุดที่กำหนด</summary>
     public class EquipmentManager : SceneSingleton<EquipmentManager>
     {
         [Header("Hand Anchors")]
@@ -21,36 +14,24 @@ namespace ProjectCook.Items
         [Tooltip("Transform ที่ไอเทมจะ parent เข้าตอนถืออยู่มือขวา")]
         [SerializeField] private Transform rightHandAnchor;
 
-        [Tooltip("ด้านถนัดของผู้เล่น เปลี่ยนค่านี้ค่าเดียวก็สลับมือทั้งเกม")]
-        [SerializeField] private Handedness handedness = Handedness.RightHanded;
+        private EquippableItem leftItem;
+        private EquippableItem rightItem;
 
-        [Header("Input")]
-        [Tooltip("Action สำหรับยกไอเทมขึ้นถือ (ตอนนี้ผูกกับปุ่มเดียวกับ Interact ไปก่อน)")]
-        [SerializeField] private InputActionReference pickUpAction;
+        /// <summary>ของในมือข้างใดข้างหนึ่งเปลี่ยน (หยิบหรือปล่อย)</summary>
+        public event Action HandsChanged;
 
-        [Tooltip("Action สำหรับวางไอเทมที่ถืออยู่ลง")]
-        [SerializeField] private InputActionReference placeAction;
-
-        [Header("Place")]
-        [Tooltip("ระยะวางของสูงสุด (เมตร) ต้องไม่เกินระยะเอื้อมที่ตั้งไว้ใน PlayerAiming")]
-        [SerializeField] private float placeMaxDistance = 1f;
-
-        private EquippableItem primaryItem;
-        private EquippableItem secondaryItem;
-        private HandRole lastEquippedRole = HandRole.Secondary;
-
-        private EquippableItem Get(HandRole role) => role == HandRole.Primary ? primaryItem : secondaryItem;
+        public EquippableItem GetHeld(HandSide side) => side == HandSide.Left ? leftItem : rightItem;
 
         /// <summary>มีของอยู่ในมือข้างใดข้างหนึ่งหรือไม่</summary>
-        public bool IsHoldingAnything => primaryItem != null || secondaryItem != null;
+        public bool IsHoldingAnything => leftItem != null || rightItem != null;
 
         /// <summary>หา component ชนิดที่ระบุจากของที่ถืออยู่ ไม่ว่าจะอยู่มือไหน</summary>
         public bool TryGetHeldComponent<T>(out T component) where T : class
         {
-            component = primaryItem != null ? primaryItem.GetComponentInChildren<T>() : null;
-            if (component == null && secondaryItem != null)
+            component = leftItem != null ? leftItem.GetComponentInChildren<T>() : null;
+            if (component == null && rightItem != null)
             {
-                component = secondaryItem.GetComponentInChildren<T>();
+                component = rightItem.GetComponentInChildren<T>();
             }
             return component != null;
         }
@@ -64,55 +45,8 @@ namespace ProjectCook.Items
             return false;
         }
 
-        private void Start()
-        {
-            if (PlayerAiming.Instance == null)
-            {
-                Debug.LogError("[EquipmentManager] ไม่พบ PlayerAiming ใน Scene การหยิบและวางของจะไม่ทำงาน", this);
-            }
-        }
-
-        private void OnEnable()
-        {
-            pickUpAction.EnableAction();
-            placeAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            pickUpAction.DisableAction();
-            placeAction.DisableAction();
-        }
-
-        private void Update()
-        {
-            if (!GameModeManager.GameplayInputAllowed) return;
-
-            if (pickUpAction.WasPressedThisFrame())
-            {
-                TryPickUpAimed();
-            }
-
-            if (placeAction.WasPressedThisFrame())
-            {
-                TryPlaceHeld();
-            }
-        }
-
-        /// <summary>ยกไอเทมที่กำลังเล็งอยู่ขึ้นถือ</summary>
-        private bool TryPickUpAimed()
-        {
-            Collider target = PlayerAiming.Instance != null ? PlayerAiming.Instance.Target : null;
-            if (target == null) return false;
-
-            EquippableItem equippable = target.GetComponentInParent<EquippableItem>();
-            if (equippable == null) return false;
-
-            return TryEquip(equippable);
-        }
-
-        /// <summary>สวมไอเทมเข้ามือตามบทบาทของมัน</summary>
-        private bool TryEquip(EquippableItem equippable)
+        /// <summary>สวมไอเทมเข้ามือที่ว่าง โดยลองมือซ้ายก่อน</summary>
+        public bool TryEquip(EquippableItem equippable)
         {
             if (equippable == null) return false;
 
@@ -122,124 +56,61 @@ namespace ProjectCook.Items
                 return false;
             }
 
-            HandRole role = equippable.HandRole;
-            if (Get(role) != null)
+            HandSide side = leftItem == null ? HandSide.Left : HandSide.Right;
+            if (GetHeld(side) != null)
             {
-                Debug.Log($"[EquipmentManager] มือ {role} ไม่ว่าง ยก {equippable.name} ไม่ได้");
+                Debug.Log($"[EquipmentManager] มือไม่ว่างทั้งสองข้าง ยก {equippable.name} ไม่ได้");
                 return false;
             }
 
-            Transform anchor = AnchorOf(role);
+            Transform anchor = AnchorOf(side);
             if (anchor == null)
             {
-                Debug.LogWarning($"[EquipmentManager] ยังไม่ได้ตั้ง Hand Anchor ของมือ {role}", this);
+                Debug.LogWarning($"[EquipmentManager] ยังไม่ได้ตั้ง Hand Anchor ของมือ {side}", this);
                 return false;
             }
 
-            SetSlot(role, equippable);
-            lastEquippedRole = role;
-
+            SetSlot(side, equippable);
             equippable.NotifyEquipped(anchor);
             return true;
         }
 
-        /// <summary>วางไอเทมที่ถืออยู่ลง โดยเลือกมือที่หยิบล่าสุดก่อน ถ้ามือนั้นว่างแล้วจึงใช้อีกมือ</summary>
-        private bool TryPlaceHeld()
-        {
-            if (Get(lastEquippedRole) != null)
-            {
-                return TryPlace(lastEquippedRole);
-            }
-
-            HandRole other = lastEquippedRole == HandRole.Primary ? HandRole.Secondary : HandRole.Primary;
-            return Get(other) != null && TryPlace(other);
-        }
-
-        /// <summary>วางไอเทมจากมือที่ระบุลงตรงจุดที่เล็ง</summary>
-        private bool TryPlace(HandRole role)
-        {
-            if (Get(role) == null) return false;
-
-            GetPlaceTarget(out Vector3 position, out Quaternion rotation);
-            Place(role, position, rotation);
-            return true;
-        }
-
-        /// <summary>ให้ระบบอื่น (เช่น สถานี) วางไอเทมที่ผู้เล่นถืออยู่ลงที่จุดที่กำหนด คืน false ถ้าไม่ได้ถือชิ้นนั้น</summary>
-        public bool TryPlaceHeld(EquippableItem equippable, Vector3 position, Quaternion rotation)
+        /// <summary>ปล่อยไอเทมที่ถืออยู่ไปวางที่จุดที่กำหนด คืน false ถ้าไม่ได้ถือชิ้นนั้น</summary>
+        public bool Release(EquippableItem equippable, Vector3 position, Quaternion rotation)
         {
             if (equippable == null) return false;
 
-            if (primaryItem == equippable)
+            if (leftItem == equippable)
             {
-                Place(HandRole.Primary, position, rotation);
-                return true;
+                SetSlot(HandSide.Left, null);
             }
-
-            if (secondaryItem == equippable)
+            else if (rightItem == equippable)
             {
-                Place(HandRole.Secondary, position, rotation);
-                return true;
-            }
-
-            return false;
-        }
-
-        private void Place(HandRole role, Vector3 position, Quaternion rotation)
-        {
-            EquippableItem equippable = Get(role);
-            SetSlot(role, null);
-            equippable.NotifyPlaced(position, rotation);
-        }
-
-        private void SetSlot(HandRole role, EquippableItem equippable)
-        {
-            if (role == HandRole.Primary)
-            {
-                primaryItem = equippable;
+                SetSlot(HandSide.Right, null);
             }
             else
             {
-                secondaryItem = equippable;
+                return false;
             }
+
+            equippable.NotifyPlaced(position, rotation);
+            return true;
         }
 
-        /// <summary>แปลงบทบาทมือเป็น Hand Anchor กายภาพตามด้านถนัดที่ตั้งไว้</summary>
-        private Transform AnchorOf(HandRole role)
+        private void SetSlot(HandSide side, EquippableItem equippable)
         {
-            bool useRight = (handedness == Handedness.RightHanded) == (role == HandRole.Primary);
-            return useRight ? rightHandAnchor : leftHandAnchor;
-        }
-
-        /// <summary>หาจุดและมุมสำหรับวางของ โดยคงมุมหันตามที่ผู้เล่นหันอยู่เสมอ</summary>
-        private void GetPlaceTarget(out Vector3 position, out Quaternion rotation)
-        {
-            PlayerAiming aiming = PlayerAiming.Instance;
-            if (aiming == null)
+            if (side == HandSide.Left)
             {
-                position = transform.position;
-                rotation = transform.rotation;
-                return;
+                leftItem = equippable;
+            }
+            else
+            {
+                rightItem = equippable;
             }
 
-            Ray ray = aiming.AimRay;
-
-            // คงมุมหันตามที่ผู้เล่นหันอยู่ ไม่ใช่ปล่อยให้ FromToRotation สุ่มมุมมาให้
-            Vector3 facing = ray.direction;
-            facing.y = 0f;
-            rotation = facing.sqrMagnitude > 0.0001f
-                ? Quaternion.LookRotation(facing.normalized, Vector3.up)
-                : Quaternion.identity;
-
-            // ระยะวางสั้นกว่าระยะเอื้อม จึงต้องกรองเป้าที่ไกลเกินออกเอง
-            if (aiming.Target != null && aiming.Hit.distance <= placeMaxDistance)
-            {
-                position = aiming.Hit.point;
-                return;
-            }
-
-            // ไม่เจอพื้นผิว: ปล่อยไว้ข้างหน้าใกล้ ๆ แล้วให้ฟิสิกส์จัดการต่อ
-            position = ray.GetPoint(placeMaxDistance * 0.6f);
+            HandsChanged?.Invoke();
         }
+
+        private Transform AnchorOf(HandSide side) => side == HandSide.Left ? leftHandAnchor : rightHandAnchor;
     }
 }

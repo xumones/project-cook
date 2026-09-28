@@ -431,6 +431,8 @@ GameObject:
   - component: {fileID: 2492135963788404930}
   - component: {fileID: 4802370635932138497}
   - component: {fileID: 3916536686433527852}
+  - component: {fileID: 2908622163723125449}
+  - component: {fileID: 4377751348638916812}
   m_Layer: 7
   m_Name: lettuce-chop-pf
   m_TagString: Food
@@ -482,7 +484,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83c0cc563c690a4a913e6bd3ebadff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Cooking::ProjectCook.Cooking.IngredientInstance
-  data: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+--- !u!114 &2908622163723125449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665548752850000808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98b4046b4cf2bb4a9172481fa25d2d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.Item
+  definition: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+--- !u!114 &4377751348638916812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665548752850000808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c829d4fca2fbd834eafca448b7914317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.StorableItem
 --- !u!1 &7191376137942004645
 GameObject:
   m_ObjectHideFlags: 0

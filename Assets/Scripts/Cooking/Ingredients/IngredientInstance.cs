@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectCook.Items;
 
 namespace ProjectCook.Cooking
 {
@@ -9,11 +10,11 @@ namespace ProjectCook.Cooking
     // ห้ามมี Rigidbody ที่ root ถ้ามีชิ้นลูก เพราะ Rigidbody ซ้อนกันจะสู้กันเอง
     [DisallowMultipleComponent]
     [RequireComponent(typeof(IngredientVisuals))]
-    public class IngredientInstance : MonoBehaviour
+    [RequireComponent(typeof(Item))]
+    public class IngredientInstance : MonoBehaviour, ISavableState
     {
-        [Header("Data Reference")]
-        [Tooltip("ScriptableObject ข้อมูลและค่าตั้งต้นของวัตถุดิบนี้")]
-        [SerializeField] private IngredientDataSO data;
+        // มาจาก Definition ของ Item จะได้ตั้งข้อมูลวัตถุดิบไว้ที่เดียว
+        private IngredientDataSO data;
 
         private IngredientVisuals visualsComponent;
         private Rigidbody[] bodies;
@@ -46,6 +47,12 @@ namespace ProjectCook.Cooking
 
         private void Awake()
         {
+            data = GetComponent<Item>().Definition as IngredientDataSO;
+            if (data == null)
+            {
+                Debug.LogError($"[IngredientInstance] {name} ต้องตั้ง Definition ของ Item เป็น IngredientDataSO", this);
+            }
+
             bodies = GetComponentsInChildren<Rigidbody>(true);
             if (bodies.Length == 0)
             {
@@ -195,6 +202,42 @@ namespace ProjectCook.Cooking
             {
                 SetState(CookingState.Cooking);
             }
+        }
+
+        [Serializable]
+        private struct SavedCookTimes
+        {
+            public float omni;
+            public float sideA;
+            public float sideB;
+        }
+
+        // สถานะความสุกและภาพคำนวณจากเวลาทอดได้ทั้งหมด จึงจดแค่เวลา
+        public string CaptureState() => JsonUtility.ToJson(new SavedCookTimes
+        {
+            omni = omniCookTime,
+            sideA = sideACookTime,
+            sideB = sideBCookTime
+        });
+
+        public void RestoreState(string state)
+        {
+            SavedCookTimes saved = JsonUtility.FromJson<SavedCookTimes>(state);
+            omniCookTime = saved.omni;
+            sideACookTime = saved.sideA;
+            sideBCookTime = saved.sideB;
+
+            if (data == null) return;
+
+            if (data.IsTwoSidedCooking)
+            {
+                EvaluateTwoSidedCookingState();
+            }
+            else
+            {
+                EvaluateCookingState();
+            }
+            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
         }
 
         private void SetState(CookingState newState)

@@ -67,6 +67,7 @@ namespace ProjectCook.Player
                 () => stationCamera, SetHeldItemVisible);
             modeHandlers[GameMode.Station] = stationHandler;
             modeHandlers[GameMode.Dialogue] = new DialogueCameraHandler(playerCamera, dialoguePanRange, dialogueTiltMin, dialogueTiltMax);
+            modeHandlers[GameMode.Inventory] = new InventoryCameraHandler(playerCamera);
         }
 
         private void Start()

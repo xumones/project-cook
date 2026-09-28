@@ -21,7 +21,7 @@ namespace ProjectCook.Cooking
             if (!EquipmentManager.TryGetHeld(out ServingFoodContainer dish)) return;
 
             EquippableItem equippable = dish.GetComponentInParent<EquippableItem>();
-            if (EquipmentManager.Instance.TryPlaceHeld(equippable, transform.position, transform.rotation))
+            if (EquipmentManager.Instance.Release(equippable, transform.position, transform.rotation))
             {
                 // ให้ OverlapSphere เห็นจานที่เพิ่งย้ายมาทันที ไม่ต้องรอฟิสิกส์สเต็ปถัดไป
                 Physics.SyncTransforms();

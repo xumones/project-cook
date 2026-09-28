@@ -21,7 +21,7 @@ namespace ProjectCook.NPC
             {
                 if (requirements[i].ingredient != null)
                 {
-                    progress.UnlockIngredient(requirements[i].ingredient.IngredientId);
+                    progress.UnlockIngredient(requirements[i].ingredient.ItemId);
                 }
             }
         }

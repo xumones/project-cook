@@ -1,0 +1,17 @@
+{
+    "name": "ProjectCook.Inventory",
+    "rootNamespace": "ProjectCook.Inventory",
+    "references": [
+        "ProjectCook.Core",
+        "ProjectCook.Items"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

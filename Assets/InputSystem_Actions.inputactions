@@ -88,9 +88,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Drop",
+                    "name": "Inventory",
                     "type": "Button",
-                    "id": "bd281d43-4883-4287-9358-e37f87c016d8",
+                    "id": "f9f12c17-fc02-41c8-9d93-794aecc7e979",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -512,12 +512,12 @@
                 },
                 {
                     "name": "",
-                    "id": "7dc7e97e-bf57-4b4e-aa93-45edf65ea5af",
-                    "path": "<Keyboard>/g",
+                    "id": "04c76caa-08b2-49ad-8315-16dd55c12843",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Drop",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -626,6 +626,15 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "15cef263-9014-4fd5-94d9-4e4a6234a6ef",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateItem",
+                    "type": "Button",
+                    "id": "a679a716-6dae-4dfb-8eb2-18f2cdcae8df",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -990,6 +999,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8c29184-e4b1-438c-8345-7c8060416504",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RotateItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

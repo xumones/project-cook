@@ -3,6 +3,10 @@
     "rootNamespace": "ProjectCook.UI",
     "references": [
         "ProjectCook.Core",
+        "ProjectCook.Items",
+        "ProjectCook.Inventory",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
         "UnityEngine.UI"
     ],
     "includePlatforms": [],
