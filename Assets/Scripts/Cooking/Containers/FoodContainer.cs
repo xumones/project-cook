@@ -145,14 +145,7 @@ namespace ProjectCook.Cooking
             return entry;
         }
 
-        /// <summary>ลงทะเบียนวัตถุดิบที่ระบบอื่นยื่นให้ตรง ๆ คืน null ถ้ามีอยู่แล้ว ผู้เรียกต้องวางชิ้นให้เสร็จก่อนแล้วเรียก RecountBodiesInside</summary>
-        protected ContainedIngredient RegisterWhole(IngredientInstance ingredient)
-        {
-            return Find(ingredient) != null ? null : Register(ingredient);
-        }
-
-        // ชิ้นที่ถูกวางเข้ามาตรง ๆ ไม่มี Enter จาก PhysX ถ้าบันทึกว่าอยู่ข้างในทั้งที่จริงอยู่นอก trigger จะไม่มี Exit มาถอดให้ตลอดไป
-        // จึงต้องนับจากตำแหน่งจริงเสมอ ชิ้นที่อยู่นอกจะร่วงลงมาแล้วถูก Enter นับเพิ่มเอง
+        // ใช้ตำแหน่งจริงนับใหม่ เพราะการสลับ isKinematic ทำให้บัญชี Enter/Exit จาก PhysX เชื่อไม่ได้
         protected void RecountBodiesInside(ContainedIngredient entry)
         {
             entry.BodiesInside.Clear();

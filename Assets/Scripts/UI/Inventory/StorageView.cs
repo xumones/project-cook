@@ -5,7 +5,7 @@ using ProjectCook.Inventory;
 
 namespace ProjectCook.UI
 {
-    /// <summary>วาดตารางย่อยทั้งชุดของที่เก็บของหนึ่งชิ้น (ตัวผู้เล่น กระเป๋า) ตามตำแหน่งในข้อมูล และซ่อนตัวเองเมื่อไม่มีตาราง</summary>
+    /// <summary>วาดตารางย่อยทั้งชุดของที่เก็บของหนึ่งชิ้น (ตัวผู้เล่น กระเป๋า ตู้เย็น) ตามตำแหน่งในข้อมูล และซ่อนตัวเองเมื่อไม่มีตาราง</summary>
     [RequireComponent(typeof(RectTransform))]
     public class StorageView : MonoBehaviour
     {
@@ -18,12 +18,12 @@ namespace ProjectCook.UI
         private readonly List<ItemGridView> views = new List<ItemGridView>();
         private IReadOnlyList<ItemGrid> boundGrids;
 
-        /// <summary>สร้างตารางใหม่เฉพาะตอนได้ชุดตารางใหม่ (สวมหรือถอดกระเป๋า) ไม่งั้นแค่วาดของใหม่</summary>
-        public void Show(IReadOnlyList<ItemGrid> grids)
+        /// <summary>สร้างตารางใหม่เฉพาะตอนได้ชุดตารางใหม่ (สวมหรือถอดกระเป๋า เปิดที่เก็บอื่น) ไม่งั้นแค่วาดของใหม่</summary>
+        public void Show(ItemStorage owner, IReadOnlyList<ItemGrid> grids)
         {
             if (grids != boundGrids)
             {
-                Rebuild(grids);
+                Rebuild(owner, grids);
             }
 
             foreach (ItemGridView view in views)
@@ -32,7 +32,7 @@ namespace ProjectCook.UI
             }
         }
 
-        private void Rebuild(IReadOnlyList<ItemGrid> grids)
+        private void Rebuild(ItemStorage owner, IReadOnlyList<ItemGrid> grids)
         {
             boundGrids = grids;
             foreach (ItemGridView view in views)
@@ -51,7 +51,7 @@ namespace ProjectCook.UI
             {
                 ItemGridView view = Instantiate(gridTemplate, transform);
                 view.gameObject.SetActive(true);
-                view.Bind(grid);
+                view.Bind(owner, grid);
 
                 var rect = (RectTransform)view.transform;
                 rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0f, 1f);

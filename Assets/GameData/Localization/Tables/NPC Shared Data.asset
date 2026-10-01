@@ -175,14 +175,6 @@ MonoBehaviour:
     m_Key: npc.1.chat.1
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546596
-    m_Key: npc.1.thanks.0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546597
-    m_Key: npc.1.thanks.1
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224772546598
     m_Key: npc.1.label.chat
     m_Metadata:
@@ -207,14 +199,6 @@ MonoBehaviour:
     m_Key: npc.2.chat.1
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546604
-    m_Key: npc.2.thanks.0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546605
-    m_Key: npc.2.thanks.1
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224772546606
     m_Key: npc.2.label.chat
     m_Metadata:
@@ -237,14 +221,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4224772546611
     m_Key: npc.3.chat.1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546612
-    m_Key: npc.3.thanks.0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546613
-    m_Key: npc.3.thanks.1
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546614
@@ -305,6 +281,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 63091673997313
     m_Key: npc.3.received.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3662186790014976
+    m_Key: ui.response.storage_full
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3667749989011456
+    m_Key: ui.response.stored
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -6,7 +6,7 @@ using ProjectCook.Items;
 
 namespace ProjectCook.UI
 {
-    /// <summary>หน้าต่างกระเป๋าที่เลื่อนเข้ามาจากซ้าย: เปิด/ปิด สลับโหมดเกม ปลดล็อกเมาส์ และวาดช่องมือกับตารางใหม่เมื่อของเปลี่ยน</summary>
+    /// <summary>หน้าต่างกระเป๋า (แผงซ้าย) และที่เก็บที่เปิดคู่กัน (แผงขวา): เปิด/ปิด สลับโหมดเกม ปลดล็อกเมาส์ และวาดใหม่เมื่อของเปลี่ยน</summary>
     public class InventoryScreen : MonoBehaviour
     {
         [Header("Input")]
@@ -16,31 +16,31 @@ namespace ProjectCook.UI
         [Tooltip("Action ปิดหน้าต่าง (Esc)")]
         [SerializeField] private InputActionReference closeAction;
 
-        [Header("Panel")]
-        [Tooltip("แผงที่เลื่อนเข้าออก ต้องยึดขอบซ้ายของจอ และห้ามเป็นตัวเดียวกับ GameObject นี้ เพราะแผงถูกปิดตอนซ่อน")]
-        [SerializeField] private RectTransform panel;
-
-        [SerializeField] private float slideDuration = 0.2f;
+        [Tooltip("ตัวเลื่อนแผงซ้าย/ขวาเข้าออก")]
+        [SerializeField] private InventoryPanelSlider slider;
 
         [Header("Views")]
         [SerializeField] private ItemSlotView[] slots;
         [SerializeField] private StorageView bodyView;
         [SerializeField] private StorageView bagView;
+        [SerializeField] private StorageView containerView;
         [SerializeField] private ItemDragController dragController;
 
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance อาจคืน null ก่อน OnDestroy
         private PlayerInventory inventory;
         private EquipmentManager equipment;
 
+        // ที่เก็บที่เปิดคู่กันรอบล่าสุด null = เปิดแค่กระเป๋า ยังเก็บไว้ระหว่างแผงเลื่อนออก
+        private ItemStorage container;
+
         private bool isOpen;
-        private float openAmount;
 
         private void Start()
         {
             inventory = PlayerInventory.Instance;
             if (inventory != null)
             {
-                inventory.Changed += RefreshIfOpen;
+                inventory.Storage.Changed += RefreshIfOpen;
             }
 
             equipment = EquipmentManager.Instance;
@@ -49,15 +49,18 @@ namespace ProjectCook.UI
                 equipment.HandsChanged += RefreshIfOpen;
             }
 
+            StorageContainer.OpenRequested += OpenWith;
+
             // สร้างตารางไว้ตั้งแต่ต้น ตอนเปิดครั้งแรกเลย์เอาต์จะได้เข้าที่แล้ว
             Refresh();
-            ApplySlide();
         }
 
         private void OnDestroy()
         {
-            if (inventory != null) inventory.Changed -= RefreshIfOpen;
+            if (inventory != null) inventory.Storage.Changed -= RefreshIfOpen;
             if (equipment != null) equipment.HandsChanged -= RefreshIfOpen;
+            StorageContainer.OpenRequested -= OpenWith;
+            SetContainer(null);
         }
 
         private void OnEnable()
@@ -76,27 +79,32 @@ namespace ProjectCook.UI
         {
             if (!isOpen)
             {
-                if (GameModeManager.GameplayInputAllowed && toggleAction.WasPressedThisFrame()) Open();
+                if (GameModeManager.GameplayInputAllowed && toggleAction.WasPressedThisFrame()) Open(null);
             }
             else if (toggleAction.WasPressedThisFrame() || closeAction.WasPressedThisFrame())
             {
                 Close();
             }
-
-            float target = isOpen ? 1f : 0f;
-            if (openAmount != target)
-            {
-                openAmount = Mathf.MoveTowards(openAmount, target, Time.unscaledDeltaTime / slideDuration);
-                ApplySlide();
-            }
         }
 
-        private void Open()
+        private void OpenWith(StorageContainer opened) => Open(opened.Storage);
+
+        private void Open(ItemStorage with)
         {
+            SetContainer(with);
             isOpen = true;
             GameModeManager.Instance.SetMode(GameMode.Inventory);
             CursorManager.RequestUnlock(this);
             Refresh();
+            slider.Open(with != null);
+        }
+
+        private void SetContainer(ItemStorage next)
+        {
+            if (container != null) container.Changed -= RefreshIfOpen;
+            container = next;
+            if (container != null) container.Changed += RefreshIfOpen;
+            dragController.SetOpenContainer(container);
         }
 
         private void Close()
@@ -104,6 +112,7 @@ namespace ProjectCook.UI
             // แผงจะถูกปิดระหว่างลาก ทำให้ไม่มี EndDrag มาเก็บเงาให้
             dragController.Cancel();
             isOpen = false;
+            slider.Close();
             CursorManager.ReleaseUnlock(this);
             GameModeManager.Instance.SetMode(GameMode.Exploring);
         }
@@ -117,17 +126,11 @@ namespace ProjectCook.UI
         {
             foreach (ItemSlotView slot in slots) slot.Refresh();
 
-            if (inventory == null) return;
-            bodyView.Show(inventory.BodyGrids);
-            bagView.Show(inventory.BagGrids);
-        }
+            if (container != null) containerView.Show(container, container.Grids);
 
-        // ease-out: ออกตัวเร็วแล้วชะลอตอนใกล้ถึงที่
-        private void ApplySlide()
-        {
-            float eased = 1f - (1f - openAmount) * (1f - openAmount);
-            panel.anchoredPosition = new Vector2(Mathf.Lerp(-panel.rect.width, 0f, eased), panel.anchoredPosition.y);
-            panel.gameObject.SetActive(openAmount > 0f);
+            if (inventory == null) return;
+            bodyView.Show(inventory.Storage, inventory.BodyGrids);
+            bagView.Show(inventory.Storage, inventory.BagGrids);
         }
     }
 }

@@ -641,6 +641,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "QuickMove",
+                    "type": "Button",
+                    "id": "3c9e5b1a-7d42-4f8e-9a61-2b0d4c8e7f13",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Point",
                     "type": "PassThrough",
                     "id": "32b35790-4ed0-4e9a-aa41-69ac6d629449",
@@ -1010,6 +1019,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "RotateItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e7a24f6d-1b39-4c85-b0d2-5f8a3e916c47",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "QuickMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

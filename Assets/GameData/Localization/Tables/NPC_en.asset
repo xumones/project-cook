@@ -216,16 +216,6 @@ MonoBehaviour:
       I don't even have a face."
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546596
-    m_Localized: Honestly, I can't even remember the last time these things actually
-      meant anything. So, just give it everything you've got.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546597
-    m_Localized: Is there really anything better than having someone who is truly
-      ready to do something for you? Right?
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224772546598
     m_Localized: chat
     m_Metadata:
@@ -250,16 +240,6 @@ MonoBehaviour:
   - m_Id: 4224772546603
     m_Localized: You know how to fry black-fleshed chicken and actually tell when
       it's cooked or not?
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546604
-    m_Localized: Don't eat too much of it. What, you thought I meant you? Nah, I
-      was talking about myself.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546605
-    m_Localized: '"I wonder if the pan is big enough to fry all of these together
-      at the same time...'
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546606
@@ -287,15 +267,6 @@ MonoBehaviour:
     m_Localized: "We don't have names, but we still feel hunger. We don't really
       exist, but we still feel. And we won't have any answers\u2014not if we don't
       even know how to ask the questions."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546612
-    m_Localized: I hope this suffering brings happiness to someone out there. I really
-      want to believe that.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546613
-    m_Localized: Make sure you take a good care of it.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546614
@@ -358,6 +329,15 @@ MonoBehaviour:
     m_Localized: Huh. You didn't have to.
     m_Metadata:
       m_Items: []
+  - m_Id: 3662186790014976
+    m_Localized: Your fridge is full. Make some room first.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3667749989011456
+    m_Localized: '{0} is in your fridge now.'
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
   references:
     version: 2
     RefIds:
@@ -367,3 +347,4 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 4224772546591
+        - id: 3667749989011456

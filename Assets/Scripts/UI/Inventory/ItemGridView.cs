@@ -6,10 +6,10 @@ using ProjectCook.Inventory;
 
 namespace ProjectCook.UI
 {
-    /// <summary>วาดตารางกระเป๋าหนึ่งตาราง และแปลงตำแหน่งเมาส์เป็นช่อง เริ่มลากของแล้วส่งต่อให้ ItemDragController</summary>
+    /// <summary>วาดตารางกระเป๋าหนึ่งตาราง และแปลงตำแหน่งเมาส์เป็นช่อง การลากและคลิกของส่งต่อให้ ItemDragController</summary>
     // ต้องมี Graphic ที่ Raycast Target เต็มพื้นที่ตาราง ไม่งั้นเมาส์ตรงช่องว่างระหว่างช่องจะไม่นับว่าอยู่บนตาราง
     [RequireComponent(typeof(RectTransform))]
-    public class ItemGridView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class ItemGridView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         [Header("Templates")]
         [Tooltip("ช่องพื้นหลังหนึ่งช่อง (ปิดไว้) ถูกคัดลอกตามจำนวนช่องของตาราง")]
@@ -28,6 +28,9 @@ namespace ProjectCook.UI
 
         public ItemGrid Grid => grid;
 
+        /// <summary>ที่เก็บที่ตารางนี้เป็นส่วนหนึ่ง</summary>
+        public ItemStorage Storage { get; private set; }
+
         /// <summary>ระยะจากช่องหนึ่งถึงช่องถัดไป (ขนาดช่องรวมช่องว่าง)</summary>
         public float Step => cellSize + spacing;
 
@@ -36,8 +39,9 @@ namespace ProjectCook.UI
             dragController = GetComponentInParent<ItemDragController>();
         }
 
-        public void Bind(ItemGrid target)
+        public void Bind(ItemStorage owner, ItemGrid target)
         {
+            Storage = owner;
             grid = target;
             ((RectTransform)transform).sizeDelta = SpanOf(grid.Size);
 
@@ -97,6 +101,15 @@ namespace ProjectCook.UI
         public void OnDrag(PointerEventData eventData) => dragController.Drag(eventData);
 
         public void OnEndDrag(PointerEventData eventData) => dragController.EndDrag(eventData);
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left) return;
+            if (!TryGetCell(eventData.position, eventData.pressEventCamera, out Vector2Int cell)) return;
+
+            InventoryItem item = grid.GetItemAt(cell);
+            if (item != null) dragController.TryQuickMove(Storage, item);
+        }
 
         public bool TryGetCell(Vector2 screenPosition, Camera eventCamera, out Vector2Int cell)
         {

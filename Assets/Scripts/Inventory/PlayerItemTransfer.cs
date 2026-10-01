@@ -22,10 +22,11 @@ namespace ProjectCook.Inventory
             return equippable != null && EquipmentManager.Instance != null && EquipmentManager.Instance.TryEquip(equippable);
         }
 
-        public bool DropFromStorage(InventoryItem item)
+        /// <summary>เอาของออกจากที่เก็บใดก็ได้ (ตัวผู้เล่น ตู้เย็น) วางลงฉากตรงจุดที่เล็ง</summary>
+        public bool DropFromStorage(ItemStorage storage, InventoryItem item)
         {
             if (!TryGetPlacePose(out Vector3 position, out Quaternion rotation) || !HasPrefab(item.Definition)) return false;
-            if (!PlayerInventory.Instance.Remove(item)) return false;
+            if (!storage.Remove(item)) return false;
 
             Spawn(item.Definition, item.States, position, rotation);
             return true;
@@ -61,7 +62,7 @@ namespace ProjectCook.Inventory
                 return false;
             }
 
-            if (!PlayerInventory.Instance.TryAdd(new InventoryItem(definition, storable.CaptureStates())))
+            if (!PlayerInventory.Instance.Storage.TryAdd(new InventoryItem(definition, storable.CaptureStates())))
             {
                 Debug.Log($"[PlayerItemTransfer] กระเป๋าเต็ม เก็บ {definition.ItemId} ไม่ได้");
                 return false;

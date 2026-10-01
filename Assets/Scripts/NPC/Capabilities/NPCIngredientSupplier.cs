@@ -4,22 +4,31 @@ using UnityEngine.Localization;
 using ProjectCook.Core;
 using ProjectCook.Cooking;
 using ProjectCook.Dialogue;
-using ProjectCook.Items;
+using ProjectCook.Inventory;
 
 namespace ProjectCook.NPC.Capabilities
 {
-    /// <summary>ให้วัตถุดิบในเมนูที่ปลดล็อกแล้ว ลงจานที่ผู้เล่นถืออยู่</summary>
+    /// <summary>ให้วัตถุดิบในเมนูที่ปลดล็อกแล้ว ส่งเข้าที่เก็บของที่กำหนด (ตู้เย็น)</summary>
     public class NPCIngredientSupplier : NPCCapability
     {
         [Tooltip("วัตถุดิบที่ NPC ตัวนี้ยอมให้")]
         [SerializeField] private List<IngredientDataSO> menu = new List<IngredientDataSO>();
 
+        [Tooltip("ที่เก็บของที่วัตถุดิบถูกส่งไป")]
+        [SerializeField] private StorageContainer deliverTo;
+
         [Tooltip("Smart String ที่รับชื่อวัตถุดิบเป็น {0}")]
         [SerializeField] private LocalizedString requestLabel;
 
+        [Tooltip("คำตอบเมื่อที่เก็บเต็ม")]
+        [SerializeField] private LocalizedString fullResponse;
+
+        [Tooltip("คำตอบเมื่อเก็บเข้าที่เก็บแล้ว Smart String ที่รับชื่อวัตถุดิบเป็น {0}")]
+        [SerializeField] private LocalizedString storedResponse;
+
         public override void BuildOptions(List<DialogueOption> options)
         {
-            if (!EquipmentManager.TryGetHeld(out ServingFoodContainer dish) || dish.IsFull) return;
+            if (deliverTo == null) return;
 
             GameProgress progress = GameProgress.Instance;
             for (int i = 0; i < menu.Count; i++)
@@ -27,40 +36,26 @@ namespace ProjectCook.NPC.Capabilities
                 IngredientDataSO data = menu[i];
                 if (data == null || !progress.IsIngredientUnlocked(data.ItemId)) continue;
 
-                Npc.Profile.Thanks.TryPick(out LocalizedString thanks);
-                options.Add(new DialogueOption
-                {
-                    Label = LabelFor(data),
-                    Response = thanks,
-                    OnSelected = () => Give(data)
-                });
+                // คำตอบตัดสินตอนกดเลือก เพราะต้องรู้ก่อนว่าที่เก็บรับได้ไหม
+                var option = new DialogueOption { Label = WithName(requestLabel, data) };
+                option.OnSelected = () => option.Response = Give(data);
+                options.Add(option);
             }
         }
 
-        // สร้าง LocalizedString ใหม่ต่อรายการ เพราะ argument ของ Smart String ผูกกับ instance
-        private LocalizedString LabelFor(IngredientDataSO data)
+        // สร้าง LocalizedString ใหม่ทุกครั้ง เพราะ argument ของ Smart String ผูกกับ instance
+        private static LocalizedString WithName(LocalizedString template, IngredientDataSO data)
         {
-            var label = new LocalizedString(requestLabel.TableReference, requestLabel.TableEntryReference);
-            label.Arguments = new object[] { data.DisplayName.GetLocalizedString() };
-            return label;
+            var text = new LocalizedString(template.TableReference, template.TableEntryReference);
+            text.Arguments = new object[] { data.DisplayName.GetLocalizedString() };
+            return text;
         }
 
-        private void Give(IngredientDataSO data)
+        private LocalizedString Give(IngredientDataSO data)
         {
-            if (data.Prefab == null)
-            {
-                Debug.LogWarning($"[NPCIngredientSupplier] '{data.ItemId}' ยังไม่ได้ตั้ง Prefab", data);
-                return;
-            }
+            if (!deliverTo.Storage.TryAdd(new InventoryItem(data, null))) return fullResponse;
 
-            if (!EquipmentManager.TryGetHeld(out ServingFoodContainer dish) || dish.IsFull) return;
-
-            // ยื่นให้จานตรง ๆ แทนปล่อยให้ trigger จับ จะได้นับได้ทันทีก่อนเมนูรอบถัดไป
-            GameObject item = Instantiate(data.Prefab);
-            if (!dish.TryReceive(item))
-            {
-                Destroy(item);
-            }
+            return WithName(storedResponse, data);
         }
     }
 }

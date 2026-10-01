@@ -10,9 +10,6 @@ namespace ProjectCook.Cooking
     public class ServingFoodContainer : FoodContainer
     {
         [Header("Content Placement")]
-        [Tooltip("จำนวนวัตถุดิบสูงสุดที่รับได้ นับรวมของที่ตกลงมาเองด้วย")]
-        [SerializeField] private int capacity = 3;
-
         [Tooltip("จุดศูนย์กลางผิวที่วางของ เว้นว่าง = เหนือจุดศูนย์กลางภาชนะเล็กน้อย")]
         [SerializeField] private Transform contentAnchor;
 
@@ -35,32 +32,6 @@ namespace ProjectCook.Cooking
         private readonly Dictionary<Rigidbody, FrozenState> frozenStates = new Dictionary<Rigidbody, FrozenState>();
         private readonly List<Rigidbody> placementBuffer = new List<Rigidbody>();
         private bool isFrozen;
-
-        /// <summary>รับของเพิ่มไม่ได้แล้ว</summary>
-        public bool IsFull => contents.Count >= capacity;
-
-        /// <summary>รับวัตถุดิบที่ระบบอื่นยื่นให้โดยตรง วางลงผิวทันทีไม่ต้องรอ trigger คืน false ถ้าเต็มหรือไม่ใช่วัตถุดิบ</summary>
-        public bool TryReceive(GameObject item)
-        {
-            if (item == null || IsFull) return false;
-
-            IngredientInstance ingredient = item.GetComponentInChildren<IngredientInstance>();
-            if (ingredient == null || ingredient.Bodies.Count == 0) return false;
-
-            ContainedIngredient entry = RegisterWhole(ingredient);
-            if (entry == null) return false;
-
-            placementBuffer.Clear();
-            placementBuffer.AddRange(ingredient.Bodies);
-            PlaceOnSurface(placementBuffer);
-
-            RecountBodiesInside(entry);
-            if (isFrozen)
-            {
-                FreezeBodiesInside(entry);
-            }
-            return true;
-        }
 
         /// <summary>เรียกจาก EquippableItem ตอนภาชนะถูกยกขึ้นถือและตอนวางลง</summary>
         public override void SetFrozen(bool frozen)

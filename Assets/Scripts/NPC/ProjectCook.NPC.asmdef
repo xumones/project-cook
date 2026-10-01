@@ -5,6 +5,7 @@
         "ProjectCook.Core",
         "ProjectCook.Dialogue",
         "ProjectCook.Items",
+        "ProjectCook.Inventory",
         "ProjectCook.Cooking",
         "Unity.Localization",
         "Unity.TextMeshPro"

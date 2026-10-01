@@ -8,16 +8,19 @@ using ProjectCook.Inventory;
 
 namespace ProjectCook.UI
 {
-    /// <summary>คุมการลากของในหน้าต่างกระเป๋า: เงาตามเมาส์ หมุนด้วยปุ่ม แล้วตัดสินตอนปล่อยว่าจะย้าย วางลงฉาก หรือยกเลิก</summary>
+    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงฉาก) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
     public class ItemDragController : MonoBehaviour
     {
         [Header("Input")]
         [Tooltip("Action หมุนของระหว่างลาก (R)")]
         [SerializeField] private InputActionReference rotateAction;
 
+        [Tooltip("Action ที่กดค้างแล้วคลิกของ เพื่อย้ายไปที่เก็บอีกฝั่งทันที (Shift)")]
+        [SerializeField] private InputActionReference quickMoveAction;
+
         [Header("Views")]
-        [Tooltip("แผงหน้าต่าง ปล่อยของนอกแผงนี้ = วางลงฉาก")]
-        [SerializeField] private RectTransform panel;
+        [Tooltip("พื้นที่ที่ปล่อยของแล้วไม่วางลงฉาก: แผงทุกแผงและแถบขอบจอที่ใช้สลับแผง")]
+        [SerializeField] private RectTransform[] panels;
 
         [Tooltip("เงาของที่ลากอยู่ (ปิดไว้) ต้องปิด Raycast Target ไม่งั้นบังตารางที่อยู่ข้างใต้")]
         [SerializeField] private UnityEngine.UI.Image ghost;
@@ -29,6 +32,9 @@ namespace ProjectCook.UI
         [SerializeField] private Color blockedColor = new Color(0.95f, 0.3f, 0.3f, 0.6f);
         [Tooltip("สีตอนเมาส์อยู่นอกหน้าต่าง ปล่อยแล้วของจะถูกวางลงฉาก")]
         [SerializeField] private Color dropColor = new Color(1f, 1f, 1f, 0.5f);
+
+        // ที่เก็บที่เปิดคู่กับผู้เล่นอยู่ null = เปิดแค่กระเป๋า
+        private ItemStorage openContainer;
 
         private ItemGridView source;
 
@@ -51,12 +57,28 @@ namespace ProjectCook.UI
         private void OnEnable()
         {
             rotateAction.EnableAction();
+            quickMoveAction.EnableAction();
         }
 
         private void OnDisable()
         {
             rotateAction.DisableAction();
+            quickMoveAction.DisableAction();
             Cancel();
+        }
+
+        public void SetOpenContainer(ItemStorage container)
+        {
+            openContainer = container;
+        }
+
+        /// <summary>ถ้ากดปุ่มย้ายด่วนค้างอยู่ ย้ายของไปที่ว่างแรกของที่เก็บอีกฝั่ง (ผู้เล่น ↔ ที่เก็บที่เปิดอยู่)</summary>
+        public void TryQuickMove(ItemStorage from, InventoryItem clicked)
+        {
+            if (openContainer == null || !quickMoveAction.IsPressed()) return;
+
+            ItemStorage player = PlayerInventory.Instance.Storage;
+            ItemStorage.TryTransfer(clicked, from, from == player ? openContainer : player);
         }
 
         public void BeginDrag(ItemGridView from, InventoryItem dragged, Vector2 grab, PointerEventData eventData)
@@ -65,7 +87,7 @@ namespace ProjectCook.UI
             item = dragged;
             rotated = dragged.IsRotated;
             grabOffset = grab;
-            dropOutside = () => PlayerItemTransfer.Instance.DropFromStorage(dragged);
+            dropOutside = () => PlayerItemTransfer.Instance.DropFromStorage(from.Storage, dragged);
             ShowGhost(source.SpanOf(item.Size), item.Definition.ItemId, eventData);
         }
 
@@ -95,7 +117,7 @@ namespace ProjectCook.UI
             Drag(eventData);
             if (target != null)
             {
-                if (canPlace) PlayerInventory.Instance.TryMove(item, target.Grid, targetCell, rotated);
+                if (canPlace) ItemStorage.TryMove(item, source.Storage, target.Storage, target.Grid, targetCell, rotated);
             }
             else if (IsOutsidePanel)
             {
@@ -134,7 +156,18 @@ namespace ProjectCook.UI
             Drag(eventData);
         }
 
-        private bool IsOutsidePanel => !RectTransformUtility.RectangleContainsScreenPoint(panel, pointer, eventCamera);
+        // พื้นที่ที่ปิดอยู่ (เช่น แผงตู้เย็นตอนเปิดแค่กระเป๋า แถบขอบที่ใช้ไม่ได้) ไม่นับ
+        private bool IsOutsidePanel
+        {
+            get
+            {
+                foreach (RectTransform panel in panels)
+                {
+                    if (panel.gameObject.activeInHierarchy && RectTransformUtility.RectangleContainsScreenPoint(panel, pointer, eventCamera)) return false;
+                }
+                return true;
+            }
+        }
 
         private void UpdateGhost()
         {

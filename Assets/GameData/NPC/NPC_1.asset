@@ -59,24 +59,6 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-  thanks:
-    variants:
-    - m_TableReference:
-        m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: npc.1.thanks.0
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
-    - m_TableReference:
-        m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-      m_TableEntryReference:
-        m_KeyId: 0
-        m_Key: npc.1.thanks.1
-      m_FallbackState: 0
-      m_WaitForCompletion: 0
-      m_LocalVariables: []
   received:
     variants:
     - m_TableReference:

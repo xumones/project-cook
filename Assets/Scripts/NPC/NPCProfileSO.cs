@@ -48,9 +48,6 @@ namespace ProjectCook.NPC
         [Tooltip("คุยเล่น ใช้โดย NPCChat")]
         [SerializeField] private LineSet chat;
 
-        [Tooltip("ขอบคุณ/ตอบรับหลังให้ของ ใช้โดย NPCIngredientSupplier")]
-        [SerializeField] private LineSet thanks;
-
         [Tooltip("ตอบรับเมื่อผู้เล่นส่งของให้เฉย ๆ โดยไม่มีเควส ใช้โดย NPCReceiver")]
         [SerializeField] private LineSet received;
 
@@ -59,7 +56,6 @@ namespace ProjectCook.NPC
         public Sprite CharacterSprite => characterSprite;
         public LineSet Greeting => greeting;
         public LineSet Chat => chat;
-        public LineSet Thanks => thanks;
         public LineSet Received => received;
     }
 }
