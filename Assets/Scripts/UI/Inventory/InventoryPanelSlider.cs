@@ -38,16 +38,6 @@ namespace ProjectCook.UI
         private float containerAmount;
         private float edgeTimer;
 
-        private void OnEnable()
-        {
-            pointAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            pointAction.DisableAction();
-        }
-
         private void Start()
         {
             Apply();

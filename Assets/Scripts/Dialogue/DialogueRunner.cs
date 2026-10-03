@@ -39,20 +39,6 @@ namespace ProjectCook.Dialogue
         private bool endAfterLine;
         private WaitForSeconds typingDelay;
 
-        private void OnEnable()
-        {
-            advanceAction.EnableAction();
-            navigateAction.EnableAction();
-            submitAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            advanceAction.DisableAction();
-            navigateAction.DisableAction();
-            submitAction.DisableAction();
-        }
-
         private void Update()
         {
             switch (phase)
@@ -74,7 +60,7 @@ namespace ProjectCook.Dialogue
             if (newSpeaker == null || phase != Phase.Idle) return;
 
             speaker = newSpeaker;
-            GameModeManager.Instance?.SetMode(GameMode.Dialogue);
+            GameModeManager.Instance?.Enter(this, GameMode.Dialogue);
 
             dialogueUI.ShowUI();
             dialogueUI.SetFont(speaker.Font);
@@ -100,7 +86,7 @@ namespace ProjectCook.Dialogue
             speaker = null;
 
             dialogueUI.HideUI();
-            GameModeManager.Instance?.SetMode(GameMode.Exploring);
+            GameModeManager.Instance?.Exit(this);
         }
 
         private void Say(LocalizedString line, bool endAfter)

@@ -24,16 +24,6 @@ namespace ProjectCook.Player
             }
         }
 
-        private void OnEnable()
-        {
-            interactAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            interactAction.DisableAction();
-        }
-
         private void Start()
         {
             if (interactAction == null || interactAction.action == null)

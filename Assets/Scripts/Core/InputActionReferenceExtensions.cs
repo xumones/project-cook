@@ -28,9 +28,5 @@ namespace ProjectCook.Core
             InputAction action = reference != null ? reference.action : null;
             return action != null && action.enabled ? action.ReadValue<T>() : default;
         }
-
-        public static void EnableAction(this InputActionReference reference) => reference?.action?.Enable();
-
-        public static void DisableAction(this InputActionReference reference) => reference?.action?.Disable();
     }
 }

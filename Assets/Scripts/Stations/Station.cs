@@ -21,7 +21,7 @@ namespace ProjectCook.Stations
         [Tooltip("สถานีที่ใช้เมาส์กดปุ่ม UI ให้ปลดล็อกเคอร์เซอร์ตลอดที่อยู่ในสถานี")]
         [SerializeField] protected bool unlockCursor;
 
-        [Tooltip("ต้องวางของในมือก่อนถึงจะเข้าได้ (ชั่วคราว รอระบบ Inventory)")]
+        [Tooltip("ต้องวางของในมือก่อนถึงจะเข้าได้")]
         [SerializeField] private bool requireEmptyHands;
 
         [Header("Station Modules")]
@@ -40,23 +40,13 @@ namespace ProjectCook.Stations
             CameraManager.SetLookInput(stationCamera, false);
         }
 
-        protected virtual void OnEnable()
-        {
-            exitAction.EnableAction();
-        }
-
-        protected virtual void OnDisable()
-        {
-            exitAction.DisableAction();
-        }
-
         // เงื่อนไขเดียวกับ Interact: เข้าไม่ได้ก็ไม่ต้องบอกว่าใช้ได้
         public virtual AimHint GetAimHint() => IsBlockedByHeldItem ? AimHint.None : AimHint.Use;
 
         /// <summary>สถานีที่มีเงื่อนไขก่อนเข้าใช้งานให้ Override แล้วเรียก EnterStation เอง</summary>
         public virtual void Interact()
         {
-            // ของในมือบังกล้องและใช้ในสถานีไม่ได้ (โหมด Station ปิดการหยิบอยู่แล้ว จึงกันแค่ตอนเข้าพอ)
+            // โหมด Station ปิดการหยิบอยู่แล้ว จึงกันแค่ตอนเข้าพอ
             if (IsBlockedByHeldItem)
             {
                 Debug.Log($"[{GetType().Name}] เข้า {name} ไม่ได้: ต้องวางของในมือก่อน");
@@ -85,13 +75,13 @@ namespace ProjectCook.Stations
             {
                 CameraManager.Instance.SetStationCamera(stationCamera);
             }
-            GameModeManager.Instance.SetMode(GameMode.Station);
+            GameModeManager.Instance.Enter(this, GameMode.Station);
             if (unlockCursor) CursorManager.RequestUnlock(this);
 
             modules.EnterAll();
         }
 
-        /// <summary>สั่งปิดโมดูลทั้งหมด แล้วคืนโหมดเกมให้กล้องกลับมุมมองผู้เล่น</summary>
+        /// <summary>สั่งปิดโมดูลทั้งหมด แล้วออกจากโหมดสถานีให้กล้องกลับมุมมองผู้เล่น</summary>
         public virtual void ExitStation()
         {
             if (!isActive) return;
@@ -101,12 +91,13 @@ namespace ProjectCook.Stations
             modules.ExitAll();
 
             if (unlockCursor) CursorManager.ReleaseUnlock(this);
-            GameModeManager.Instance.SetMode(GameMode.Exploring);
+            GameModeManager.Instance.Exit(this);
         }
 
         protected virtual void Update()
         {
-            if (isActive && exitAction.WasPressedThisFrame())
+            // หน้าต่างที่เปิดทับ (กระเป๋า) ได้ Esc ก่อน
+            if (isActive && GameModeManager.InputAllowedIn(GameMode.Station) && exitAction.WasPressedThisFrame())
             {
                 OnExitPressed();
             }

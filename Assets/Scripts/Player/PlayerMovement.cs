@@ -48,17 +48,6 @@ namespace ProjectCook.Player
         /// <summary>กำลังกดวิ่งอยู่ ให้ระบบอื่น (เช่น HeadBob) อ่านแทนเดาจากความเร็ว</summary>
         public bool IsSprinting { get; private set; }
 
-        /// <summary>เปิด/ปิด การควบคุมการเคลื่อนที่ของผู้เล่น</summary>
-        public void SetControlActive(bool active)
-        {
-            isControlActive = active;
-            if (!active)
-            {
-                isCrouching = false;
-                StopMotion();
-            }
-        }
-
         /// <summary>ขอหยุดเดินชั่วคราว (เช่น ระหว่างบิดลูกบิด) ต้องเรียก ReleaseMovementLock คู่กันเสมอ</summary>
         public void RequestMovementLock(Object requester)
         {
@@ -94,9 +83,6 @@ namespace ProjectCook.Player
 
         private void Start()
         {
-            // สร้าง CursorManager และบังคับสถานะเริ่มต้น (ล็อกเคอร์เซอร์กลางจอสำหรับมุมมอง FPS)
-            CursorManager.EnsureInitialized();
-
             gameMode = GameModeManager.Instance;
             if (gameMode != null)
             {
@@ -112,23 +98,14 @@ namespace ProjectCook.Player
             }
         }
 
+        // เดินได้เฉพาะตอนเดินสำรวจ เข้าโหมดอื่นแล้วหยุดทันทีและลุกขึ้นยืน
         private void HandleModeChanged(GameMode mode)
         {
-            SetControlActive(mode == GameMode.Exploring);
-        }
+            isControlActive = mode == GameMode.Exploring;
+            if (isControlActive) return;
 
-        private void OnEnable()
-        {
-            moveAction.EnableAction();
-            sprintAction.EnableAction();
-            crouchAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            moveAction.DisableAction();
-            sprintAction.DisableAction();
-            crouchAction.DisableAction();
+            isCrouching = false;
+            StopMotion();
         }
 
         private void Update()

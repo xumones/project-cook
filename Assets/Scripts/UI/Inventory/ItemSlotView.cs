@@ -13,13 +13,13 @@ namespace ProjectCook.UI
         Bag
     }
 
-    /// <summary>ช่องของที่ติดตัว (มือ กระเป๋าที่สวม): แสดงรหัสของในช่อง และลากออกนอกหน้าต่างเพื่อวางลงฉาก</summary>
+    /// <summary>ช่องของที่ติดตัว (มือ กระเป๋าที่สวม): แสดงชื่อของในช่อง ลากออกนอกหน้าต่างเพื่อวางลงฉาก และช่องกระเป๋ารับกระเป๋าที่ลากมาเพื่อสวม</summary>
     // ต้องมี Graphic ที่ Raycast Target ไม่งั้นเริ่มลากจากช่องนี้ไม่ได้
     public class ItemSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField] private EquipSlot slot;
 
-        [Tooltip("ข้อความแสดงรหัสของในช่อง")]
+        [Tooltip("ข้อความแสดงชื่อของในช่อง")]
         [SerializeField] private TMP_Text itemLabel;
 
         private ItemDragController dragController;
@@ -33,30 +33,37 @@ namespace ProjectCook.UI
 
         public void Refresh()
         {
-            itemLabel.text = CurrentItemId() ?? string.Empty;
+            itemLabel.text = CurrentItemName() ?? string.Empty;
         }
+
+        /// <summary>รับของที่ลากมาจากที่เก็บได้ไหม ตอนนี้มีแค่ช่องกระเป๋าที่รับกระเป๋าไปสวม</summary>
+        public bool CanTake(ItemStorage from, InventoryItem item) =>
+            slot == EquipSlot.Bag && PlayerItemTransfer.CanWearFromStorage(from, item);
+
+        public bool TryTake(ItemStorage from, InventoryItem item) =>
+            slot == EquipSlot.Bag && PlayerItemTransfer.Instance.TryWearFromStorage(from, item);
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
 
-            string id = CurrentItemId();
-            if (id == null) return;
+            string itemName = CurrentItemName();
+            if (itemName == null) return;
 
-            dragController.BeginDropOnlyDrag(id, ((RectTransform)transform).rect.size, Drop, eventData);
+            dragController.BeginDropOnlyDrag(itemName, ((RectTransform)transform).rect.size, Drop, eventData);
         }
 
         public void OnDrag(PointerEventData eventData) => dragController.Drag(eventData);
 
         public void OnEndDrag(PointerEventData eventData) => dragController.EndDrag(eventData);
 
-        /// <summary>รหัสของในช่อง null เมื่อช่องว่าง</summary>
-        private string CurrentItemId()
+        /// <summary>ชื่อของในช่อง null เมื่อช่องว่าง</summary>
+        private string CurrentItemName()
         {
             if (slot == EquipSlot.Bag)
             {
                 BagDefinitionSO bag = PlayerInventory.Instance != null ? PlayerInventory.Instance.WornBag : null;
-                return bag != null ? bag.ItemId : null;
+                return bag != null ? bag.GetDisplayName() : null;
             }
 
             EquippableItem held = EquipmentManager.Instance != null ? EquipmentManager.Instance.GetHeld(Hand) : null;
@@ -64,7 +71,7 @@ namespace ProjectCook.UI
 
             // ของที่ยังไม่ได้ตั้ง Definition แสดงชื่อ GameObject แทน จะได้ยังเห็นว่าถืออะไรอยู่
             ItemDefinitionSO definition = held.GetComponent<Item>().Definition;
-            return definition != null ? definition.ItemId : held.name;
+            return definition != null ? definition.GetDisplayName() : held.name;
         }
 
         private void Drop()

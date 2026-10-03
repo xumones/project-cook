@@ -15,6 +15,7 @@ MonoBehaviour:
   questId: steak
   objective: {fileID: 11400000, guid: b36e53f791fbb6c4f87f14737219855b, type: 2}
   prerequisites: []
+  reward: 50
   lockedText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990

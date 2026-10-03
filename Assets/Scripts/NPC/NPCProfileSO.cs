@@ -38,7 +38,7 @@ namespace ProjectCook.NPC
         [SerializeField] private LocalizedString displayName;
         [SerializeField] private TMP_FontAsset font;
 
-        [Tooltip("ภาพตัวละคร ตั้งค่าไว้ก่อน ยังไม่ถูกใช้งาน")]
+        [Tooltip("ภาพตัวละคร แสดงในหน้าต่างคุย เว้นว่าง = ซ่อนรูป")]
         [SerializeField] private Sprite characterSprite;
 
         [Header("Lines")]

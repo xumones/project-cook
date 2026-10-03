@@ -159,7 +159,7 @@ namespace ProjectCook.Cooking
         {
             if (foodContainer == null || voices == null) return;
 
-            // 1. Throttled State Check: เช็กจำนวนวัตถุดิบและ Physics Raycast ทุกๆ checkInterval (10 Hz)
+            // 1. Throttled State Check: เช็กจำนวนวัตถุดิบและ Physics Raycast ทุกๆ checkInterval
             checkTimer += Time.deltaTime;
             if (checkTimer >= checkInterval)
             {
@@ -304,7 +304,7 @@ namespace ProjectCook.Cooking
 
                 if (voice.TargetVolume <= 0.001f && source.volume <= 0.001f && source.isPlaying)
                 {
-                    // ไม่ล้าง clip ที่นี่ (เดิมเซ็ต null) เพราะถ้าสถานะกะพริบ (เช่นคีบวัตถุดิบขึ้น-ลง) จะเกิดการโหลด/ปล่อยคลิปรัวๆ โดยไม่จำเป็น
+                    // ไม่ล้าง clip ที่นี่ เพราะถ้าสถานะกะพริบ (เช่นคีบวัตถุดิบขึ้น-ลง) จะเกิดการโหลด/ปล่อยคลิปรัวๆ โดยไม่จำเป็น
                     source.Pause();
                 }
             }

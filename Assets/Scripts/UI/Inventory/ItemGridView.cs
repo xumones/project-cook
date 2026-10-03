@@ -15,7 +15,7 @@ namespace ProjectCook.UI
         [Tooltip("ช่องพื้นหลังหนึ่งช่อง (ปิดไว้) ถูกคัดลอกตามจำนวนช่องของตาราง")]
         [SerializeField] private RectTransform cellTemplate;
 
-        [Tooltip("กล่องของหนึ่งชิ้น (ปิดไว้) ต้องมีข้อความ TMP เป็นลูกไว้แสดงรหัสไอเทม")]
+        [Tooltip("กล่องของหนึ่งชิ้น (ปิดไว้) ต้องมีข้อความ TMP เป็นลูกไว้แสดงชื่อไอเทม")]
         [SerializeField] private RectTransform itemTemplate;
 
         [Header("Layout")]
@@ -68,13 +68,21 @@ namespace ProjectCook.UI
                 RectTransform view = GetItemView(i);
                 view.gameObject.SetActive(true);
                 Place(view, items[i].Position, items[i].Size);
-                view.GetComponentInChildren<TMP_Text>().text = items[i].Definition.ItemId;
+                view.GetComponentInChildren<TMP_Text>().text = LabelOf(items[i]);
             }
 
             for (int i = items.Count; i < itemViews.Count; i++)
             {
                 itemViews[i].gameObject.SetActive(false);
             }
+        }
+
+        // ของที่ต้องจ่ายเงินถึงจะเอาออกได้ (ของในร้าน) แสดงราคาใต้ชื่อ
+        private string LabelOf(InventoryItem item)
+        {
+            string name = item.Definition.GetDisplayName();
+            int price = Storage.PriceOf(item);
+            return price > 0 ? $"{name}\n${price}" : name;
         }
 
         // กล่องของถูกสร้างหลังช่องพื้นหลังเสมอ จึงวาดทับช่องโดยไม่ต้องจัดลำดับเอง

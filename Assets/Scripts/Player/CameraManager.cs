@@ -5,7 +5,7 @@ using ProjectCook.Core;
 
 namespace ProjectCook.Player
 {
-    /// <summary>ปรับกล้องตามโหมดของเกม สถานีต้องเรียก SetStationCamera ก่อนเปลี่ยนโหมด</summary>
+    /// <summary>ปรับกล้องตามโหมดของเกม สถานีต้องเรียก SetStationCamera ก่อนเข้าโหมด</summary>
     public class CameraManager : SceneSingleton<CameraManager>
     {
         [Header("Default Player Camera")]
@@ -27,13 +27,12 @@ namespace ProjectCook.Player
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance คืน null ไปแล้ว แต่ยังต้องถอน event ให้ครบ
         private GameModeManager gameMode;
 
-        private GameMode currentMode = GameMode.Exploring;
-
         // ของในมือยังลอยอยู่ที่ Hand Anchor ระหว่างอยู่สถานี จึงซ่อนทั้ง layer HeldItem จากกล้องหลักแทน
         private int heldItemLayer = -1;
 
-        // ปฏิกิริยาของกล้องต่อแต่ละโหมด เพิ่มโหมดใหม่ = เพิ่ม handler ที่นี่ ไม่ต้องแก้ HandleModeChanged
+        // ปฏิกิริยาของกล้องต่อแต่ละโหมด ทำงานตลอดที่โหมดนั้นอยู่ชั้นใดชั้นหนึ่ง เพิ่มโหมดใหม่ = เพิ่ม handler ที่นี่
         private readonly Dictionary<GameMode, ICameraModeHandler> modeHandlers = new Dictionary<GameMode, ICameraModeHandler>();
+        private readonly HashSet<GameMode> activeModes = new HashSet<GameMode>();
 
         // ผู้ขอล็อกการหันกล้อง และตัวรับ mouse look ที่ถูกปิดไว้ (เพื่อเปิดคืนตัวเดิมตอนปลด)
         private readonly HashSet<Object> lookLocks = new HashSet<Object>();
@@ -42,11 +41,13 @@ namespace ProjectCook.Player
         private CinemachineCamera stationCamera;
         private StationCameraHandler stationHandler;
 
+        private bool InStation => activeModes.Contains(GameMode.Station);
+
         /// <summary>ตั้งกล้องสถานี เรียกก่อนเข้าโหมด Station หรือระหว่างอยู่ในสถานีเพื่อสลับมุมกล้อง</summary>
         public void SetStationCamera(CinemachineCamera camera)
         {
             stationCamera = camera;
-            if (currentMode == GameMode.Station) stationHandler.SwitchTo(camera);
+            if (InStation) stationHandler.SwitchTo(camera);
         }
 
         /// <summary>เปิด/ปิดการรับ mouse look ของกล้องตัวนั้น กล้องที่ไม่ได้ใช้อยู่ต้องปิดไม่งั้นมันหมุนตามเมาส์อยู่เงียบ ๆ</summary>
@@ -67,7 +68,6 @@ namespace ProjectCook.Player
                 () => stationCamera, SetHeldItemVisible);
             modeHandlers[GameMode.Station] = stationHandler;
             modeHandlers[GameMode.Dialogue] = new DialogueCameraHandler(playerCamera, dialoguePanRange, dialogueTiltMin, dialogueTiltMax);
-            modeHandlers[GameMode.Inventory] = new InventoryCameraHandler(playerCamera);
         }
 
         private void Start()
@@ -115,15 +115,14 @@ namespace ProjectCook.Player
         {
             if (requester == null || !lookLocks.Remove(requester) || lookLocks.Count > 0) return;
 
-            if (lockedLookInput != null) lockedLookInput.enabled = true;
-            lockedLookInput = null;
+            UnlockLook();
         }
 
         private void ApplyLookLock()
         {
             if (lockedLookInput != null) return;
 
-            CinemachineCamera live = currentMode == GameMode.Station ? stationCamera : playerCamera;
+            CinemachineCamera live = InStation ? stationCamera : playerCamera;
             var input = live != null ? live.GetComponent<CinemachineInputAxisController>() : null;
             if (input == null || !input.enabled) return;
 
@@ -131,23 +130,30 @@ namespace ProjectCook.Player
             lockedLookInput = input;
         }
 
+        private void UnlockLook()
+        {
+            if (lockedLookInput != null) lockedLookInput.enabled = true;
+            lockedLookInput = null;
+        }
+
         private void HandleModeChanged(GameMode mode)
         {
-            GameMode previous = currentMode;
-            currentMode = mode;
+            // ปลดล็อกก่อนให้ handler ตั้งสถานะ mouse look ใหม่ แล้วค่อยล็อกกล้องตัวที่ใช้อยู่ตอนนี้อีกที
+            UnlockLook();
 
-            // handler ตั้งสถานะ mouse look ใหม่เองทั้งหมด จึงทิ้งตัวที่ล็อกไว้ ไม่งั้นตอนปลดจะไปเปิดกล้องเก่าคืน
-            lockedLookInput = null;
-
-            if (modeHandlers.TryGetValue(previous, out ICameraModeHandler previousHandler))
+            // ออกก่อนเข้า กล้องจะได้ไม่ถูกสองโหมดแย่งกันตั้งค่า
+            foreach (KeyValuePair<GameMode, ICameraModeHandler> pair in modeHandlers)
             {
-                previousHandler.OnExit();
+                if (!gameMode.Contains(pair.Key) && activeModes.Remove(pair.Key)) pair.Value.OnExit();
+            }
+            foreach (KeyValuePair<GameMode, ICameraModeHandler> pair in modeHandlers)
+            {
+                if (gameMode.Contains(pair.Key) && activeModes.Add(pair.Key)) pair.Value.OnEnter();
             }
 
-            if (modeHandlers.TryGetValue(mode, out ICameraModeHandler nextHandler))
-            {
-                nextHandler.OnEnter();
-            }
+            // เมาส์ใช้จัดของ จึงหยุดหันกล้องตัวที่ใช้อยู่ตลอดที่เปิดหน้าต่างกระเป๋า ไม่ว่าจะเปิดทับโหมดไหน
+            if (gameMode.Contains(GameMode.Inventory)) lookLocks.Add(this);
+            else lookLocks.Remove(this);
 
             if (lookLocks.Count > 0) ApplyLookLock();
         }

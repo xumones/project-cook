@@ -28,16 +28,8 @@ namespace ProjectCook.Player
             if (movement == null) movement = GetComponent<PlayerMovement>();
         }
 
-        private void OnEnable()
-        {
-            holdAction.EnableAction();
-            // ไม่ Disable คืนตอนปิด เพราะกล้องใช้ Look ตัวเดียวกันหมุนมุมมองอยู่
-            deltaAction.EnableAction();
-        }
-
         private void OnDisable()
         {
-            holdAction.DisableAction();
             EndTurn();
         }
 

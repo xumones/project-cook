@@ -239,10 +239,6 @@ MonoBehaviour:
     m_Key: ui.label.deliver
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546618
-    m_Key: ui.label.request
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224772546619
     m_Key: ui.label.farewell
     m_Metadata:
@@ -283,12 +279,8 @@ MonoBehaviour:
     m_Key: npc.3.received.0
     m_Metadata:
       m_Items: []
-  - m_Id: 3662186790014976
-    m_Key: ui.response.storage_full
-    m_Metadata:
-      m_Items: []
-  - m_Id: 3667749989011456
-    m_Key: ui.response.stored
+  - m_Id: 3979519798562816
+    m_Key: ui.label.shop
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -24,6 +24,7 @@ MonoBehaviour:
     m_LocalVariables: []
   prefab: {fileID: 6794420639462549953, guid: 681c716774917294bb6e7d3d3ddbd2f1, type: 3}
   gridSize: {x: 2, y: 1}
+  price: 50
   compartments:
   - size: {x: 1, y: 1}
     position: {x: 0, y: 0}

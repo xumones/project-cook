@@ -28,9 +28,10 @@ namespace ProjectCook.Core
             if (grade > GetQuestGrade(questId)) Set(GradeKey(questId), (int)grade);
         }
 
-        public bool IsIngredientUnlocked(string ingredientId) => Get(IngredientKey(ingredientId)) > 0;
+        /// <summary>ไอเทมที่ปลดล็อกแล้วถึงจะมีขายในร้าน</summary>
+        public bool IsItemUnlocked(string itemId) => Get(ItemKey(itemId)) > 0;
 
-        public void UnlockIngredient(string ingredientId) => Set(IngredientKey(ingredientId), 1);
+        public void UnlockItem(string itemId) => Set(ItemKey(itemId), 1);
 
         private int Get(string key) => values.TryGetValue(key, out int value) ? value : 0;
 
@@ -42,6 +43,6 @@ namespace ProjectCook.Core
 
         private static string QuestKey(string questId) => $"quest_{questId}";
         private static string GradeKey(string questId) => $"quest_{questId}_grade";
-        private static string IngredientKey(string ingredientId) => $"ingredient_{ingredientId}";
+        private static string ItemKey(string itemId) => $"item_{itemId}";
     }
 }

@@ -5,7 +5,7 @@ using ProjectCook.Cooking;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>เควสที่ขอวัตถุดิบหลัก: ปลดล็อกให้ขอได้ตอนรับ และให้เกรดจานที่ส่งตามความสุกของวัตถุดิบเหล่านั้น</summary>
+    /// <summary>เควสที่ขอวัตถุดิบหลัก: ปลดล็อกให้ร้านขายตอนรับ และให้เกรดจานที่ส่งตามความสุกของวัตถุดิบเหล่านั้น</summary>
     [CreateAssetMenu(fileName = "Objective_", menuName = "ProjectCook/NPC/Ingredient Objective")]
     public class IngredientObjectiveSO : QuestObjectiveSO
     {
@@ -21,7 +21,7 @@ namespace ProjectCook.NPC
             {
                 if (requirements[i].ingredient != null)
                 {
-                    progress.UnlockIngredient(requirements[i].ingredient.ItemId);
+                    progress.UnlockItem(requirements[i].ingredient.ItemId);
                 }
             }
         }

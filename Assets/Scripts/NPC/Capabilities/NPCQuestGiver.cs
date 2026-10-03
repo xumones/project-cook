@@ -4,6 +4,7 @@ using UnityEngine.Localization;
 using ProjectCook.Core;
 using ProjectCook.Cooking;
 using ProjectCook.Dialogue;
+using ProjectCook.Inventory;
 
 namespace ProjectCook.NPC.Capabilities
 {
@@ -93,6 +94,10 @@ namespace ProjectCook.NPC.Capabilities
             }
 
             best.Objective.Consume(dish);
+            if (progress.GetQuestState(best.QuestId) == QuestState.Active && PlayerWallet.Instance != null)
+            {
+                PlayerWallet.Instance.Earn(best.Reward);
+            }
             progress.SetQuestState(best.QuestId, QuestState.Completed);
             progress.SetQuestGrade(best.QuestId, bestScore.Grade);
             response = best.ResultText(bestScore.Grade);

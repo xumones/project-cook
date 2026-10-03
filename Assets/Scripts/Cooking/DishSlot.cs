@@ -12,12 +12,9 @@ namespace ProjectCook.Cooking
 
         private readonly Collider[] overlapBuffer = new Collider[16];
 
-        /// <summary>จานที่วางอยู่บนจุดนี้ตอนนี้ null ถ้าว่าง</summary>
-        public ServingFoodContainer CurrentDish => FindDishOnSlot();
-
         public void OnStationEnter()
         {
-            if (CurrentDish != null) return;
+            if (FindDishOnSlot() != null) return;
             if (!EquipmentManager.TryGetHeld(out ServingFoodContainer dish)) return;
 
             EquippableItem equippable = dish.GetComponentInParent<EquippableItem>();
@@ -32,7 +29,7 @@ namespace ProjectCook.Cooking
         {
         }
 
-        // เช็คจากฟิสิกส์ทุกครั้งแทนการจำไว้ ผู้เล่นจะหยิบออกหรือกด G วางคืนเองก็ยังได้ผลถูกเสมอ
+        // เช็คจากฟิสิกส์ทุกครั้งแทนการจำไว้ ผู้เล่นจะหยิบจานออกหรือวางคืนเองก็ยังได้ผลถูกเสมอ
         private ServingFoodContainer FindDishOnSlot()
         {
             int count = Physics.OverlapSphereNonAlloc(transform.position, occupiedRadius, overlapBuffer, ~0, QueryTriggerInteraction.Collide);

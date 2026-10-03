@@ -83,20 +83,8 @@ namespace ProjectCook.Cooking
         // จุดศูนย์ถ่วงที่ตรึงไว้ระหว่างหมุน อาหารจึงหมุนอยู่กับที่ ไม่โดนแรงลากดึงสู้
         private Vector3 rotatePivot;
 
-        private void OnEnable()
-        {
-            gripAction.EnableAction();
-            distanceAction.EnableAction();
-            rotateHoldAction.EnableAction();
-            rotateDeltaAction.EnableAction();
-        }
-
         private void OnDisable()
         {
-            gripAction.DisableAction();
-            distanceAction.DisableAction();
-            rotateHoldAction.DisableAction();
-            rotateDeltaAction.DisableAction();
             ReleaseIngredient();
         }
 
@@ -114,6 +102,13 @@ namespace ProjectCook.Cooking
         private void Update()
         {
             if (!isActive) return;
+
+            // เปิดหน้าต่างทับสถานีอยู่ คลิกเป็นของหน้าต่าง ปล่อยของที่คีบไว้
+            if (!GameModeManager.InputAllowedIn(GameMode.Station))
+            {
+                ReleaseIngredient();
+                return;
+            }
 
             if (currentGrippedIngredient == null)
             {

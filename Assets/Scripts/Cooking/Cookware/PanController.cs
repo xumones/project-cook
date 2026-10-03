@@ -79,16 +79,6 @@ namespace ProjectCook.Cooking
             SetControllerActive(false);
         }
 
-        private void OnEnable()
-        {
-            moveAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            moveAction.DisableAction();
-        }
-
         private void SetControllerActive(bool active)
         {
             isControllerActive = active;
@@ -115,7 +105,8 @@ namespace ProjectCook.Cooking
         {
             if (isControllerActive)
             {
-                Vector2 input = ReadMoveInput();
+                // เปิดหน้าต่างทับสถานีอยู่ ปล่อยให้กระทะคืนมุมเหมือนปล่อยปุ่ม
+                Vector2 input = GameModeManager.InputAllowedIn(GameMode.Station) ? moveAction.ReadValue<Vector2>() : Vector2.zero;
 
                 if (input.sqrMagnitude > 0.001f)
                 {
@@ -226,7 +217,5 @@ namespace ProjectCook.Cooking
             panRigidbody.MovePosition(worldPos);
             panRigidbody.MoveRotation(worldRot);
         }
-
-        private Vector2 ReadMoveInput() => moveAction.ReadValue<Vector2>();
     }
 }

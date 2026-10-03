@@ -8,7 +8,7 @@ using ProjectCook.Inventory;
 
 namespace ProjectCook.UI
 {
-    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงฉาก) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
+    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงช่องติดตัว วางลงฉาก) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
     public class ItemDragController : MonoBehaviour
     {
         [Header("Input")]
@@ -49,21 +49,16 @@ namespace ProjectCook.UI
         private Vector2 grabOffset;
 
         private ItemGridView target;
+
+        // ช่องของติดตัวที่เมาส์ชี้อยู่ ใช้เมื่อไม่ได้ชี้ตาราง
+        private ItemSlotView slotTarget;
         private Vector2Int targetCell;
         private bool canPlace;
         private Vector2 pointer;
         private Camera eventCamera;
 
-        private void OnEnable()
-        {
-            rotateAction.EnableAction();
-            quickMoveAction.EnableAction();
-        }
-
         private void OnDisable()
         {
-            rotateAction.DisableAction();
-            quickMoveAction.DisableAction();
             Cancel();
         }
 
@@ -88,7 +83,7 @@ namespace ProjectCook.UI
             rotated = dragged.IsRotated;
             grabOffset = grab;
             dropOutside = () => PlayerItemTransfer.Instance.DropFromStorage(from.Storage, dragged);
-            ShowGhost(source.SpanOf(item.Size), item.Definition.ItemId, eventData);
+            ShowGhost(source.SpanOf(item.Size), item.Definition.GetDisplayName(), eventData);
         }
 
         /// <summary>ลากของที่วางลงตารางไม่ได้ ปล่อยนอกหน้าต่างแล้วเรียก drop</summary>
@@ -107,6 +102,7 @@ namespace ProjectCook.UI
             eventCamera = eventData.pressEventCamera;
             GameObject hovered = eventData.pointerCurrentRaycast.gameObject;
             target = item != null && hovered != null ? hovered.GetComponentInParent<ItemGridView>() : null;
+            slotTarget = item != null && hovered != null && target == null ? hovered.GetComponentInParent<ItemSlotView>() : null;
             UpdateGhost();
         }
 
@@ -118,6 +114,10 @@ namespace ProjectCook.UI
             if (target != null)
             {
                 if (canPlace) ItemStorage.TryMove(item, source.Storage, target.Storage, target.Grid, targetCell, rotated);
+            }
+            else if (slotTarget != null)
+            {
+                slotTarget.TryTake(source.Storage, item);
             }
             else if (IsOutsidePanel)
             {
@@ -131,6 +131,7 @@ namespace ProjectCook.UI
             item = null;
             source = null;
             target = null;
+            slotTarget = null;
             dropOutside = null;
             if (ghost != null) ghost.gameObject.SetActive(false);
         }
@@ -176,7 +177,7 @@ namespace ProjectCook.UI
             if (target != null && target.TryGetCell(pointer, eventCamera, out Vector2Int pointerCell))
             {
                 targetCell = pointerCell - Vector2Int.FloorToInt(grabOffset / target.Step);
-                canPlace = target.Grid.CanPlace(item, targetCell, rotated);
+                canPlace = target.Grid.CanPlace(item, targetCell, rotated) && ItemStorage.CanMove(item, source.Storage, target.Storage);
                 ghostRect.position = target.CellToWorld(targetCell);
                 ghost.color = canPlace ? placeableColor : blockedColor;
                 return;
@@ -186,7 +187,16 @@ namespace ProjectCook.UI
             canPlace = false;
             RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)ghostRect.parent, pointer, eventCamera, out Vector2 local);
             ghostRect.localPosition = local + new Vector2(-grabOffset.x, grabOffset.y);
-            ghost.color = IsOutsidePanel ? dropColor : blockedColor;
+
+            if (slotTarget != null)
+            {
+                ghost.color = slotTarget.CanTake(source.Storage, item) ? placeableColor : blockedColor;
+                return;
+            }
+
+            // ของที่ไม่ได้มาจากตาราง (item เป็น null) ไม่มีกฎที่เก็บมาบังคับ
+            bool canDrop = IsOutsidePanel && (item == null || source.Storage.CanRelease(item));
+            ghost.color = canDrop ? dropColor : blockedColor;
         }
     }
 }

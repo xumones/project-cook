@@ -25,12 +25,13 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4224755769344
     m_Localized: I haven't eaten in so long... If it's not too much trouble, could
-      you whip something up for me? I've got a bit of bacon left.
+      you whip something up for me? I've still got a bit of bacon. I'll sell it to
+      you cheap, and pay you back for the trouble.
     m_Metadata:
       m_Items: []
   - m_Id: 4224764157952
-    m_Localized: "Crispy or burnt, it doesn't really matter\u2014and don't forget
-      to bring \"a plate\" so I can share some with you."
+    m_Localized: "Crispy or burnt, it doesn't really matter. If you're out of bacon,
+      I've still got some for you it free so take \nit as much as you want."
     m_Metadata:
       m_Items: []
   - m_Id: 4224764157953
@@ -44,12 +45,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546561
-    m_Localized: Maybe you missing something?.
+    m_Localized: Maybe you're missing something?
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546562
     m_Localized: Last one ,A bit of meat, an egg, and some bacon... that doesn't
-      sound like too much for you right now, does it?
+      sound like too much for you right now, does it? I'll pay you well for this
+      last one.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546563
@@ -74,7 +76,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546567
-    m_Localized: Yes please, just egg on a plate that should be enough.
+    m_Localized: Yes please, just egg on a plate that should be enough. I'll make
+      it worth your while.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546568
@@ -100,7 +103,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4224772546572
     m_Localized: I've eaten raw fish all week. Cook one for me, would you? Bring
-      it on a plate.
+      it on a plate, and I'll pay you for your trouble.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546573
@@ -123,7 +126,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4224772546577
     m_Localized: Sometimes I just want to try something a little strange... maybe
-      I'll stick to just vegetables this time.
+      I'll stick to just vegetables this time. I'll still pay you for it, don't worry.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546578
@@ -148,12 +151,12 @@ MonoBehaviour:
   - m_Id: 4224772546582
     m_Localized: Of course you can... So, how about we try making this pretty useless
       piece of food look a little better? I can't quite remember what it's called,
-      though...flying? fleeing? 'Frying', was it?.
+      though...flying? fleeing? 'Frying', was it?. I'll pay you for it, of course.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546583
-    m_Localized: "A shiny, oil-glazed red sausage with a nice crispy skin\u2014and
-      of course, the most important part... a plate."
+    m_Localized: A shiny, oil-glazed red sausage with a nice crispy skin. Someone?
+      should have one for sale, I think.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546584
@@ -172,7 +175,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4224772546587
     m_Localized: After eating stuff with zero nutritional value, guess it's time
-      for something actually good... Let's go with cooked steak this time.
+      for something actually good... Let's go with cooked steak this time. I'll pay
+      you properly for this one.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546588
@@ -217,7 +221,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546598
-    m_Localized: chat
+    m_Localized: Chat
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546599
@@ -243,7 +247,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546606
-    m_Localized: talk
+    m_Localized: Talk
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546607
@@ -283,10 +287,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4224772546617
     m_Localized: Here's your order.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546618
-    m_Localized: '{0}, please.'
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546619
@@ -329,15 +329,10 @@ MonoBehaviour:
     m_Localized: Huh. You didn't have to.
     m_Metadata:
       m_Items: []
-  - m_Id: 3662186790014976
-    m_Localized: Your fridge is full. Make some room first.
+  - m_Id: 3979519798562816
+    m_Localized: Shop
     m_Metadata:
       m_Items: []
-  - m_Id: 3667749989011456
-    m_Localized: '{0} is in your fridge now.'
-    m_Metadata:
-      m_Items:
-      - rid: 283005983412453505
   references:
     version: 2
     RefIds:
@@ -347,4 +342,3 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 4224772546591
-        - id: 3667749989011456

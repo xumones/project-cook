@@ -16,6 +16,7 @@ MonoBehaviour:
   objective: {fileID: 11400000, guid: 14210e3710acc7b48b6199b63498adc7, type: 2}
   prerequisites:
   - {fileID: 11400000, guid: 2d66065f52e9d6a49beeb4d4034eed49, type: 2}
+  reward: 15
   lockedText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990

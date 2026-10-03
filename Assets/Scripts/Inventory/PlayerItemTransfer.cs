@@ -32,6 +32,22 @@ namespace ProjectCook.Inventory
             return true;
         }
 
+        /// <summary>กระเป๋าในที่เก็บชิ้นนี้สวมได้ไหม (ยังไม่ได้สวมใบไหน และที่เก็บยอมให้เอาออก เช่น ร้านต้องมีเงินพอ)</summary>
+        public static bool CanWearFromStorage(ItemStorage storage, InventoryItem item) =>
+            item.Definition is BagDefinitionSO
+            && PlayerInventory.Instance != null && PlayerInventory.Instance.WornBag == null
+            && storage.CanRelease(item);
+
+        /// <summary>สวมกระเป๋าที่อยู่ในที่เก็บ กระเป๋าในที่เก็บข้างในว่างเสมอ จึงสร้างช่องใหม่ตามแบบ</summary>
+        public bool TryWearFromStorage(ItemStorage storage, InventoryItem item)
+        {
+            if (!CanWearFromStorage(storage, item) || !storage.Remove(item)) return false;
+
+            var bag = (BagDefinitionSO)item.Definition;
+            PlayerInventory.Instance.WearBag(bag, ItemGrid.FromLayouts(bag.Compartments));
+            return true;
+        }
+
         /// <summary>ถอดกระเป๋าที่สวมอยู่วางลงฉาก ของข้างในติดไปกับกระเป๋า</summary>
         public bool DropBag()
         {

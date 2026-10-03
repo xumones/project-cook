@@ -17,6 +17,10 @@ namespace ProjectCook.NPC
         [Tooltip("เควสที่ต้องจบก่อนถึงจะรับอันนี้ได้ จะเป็นของ NPC ไหนก็ได้ เว้นว่าง = รับได้ทันที")]
         [SerializeField] private List<QuestSO> prerequisites = new List<QuestSO>();
 
+        [Tooltip("ค่าตอบแทนที่ได้ตอนส่งสำเร็จครั้งแรก ส่งซ้ำเพื่อแก้เกรดไม่ได้เงินเพิ่ม")]
+        [Min(0)]
+        [SerializeField] private int reward;
+
         [Header("Lines")]
         [Tooltip("ตอนยังรับไม่ได้เพราะเควสก่อนหน้ายังไม่จบ")]
         [SerializeField] private LocalizedString lockedText;
@@ -32,6 +36,7 @@ namespace ProjectCook.NPC
 
         public string QuestId => questId;
         public QuestObjectiveSO Objective => objective;
+        public int Reward => reward;
         public LocalizedString LockedText => lockedText;
         public LocalizedString OfferText => offerText;
         public LocalizedString ReminderText => reminderText;

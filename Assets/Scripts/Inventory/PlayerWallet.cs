@@ -1,0 +1,43 @@
+using System;
+using UnityEngine;
+using ProjectCook.Core;
+
+namespace ProjectCook.Inventory
+{
+    /// <summary>เงินของผู้เล่น</summary>
+    public class PlayerWallet : SceneSingleton<PlayerWallet>
+    {
+        [Min(0)]
+        [SerializeField] private int startingMoney = 100;
+
+        public int Money { get; private set; }
+
+        public event Action Changed;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Money = startingMoney;
+        }
+
+        public bool CanAfford(int amount) => Money >= amount;
+
+        public void Earn(int amount)
+        {
+            if (amount <= 0) return;
+
+            Money += amount;
+            Changed?.Invoke();
+        }
+
+        /// <summary>หักเงิน ถ้าเงินไม่พอคืน false และไม่หัก</summary>
+        public bool TrySpend(int amount)
+        {
+            if (!CanAfford(amount)) return false;
+
+            Money -= amount;
+            Changed?.Invoke();
+            return true;
+        }
+    }
+}

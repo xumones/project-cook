@@ -34,14 +34,8 @@ namespace ProjectCook.Stations
             initialVertical = orbitalFollow.VerticalAxis.Value;
         }
 
-        private void OnEnable()
-        {
-            orbitHoldAction.EnableAction();
-        }
-
         private void OnDisable()
         {
-            orbitHoldAction.DisableAction();
             CursorManager.ReleaseHide(this);
         }
 
@@ -64,7 +58,7 @@ namespace ProjectCook.Stations
         {
             if (!isActive) return;
 
-            SetOrbiting(orbitHoldAction.IsPressed());
+            SetOrbiting(GameModeManager.InputAllowedIn(GameMode.Station) && orbitHoldAction.IsPressed());
         }
 
         /// <summary>เปิดแกนหมุนกล้องพร้อมซ่อนเคอร์เซอร์ระหว่างลาก ให้รู้สึกเหมือนหมุนด้วยมือ</summary>

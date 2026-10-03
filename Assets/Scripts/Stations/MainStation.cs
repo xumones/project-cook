@@ -14,18 +14,6 @@ namespace ProjectCook.Stations
 
         private SubStation current;
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            selectAction.EnableAction();
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            selectAction.DisableAction();
-        }
-
         public override void ExitStation()
         {
             if (!isActive) return;
@@ -38,7 +26,10 @@ namespace ProjectCook.Stations
         {
             base.Update();
 
-            if (isActive && current == null && selectAction.WasPressedThisFrame()) TryEnterAimedSubStation();
+            if (isActive && current == null && GameModeManager.InputAllowedIn(GameMode.Station) && selectAction.WasPressedThisFrame())
+            {
+                TryEnterAimedSubStation();
+            }
         }
 
         protected override void OnExitPressed()

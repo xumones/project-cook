@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ProjectCook.Core;
@@ -6,7 +7,7 @@ using ProjectCook.Items;
 
 namespace ProjectCook.UI
 {
-    /// <summary>หน้าต่างกระเป๋า (แผงซ้าย) และที่เก็บที่เปิดคู่กัน (แผงขวา): เปิด/ปิด สลับโหมดเกม ปลดล็อกเมาส์ และวาดใหม่เมื่อของเปลี่ยน</summary>
+    /// <summary>หน้าต่างกระเป๋า (แผงซ้าย) และที่เก็บที่เปิดคู่กัน (แผงขวา): เปิด/ปิด เข้าโหมดกระเป๋า ปลดล็อกเมาส์ และวาดใหม่เมื่อของเปลี่ยน</summary>
     public class InventoryScreen : MonoBehaviour
     {
         [Header("Input")]
@@ -24,6 +25,7 @@ namespace ProjectCook.UI
         [SerializeField] private StorageView bodyView;
         [SerializeField] private StorageView bagView;
         [SerializeField] private StorageView containerView;
+        [SerializeField] private TMP_Text containerTitle;
         [SerializeField] private ItemDragController dragController;
 
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance อาจคืน null ก่อน OnDestroy
@@ -49,7 +51,7 @@ namespace ProjectCook.UI
                 equipment.HandsChanged += RefreshIfOpen;
             }
 
-            StorageContainer.OpenRequested += OpenWith;
+            ItemStorage.OpenRequested += Open;
 
             // สร้างตารางไว้ตั้งแต่ต้น ตอนเปิดครั้งแรกเลย์เอาต์จะได้เข้าที่แล้ว
             Refresh();
@@ -59,27 +61,16 @@ namespace ProjectCook.UI
         {
             if (inventory != null) inventory.Storage.Changed -= RefreshIfOpen;
             if (equipment != null) equipment.HandsChanged -= RefreshIfOpen;
-            StorageContainer.OpenRequested -= OpenWith;
+            ItemStorage.OpenRequested -= Open;
             SetContainer(null);
-        }
-
-        private void OnEnable()
-        {
-            toggleAction.EnableAction();
-            closeAction.EnableAction();
-        }
-
-        private void OnDisable()
-        {
-            toggleAction.DisableAction();
-            closeAction.DisableAction();
         }
 
         private void Update()
         {
             if (!isOpen)
             {
-                if (GameModeManager.GameplayInputAllowed && toggleAction.WasPressedThisFrame()) Open(null);
+                // เปิดได้ทั้งตอนเดินและในสถานี ปิดแล้วกลับไปโหมดเดิม
+                if (GameModeManager.WorldInputAllowed && toggleAction.WasPressedThisFrame()) Open(null, null);
             }
             else if (toggleAction.WasPressedThisFrame() || closeAction.WasPressedThisFrame())
             {
@@ -87,13 +78,12 @@ namespace ProjectCook.UI
             }
         }
 
-        private void OpenWith(StorageContainer opened) => Open(opened.Storage);
-
-        private void Open(ItemStorage with)
+        private void Open(ItemStorage with, string title)
         {
             SetContainer(with);
+            containerTitle.text = title;
             isOpen = true;
-            GameModeManager.Instance.SetMode(GameMode.Inventory);
+            GameModeManager.Instance.Enter(this, GameMode.Inventory);
             CursorManager.RequestUnlock(this);
             Refresh();
             slider.Open(with != null);
@@ -114,7 +104,7 @@ namespace ProjectCook.UI
             isOpen = false;
             slider.Close();
             CursorManager.ReleaseUnlock(this);
-            GameModeManager.Instance.SetMode(GameMode.Exploring);
+            GameModeManager.Instance.Exit(this);
         }
 
         private void RefreshIfOpen()

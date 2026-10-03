@@ -20,15 +20,9 @@ namespace ProjectCook.Core
         private bool restorePositionOnShow;
         private bool wasVisible;
 
-        /// <summary>เรียกให้แน่ใจว่า CursorManager ถูกสร้างและบังคับใช้สถานะเริ่มต้นแล้ว</summary>
-        public static void EnsureInitialized()
-        {
-            CursorManager manager = Instance;
-            if (manager != null)
-            {
-                manager.ApplyState();
-            }
-        }
+        // สร้างตั้งแต่เริ่มเกม เคอร์เซอร์จะได้ล็อกกลางจอทันทีโดยไม่ต้องรอให้ระบบอื่นเรียกใช้ก่อน
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void CreateOnStart() => _ = Instance;
 
         /// <summary>ขอปลดล็อกเคอร์เซอร์เพื่อใช้ตัวชี้เมาส์ (เช่น ตอนเปิดหน้าต่างบทสนทนาหรือเมนู)</summary>
         public static void RequestUnlock(Object requester)
