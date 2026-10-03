@@ -18,8 +18,6 @@ namespace ProjectCook.Player
         [SerializeField] private float crouchHeight = 1.0f;
         [Tooltip("ความเร็วการย่อ/ลุก (สูง = เร็ว)")]
         [SerializeField] private float crouchTransitionSpeed = 10f;
-        [Tooltip("ชั้นที่ถือว่าเป็นเพดานตอนเช็คก่อนลุก")]
-        [SerializeField] private LayerMask ceilingMask = ~0;
 
         [Header("References")]
         [SerializeField] private Transform orientation;
@@ -171,9 +169,11 @@ namespace ProjectCook.Player
             float radius = controller.radius;
             Vector3 bottom = transform.position + Vector3.up * (controller.height - radius);
             Vector3 top = transform.position + Vector3.up * (standHeight - radius);
+            // เพดาน = สิ่งที่ชนกับตัวผู้เล่นจริงตาม Collision Matrix ของหลวมเหนือหัวจึงไม่กันการลุก
+            int ceilingMask = GameLayers.CollisionMaskOf(gameObject.layer);
             int count = Physics.OverlapCapsuleNonAlloc(bottom, top, radius - 0.01f, ceilingHits, ceilingMask, QueryTriggerInteraction.Ignore);
 
-            // ผู้เล่นอยู่ layer เดียวกับฉาก จึงกรอง collider ตัวเองออกแทนการใช้ mask
+            // layer ผู้เล่นชนกับตัวเองด้วย จึงกรอง collider ตัวเองออก
             for (int i = 0; i < count; i++)
             {
                 if (ceilingHits[i] != controller) return false;

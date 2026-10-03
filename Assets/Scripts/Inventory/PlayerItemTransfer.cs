@@ -9,6 +9,13 @@ namespace ProjectCook.Inventory
     // ของที่เก็บเป็นข้อมูล ของในฉากและในมือเป็นวัตถุจริง ข้ามกันได้ผ่าน CaptureStates กับ Spawn ในไฟล์นี้เท่านั้น
     public class PlayerItemTransfer : SceneSingleton<PlayerItemTransfer>, IPickUpHandler
     {
+        [Header("Placing")]
+        [Tooltip("ระยะวางของสูงสุดจากตาผู้เล่น (เมตร)")]
+        [SerializeField] private float placeDistance = 1f;
+
+        [Tooltip("ความเร็วสูงสุด (เมตร/วินาที) ที่ฟิสิกส์ใช้ดันของที่วางแล้วทับสิ่งอื่นให้แยกออก ยิ่งต่ำยิ่งค่อยๆ ไหลออกแทนการดีดกระเด็น")]
+        [SerializeField] private float maxDepenetrationVelocity = 2f;
+
         public bool TryPickUp(Collider target)
         {
             StorableItem storable = target.GetComponentInParent<StorableItem>();
@@ -25,7 +32,7 @@ namespace ProjectCook.Inventory
         /// <summary>เอาของออกจากที่เก็บใดก็ได้ (ตัวผู้เล่น ตู้เย็น) วางลงฉากตรงจุดที่เล็ง</summary>
         public bool DropFromStorage(ItemStorage storage, InventoryItem item)
         {
-            if (!TryGetPlacePose(out Vector3 position, out Quaternion rotation) || !HasPrefab(item.Definition)) return false;
+            if (!HasPrefab(item.Definition) || !TryGetPlacePose(item.Definition.Prefab, out Vector3 position, out Quaternion rotation)) return false;
             if (!storage.Remove(item)) return false;
 
             Spawn(item.Definition, item.States, position, rotation);
@@ -53,7 +60,7 @@ namespace ProjectCook.Inventory
         {
             PlayerInventory inventory = PlayerInventory.Instance;
             BagDefinitionSO bag = inventory.WornBag;
-            if (bag == null || !TryGetPlacePose(out Vector3 position, out Quaternion rotation) || !HasPrefab(bag)) return false;
+            if (bag == null || !HasPrefab(bag) || !TryGetPlacePose(bag.Prefab, out Vector3 position, out Quaternion rotation)) return false;
 
             List<ItemGrid> contents = inventory.TakeOffBag();
             Spawn(bag, null, position, rotation).GetComponent<BagItem>().PutGrids(contents);
@@ -64,9 +71,11 @@ namespace ProjectCook.Inventory
         {
             EquipmentManager equipment = EquipmentManager.Instance;
             EquippableItem held = equipment != null ? equipment.GetHeld(side) : null;
-            if (held == null || !TryGetPlacePose(out Vector3 position, out Quaternion rotation)) return false;
+            if (held == null || !TryGetPlacePose(held.gameObject, out Vector3 position, out Quaternion rotation)) return false;
+            if (!equipment.Release(held, position, rotation)) return false;
 
-            return equipment.Release(held, position, rotation);
+            LimitDepenetration(held.gameObject);
+            return true;
         }
 
         private bool TryStore(StorableItem storable)
@@ -112,17 +121,19 @@ namespace ProjectCook.Inventory
         }
 
         /// <summary>สร้างวัตถุจากข้อมูล แล้วคืนสถานะที่จดไว้ (ถ้ามี)</summary>
-        private static GameObject Spawn(ItemDefinitionSO definition, IReadOnlyList<ComponentState> states, Vector3 position, Quaternion rotation)
+        private GameObject Spawn(ItemDefinitionSO definition, IReadOnlyList<ComponentState> states, Vector3 position, Quaternion rotation)
         {
             GameObject spawned = Instantiate(definition.Prefab, position, rotation);
             if (states != null && spawned.TryGetComponent(out StorableItem storable))
             {
                 storable.RestoreStates(states);
             }
+            LimitDepenetration(spawned);
             return spawned;
         }
 
-        private static bool TryGetPlacePose(out Vector3 position, out Quaternion rotation)
+        /// <summary>หาท่าวางตรงที่เล็งที่ของรูปทรงเดียวกับ shape ลงได้โดยไม่ทับอะไร false = ไม่มีที่ว่าง</summary>
+        private bool TryGetPlacePose(GameObject shape, out Vector3 position, out Quaternion rotation)
         {
             if (PlayerAiming.Instance == null)
             {
@@ -131,8 +142,19 @@ namespace ProjectCook.Inventory
                 return false;
             }
 
-            PlayerAiming.Instance.GetPlacePose(out position, out rotation);
-            return true;
+            if (ItemPlacement.TryFindPose(shape, PlayerAiming.Instance.AimRay, placeDistance, out position, out rotation)) return true;
+
+            Debug.Log($"[PlayerItemTransfer] ไม่มีที่ว่างพอวาง {shape.name} ตรงที่เล็ง");
+            return false;
+        }
+
+        // กันพลาดชั้นสอง: ถ้ายังทับอะไรอยู่นิดหน่อย ให้ค่อยๆ ไหลออกแทนการดีดกระเด็น
+        private void LimitDepenetration(GameObject placed)
+        {
+            foreach (Rigidbody body in placed.GetComponentsInChildren<Rigidbody>())
+            {
+                body.maxDepenetrationVelocity = maxDepenetrationVelocity;
+            }
         }
 
         private static bool HasPrefab(ItemDefinitionSO definition)

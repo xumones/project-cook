@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1954482364067019654}
   - component: {fileID: 1389743963280132941}
   - component: {fileID: 1931348185275001061}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: bag-basic-pf
   m_TagString: Untagged
   m_Icon: {fileID: 0}

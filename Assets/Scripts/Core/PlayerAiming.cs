@@ -14,12 +14,8 @@ namespace ProjectCook.Core
         [Tooltip("ระยะเอื้อมสูงสุดของผู้เล่น (เมตร) ระบบที่ต้องการระยะสั้นกว่านี้ให้เช็ค Hit.distance เอง")]
         [SerializeField] private float maxDistance = 2.5f;
 
-        [Tooltip("Layer ที่เล็งโดนได้ ต้องกว้างพอให้หาพื้นผิวสำหรับวางของได้ด้วย เว้นว่าง = ทุกอย่างที่เป็นของแข็ง")]
+        [Tooltip("Layer ที่เล็งโดนได้ เว้นว่าง = ทุกอย่างที่เป็นของแข็ง")]
         [SerializeField] private LayerMask aimMask;
-
-        [Header("Placing")]
-        [Tooltip("ระยะวางของสูงสุด (เมตร) ต้องไม่เกินระยะเอื้อม")]
-        [SerializeField] private float placeDistance = 1f;
 
         /// <summary>เป้าที่เล็งอยู่ตอนนี้ null = ไม่ได้เล็งโดนอะไร</summary>
         public Collider Target { get; private set; }
@@ -38,21 +34,19 @@ namespace ProjectCook.Core
         {
             base.Awake();
 
-            // กว้างไว้ก่อน เพราะเส้นนี้ถูกใช้หาพื้นผิวสำหรับวางของด้วย ไม่ใช่แค่หาของที่เล็งอยู่
-            // ระบบปลายทางกรองซ้ำด้วย component เองอยู่แล้ว Layer จึงไม่ต้องแคบ
+            // กว้างไว้ให้ผนังบังของที่อยู่ข้างหลังได้ ระบบปลายทางกรองซ้ำด้วย component เองอยู่แล้ว
             if (aimMask.value == 0)
             {
                 aimMask = Physics.DefaultRaycastLayers;
             }
 
-            // ของที่ถืออยู่ห่างกล้องแค่ครึ่งเมตร ถ้าไม่ตัดออกมันจะบังทุกอย่างที่อยู่ข้างหลัง
-            int heldItem = LayerMask.NameToLayer(GameLayers.HeldItem);
-            queryMask = heldItem >= 0 ? aimMask.value & ~(1 << heldItem) : aimMask.value;
+            // ตัวผู้เล่นกับของในมืออยู่ติดกล้อง ถ้าไม่ตัดออกจะบังทุกอย่างที่อยู่ข้างหลัง
+            queryMask = aimMask.value & ~GameLayers.PlayerAndHeldMask;
 
             if (queryMask == 0)
             {
                 Debug.LogError($"[PlayerAiming] Aim Mask ไม่เหลือ Layer ให้เล็งเลย " +
-                               $"(ตั้งไว้เป็น '{GameLayers.HeldItem}' ซึ่งเป็น Layer ชั่วคราวตอนถืออยู่ ไม่ใช่ Layer ที่ของวางอยู่ในฉาก) " +
+                               $"('{GameLayers.Player}' กับ '{GameLayers.HeldItem}' ถูกตัดออกเสมอ) " +
                                $"ปล่อยว่างไว้เพื่อใช้ค่าเริ่มต้นจะปลอดภัยกว่า", this);
             }
         }
@@ -74,26 +68,6 @@ namespace ProjectCook.Core
             Target = Physics.Raycast(AimRay, out hit, maxDistance, queryMask, QueryTriggerInteraction.Ignore)
                 ? hit.collider
                 : null;
-        }
-
-        /// <summary>จุดและมุมสำหรับวางของลงฉาก: ตรงจุดที่เล็งถ้าอยู่ในระยะวาง ไม่งั้นลอยไว้ข้างหน้าให้ฟิสิกส์จัดการต่อ</summary>
-        public void GetPlacePose(out Vector3 position, out Quaternion rotation)
-        {
-            // คงมุมหันตามที่ผู้เล่นหันอยู่ ไม่ใช่ปล่อยให้ FromToRotation สุ่มมุมมาให้
-            Vector3 facing = AimRay.direction;
-            facing.y = 0f;
-            rotation = facing.sqrMagnitude > 0.0001f
-                ? Quaternion.LookRotation(facing.normalized, Vector3.up)
-                : Quaternion.identity;
-
-            // ระยะวางสั้นกว่าระยะเอื้อม จึงต้องกรองเป้าที่ไกลเกินออกเอง
-            if (Target != null && hit.distance <= placeDistance)
-            {
-                position = hit.point;
-                return;
-            }
-
-            position = AimRay.GetPoint(placeDistance * 0.6f);
         }
 
         private Transform GetAimOrigin()

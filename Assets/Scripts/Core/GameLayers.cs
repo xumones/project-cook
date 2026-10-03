@@ -3,10 +3,36 @@ using UnityEngine;
 namespace ProjectCook.Core
 {
     /// <summary>ชื่อ Layer ที่โค้ดอ้างถึง รวมไว้ที่เดียวกันพิมพ์ผิดแล้วยังหาต้นตอเจอ</summary>
+    // Layer แบ่งตามบทบาททางฟิสิกส์ ไม่ใช่ชนิดของ (ชนิดดูจาก component) การชนตั้งใน Collision Matrix:
+    //   ฉากตายตัว    Default, terrain           ชนผู้เล่น
+    //   ของใช้ตายตัว  Interactable               เล็งได้ ชนผู้เล่น (สถานี ตู้เย็น NPC)
+    //   ของหลวม      Item, SolidFood, NonSolidFood  เล็งได้ ไม่ชนผู้เล่น (ของที่หยิบ/วางได้)
+    //   ผู้เล่น       Player
+    //   ของในมือ     HeldItem                   ไม่ชนผู้เล่น ระบบย้ายเข้าออกเอง ห้ามตั้งใน prefab
     public static class GameLayers
     {
-        /// <summary>Layer ชั่วคราวของไอเทมระหว่างอยู่ในมือ ถูกตัดออกจากการเล็งและไม่ชนกับผู้เล่น (ตั้งใน Collision Matrix)</summary>
         public const string HeldItem = "HeldItem";
+        public const string Player = "Player";
+
+        /// <summary>ตัวผู้เล่นกับของในมือ การเล็งและการหาที่วางต้องมองข้ามเสมอ</summary>
+        public static int PlayerAndHeldMask => MaskOf(Player) | MaskOf(HeldItem);
+
+        /// <summary>ทุก layer ที่ชนกับ layer นี้ตาม Collision Matrix</summary>
+        public static int CollisionMaskOf(int layer)
+        {
+            int mask = 0;
+            for (int other = 0; other < 32; other++)
+            {
+                if (!Physics.GetIgnoreLayerCollision(layer, other)) mask |= 1 << other;
+            }
+            return mask;
+        }
+
+        private static int MaskOf(string layerName)
+        {
+            int layer = LayerMask.NameToLayer(layerName);
+            return layer >= 0 ? 1 << layer : 0;
+        }
     }
 
     /// <summary>สถานะ "ถูกถืออยู่" ของวัตถุ: ย้ายทั้ง hierarchy ไป Layer HeldItem และปิดฟิสิกส์ แล้วคืนได้ครบด้วย Restore</summary>
