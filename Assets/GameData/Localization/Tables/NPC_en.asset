@@ -19,10 +19,6 @@ MonoBehaviour:
     m_Items:
     - rid: 283005983412453505
   m_TableData:
-  - m_Id: 4224512499712
-    m_Localized: ...
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224755769344
     m_Localized: I haven't eaten in so long... If it's not too much trouble, could
       you whip something up for me? I've still got a bit of bacon. I'll sell it to
@@ -44,19 +40,13 @@ MonoBehaviour:
       truly.
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546561
-    m_Localized: Maybe you're missing something?
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224772546562
-    m_Localized: Last one ,A bit of meat, an egg, and some bacon... that doesn't
-      sound like too much for you right now, does it? I'll pay you well for this
-      last one.
+    m_Localized: A bit of meat, an egg, and some bacon... that doesn't sound like
+      too much for you right now, does it? I'll pay you well for this one.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546563
-    m_Localized: So this is really the end, Just meat, egg and bacon basic things
-      isn't it?
+    m_Localized: Just meat, egg and bacon. The basics, right?
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546564
@@ -69,10 +59,6 @@ MonoBehaviour:
     m_Localized: Thank you so much for staying with me all the way to this point.
       Thank you for making it through life this far, for being right here. You're
       seriously, damn incredible.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546566
-    m_Localized: Let's see that bacon first.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546567
@@ -97,8 +83,9 @@ MonoBehaviour:
       the first place.
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546571
-    m_Localized: Maybe you're missing someperson?
+  - m_Id: 4711672880111621
+    m_Localized: Something's missing... meat, egg, bacon. Take your time. We've come
+      this far.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546572
@@ -120,8 +107,8 @@ MonoBehaviour:
     m_Localized: I really wish I could go to the beach too.
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546576
-    m_Localized: Fish first. I've been waiting all week.
+  - m_Id: 4711672880111620
+    m_Localized: Not quite lettuce. Even something this simple can take a few tries.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546577
@@ -142,10 +129,9 @@ MonoBehaviour:
     m_Localized: Lettuce and company. Fine by me.
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546581
-    m_Localized: Do you know how to cook? You're wondering about that too, huh? Well...
-      yeah, it's you we're talking about, so one day you "will" figure it out anyway
-      huh?.
+  - m_Id: 4711672880111619
+    m_Localized: This isn't the fish I've been dreaming of... but nobody's judging
+      you here. Try again.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546582
@@ -169,8 +155,8 @@ MonoBehaviour:
       Thx bud.
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546586
-    m_Localized: ...
+  - m_Id: 4711672880111618
+    m_Localized: That's not the steak. No rush. Just bring me the real thing.
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546587
@@ -317,22 +303,103 @@ MonoBehaviour:
     m_Localized: Steak
     m_Metadata:
       m_Items: []
-  - m_Id: 63091481059328
-    m_Localized: Oh... for me? Thank you.
+  - m_Id: 4711672880111617
+    m_Localized: What is this? Not a sausage, that's for sure. Try again, bud.
     m_Metadata:
       m_Items: []
-  - m_Id: 63091673997312
-    m_Localized: I'll take it. Thanks.
+  - m_Id: 4711672880111616
+    m_Localized: That's... not an egg. Or if it is, it's had a very hard day. One
+      more try?
     m_Metadata:
       m_Items: []
-  - m_Id: 63091673997313
-    m_Localized: Huh. You didn't have to.
+  - m_Id: 4711672699756544
+    m_Localized: Hm... this isn't quite it, is it? It's alright. Try again when you're
+      ready. I'm not going anywhere.
     m_Metadata:
       m_Items: []
   - m_Id: 3979519798562816
     m_Localized: Shop
     m_Metadata:
       m_Items: []
+  - m_Id: 4716444446171136
+    m_Localized: Could you make me something with {0:list:{}|, | and }? I'll pay
+      you back, like always.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444655886336
+    m_Localized: Just {0:list:{}|, | and }. Whenever you're ready.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444655886337
+    m_Localized: Hm... that's not quite {0:list:{}|, | and }, is it? It's alright.
+      Try again.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080640
+    m_Localized: Thank you. It tastes almost like I remembered.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080641
+    m_Localized: This... this is exactly how it should taste. Thank you.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080642
+    m_Localized: Hungry again. {0:list:{}|, | and }. You know the drill. I'll pay.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080643
+    m_Localized: '{0:list:{}|, | and }. Not that hard, right?'
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080644
+    m_Localized: That's not {0:list:{}|, | and }. Try again, bud.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080645
+    m_Localized: Good enough. Thx bud.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080646
+    m_Localized: Okay, that was actually great. Don't let it go to your head.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080647
+    m_Localized: Today I'd like {0:list:{}|, | and }. No hurry. Nobody's judging
+      you here.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080648
+    m_Localized: '{0:list:{}|, | and }, whenever you''re ready.'
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080649
+    m_Localized: Something's missing... it should have {0:list:{}|, | and }. Take
+      your time.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080650
+    m_Localized: Thank you. Small things like this keep the days going.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
+  - m_Id: 4716444660080651
+    m_Localized: Perfect. Some days really do turn out right.
+    m_Metadata:
+      m_Items:
+      - rid: 283005983412453505
   references:
     version: 2
     RefIds:
@@ -342,3 +409,18 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 4224772546591
+        - id: 4716444446171136
+        - id: 4716444655886336
+        - id: 4716444655886337
+        - id: 4716444660080640
+        - id: 4716444660080641
+        - id: 4716444660080642
+        - id: 4716444660080643
+        - id: 4716444660080644
+        - id: 4716444660080645
+        - id: 4716444660080646
+        - id: 4716444660080647
+        - id: 4716444660080648
+        - id: 4716444660080649
+        - id: 4716444660080650
+        - id: 4716444660080651

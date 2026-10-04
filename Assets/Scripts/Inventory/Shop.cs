@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using ProjectCook.Core;
 using ProjectCook.Items;
 
 namespace ProjectCook.Inventory
@@ -10,20 +8,11 @@ namespace ProjectCook.Inventory
     [DisallowMultipleComponent]
     public class Shop : MonoBehaviour, IStorageRules
     {
-        [Serializable]
-        private struct StockEntry
-        {
-            public ItemDefinitionSO item;
-
-            [Tooltip("ขายหลังปลดล็อกแล้วเท่านั้น (เช่น วัตถุดิบที่ได้จากการรับเควส)")]
-            public bool requiresUnlock;
-        }
-
         [Tooltip("ชื่อบนหัวหน้าต่าง")]
         [SerializeField] private string title = "SHOP";
 
         [Tooltip("ของที่ขาย เรียงตามลำดับที่วางในร้าน ราคามาจากข้อมูลไอเทม")]
-        [SerializeField] private List<StockEntry> stock = new List<StockEntry>();
+        [SerializeField] private List<ItemDefinitionSO> stock = new List<ItemDefinitionSO>();
 
         [SerializeField] private CompartmentLayout[] compartments =
         {
@@ -35,14 +24,10 @@ namespace ProjectCook.Inventory
         private void Awake()
         {
             storage = new ItemStorage(ItemGrid.FromLayouts(compartments), this);
+            Restock();
         }
 
-        /// <summary>เติมของตามที่ปลดล็อกล่าสุดแล้วเปิดหน้าต่างร้าน</summary>
-        public void Open()
-        {
-            Restock();
-            storage.RequestOpen(title);
-        }
+        public void Open() => storage.RequestOpen(title);
 
         public bool CanRelease(InventoryItem item) =>
             PlayerWallet.Instance != null && PlayerWallet.Instance.CanAfford(PriceOf(item));
@@ -62,11 +47,9 @@ namespace ProjectCook.Inventory
         {
             storage.Clear();
 
-            GameProgress progress = GameProgress.Instance;
-            foreach (StockEntry entry in stock)
+            foreach (ItemDefinitionSO item in stock)
             {
-                ItemDefinitionSO item = entry.item;
-                if (item == null || (entry.requiresUnlock && !progress.IsItemUnlocked(item.ItemId))) continue;
+                if (item == null) continue;
 
                 if (!storage.TryAdd(new InventoryItem(item, null)))
                 {

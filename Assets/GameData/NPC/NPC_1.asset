@@ -59,13 +59,53 @@ MonoBehaviour:
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-  received:
+  orderOffer:
     variants:
     - m_TableReference:
         m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: npc.1.received.0
+        m_Key: npc.1.order.offer.0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  orderReminder:
+    variants:
+    - m_TableReference:
+        m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: npc.1.order.reminder.0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  orderFail:
+    variants:
+    - m_TableReference:
+        m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: npc.1.order.fail.0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  orderPass:
+    variants:
+    - m_TableReference:
+        m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: npc.1.order.pass.0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+  orderExcellent:
+    variants:
+    - m_TableReference:
+        m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: npc.1.order.excellent.0
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []

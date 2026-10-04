@@ -8,7 +8,7 @@ namespace ProjectCook.Inventory
     public class PlayerWallet : SceneSingleton<PlayerWallet>
     {
         [Min(0)]
-        [SerializeField] private int startingMoney = 100;
+        [SerializeField] private int startingMoney = 25;
 
         public int Money { get; private set; }
 

@@ -5,103 +5,79 @@ using ProjectCook.Core;
 using ProjectCook.Cooking;
 using ProjectCook.Dialogue;
 using ProjectCook.Inventory;
+using ProjectCook.Items;
 
 namespace ProjectCook.NPC.Capabilities
 {
-    /// <summary>ไล่เควสของ NPC ทีละตัวให้รับ และรับช่วงการส่งของจาก NPCReceiver ไปเป็นการส่งเควสที่ตรงที่สุด</summary>
-    [RequireComponent(typeof(NPCReceiver))]
-    public class NPCQuestGiver : NPCCapability, IDeliveryHandler
+    /// <summary>ให้เควสทีละอันต่อ NPC: เควสเนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มเควสจากวัตถุดิบ และรับจานที่ผู้เล่นถือมาส่ง</summary>
+    public class NPCQuestGiver : NPCCapability
     {
-        [Tooltip("เควสตามลำดับ ตัวแรกที่ยังไม่เสร็จคือเควสที่เสนอให้รับ")]
-        [SerializeField] private List<QuestSO> quests = new List<QuestSO>();
+        [Tooltip("เควสเนื้อเรื่องตามลำดับ ทำครั้งเดียว ตัวแรกที่ยังไม่จบคือเควสที่เสนอ")]
+        [SerializeField] private List<QuestSO> storyQuests = new List<QuestSO>();
+
+        [Tooltip("วัตถุดิบที่ NPC นี้สั่งได้ในเควสสุ่มหลังเนื้อเรื่องจบ ว่าง = ไม่มีเควสสุ่ม")]
+        [SerializeField] private List<IngredientDataSO> orderIngredients = new List<IngredientDataSO>();
 
         [Header("Labels")]
         [SerializeField] private LocalizedString askLabel;
         [SerializeField] private LocalizedString reminderLabel;
+        [SerializeField] private LocalizedString deliverLabel;
 
-        private QuestSO CurrentQuest
-        {
-            get
-            {
-                GameProgress progress = GameProgress.Instance;
-                for (int i = 0; i < quests.Count; i++)
-                {
-                    if (quests[i] != null && progress.GetQuestState(quests[i].QuestId) != QuestState.Completed)
-                    {
-                        return quests[i];
-                    }
-                }
-                return null;
-            }
-        }
+        // เควสที่ให้อยู่ตอนนี้ null = ว่าง ขอเควสใหม่ได้
+        private IQuestRequest active;
 
         public override void BuildOptions(List<DialogueOption> options)
         {
-            QuestSO quest = CurrentQuest;
-            if (quest == null) return;
-
-            switch (GameProgress.Instance.GetQuestState(quest.QuestId))
+            if (active == null)
             {
-                case QuestState.NotStarted when quest.PrerequisitesMet:
-                    options.Add(new DialogueOption { Label = askLabel, Response = quest.OfferText, OnSelected = () => Accept(quest) });
-                    break;
+                IQuestRequest next = NextRequest();
+                if (next != null)
+                {
+                    options.Add(new DialogueOption { Label = askLabel, Response = next.OfferText, OnSelected = () => active = next });
+                }
+                return;
+            }
 
-                case QuestState.NotStarted:
-                    options.Add(new DialogueOption { Label = askLabel, Response = quest.LockedText });
-                    break;
+            options.Add(new DialogueOption { Label = reminderLabel, Response = active.ReminderText });
 
-                case QuestState.Active:
-                    options.Add(new DialogueOption { Label = reminderLabel, Response = quest.ReminderText });
-                    break;
+            if (EquipmentManager.TryGetHeld(out ServingFoodContainer dish) && dish.HasContents)
+            {
+                // คำตอบขึ้นกับผลประเมิน จึงตั้งตอนกดเลือก
+                var option = new DialogueOption { Label = deliverLabel };
+                option.OnSelected = () => option.Response = Deliver(dish);
+                options.Add(option);
             }
         }
 
-        private void Accept(QuestSO quest)
-        {
-            GameProgress.Instance.SetQuestState(quest.QuestId, QuestState.Active);
-            quest.Objective.OnAccepted();
-        }
-
-        // ส่งได้ทั้งเควสที่ทำอยู่และเควสที่จบแล้วแต่ยังไม่ S จานเป็นตัวบอกว่าส่งเควสไหน (คะแนนสูงสุด เท่ากันเอาที่ทำอยู่)
-        public bool TryHandleDelivery(ServingFoodContainer dish, out LocalizedString response)
+        private IQuestRequest NextRequest()
         {
             GameProgress progress = GameProgress.Instance;
-            QuestSO best = null;
-            DishScore bestScore = default;
-
-            for (int i = 0; i < quests.Count; i++)
+            foreach (QuestSO quest in storyQuests)
             {
-                QuestSO quest = quests[i];
-                if (quest == null || quest.Objective == null) continue;
-
-                QuestState state = progress.GetQuestState(quest.QuestId);
-                bool deliverable = state == QuestState.Active
-                    || (state == QuestState.Completed && progress.GetQuestGrade(quest.QuestId) < QualityGrade.S);
-                if (!deliverable) continue;
-
-                DishScore score = quest.Objective.Evaluate(dish);
-                if (best == null || score.Score > bestScore.Score || (score.Score == bestScore.Score && state == QuestState.Active))
-                {
-                    best = quest;
-                    bestScore = score;
-                }
+                if (quest != null && !progress.IsQuestCompleted(quest.QuestId)) return quest;
             }
 
-            if (best == null)
-            {
-                response = null;
-                return false;
-            }
+            // ขอได้เฉพาะเควสที่เงินตอนนี้พอซื้อวัตถุดิบ
+            return PlayerWallet.Instance != null
+                ? IngredientOrder.TryCreate(orderIngredients, PlayerWallet.Instance.Money, Npc.Profile)
+                : null;
+        }
 
-            best.Objective.Consume(dish);
-            if (progress.GetQuestState(best.QuestId) == QuestState.Active && PlayerWallet.Instance != null)
+        // ไม่ผ่าน = จานยังอยู่กับผู้เล่น แก้แล้วส่งใหม่ได้
+        private LocalizedString Deliver(ServingFoodContainer dish)
+        {
+            IQuestRequest request = active;
+            QualityGrade grade = request.Evaluate(dish).Grade;
+            if (grade == QualityGrade.F) return request.ResultText(grade);
+
+            request.Consume(dish);
+            if (PlayerWallet.Instance != null)
             {
-                PlayerWallet.Instance.Earn(best.Reward);
+                PlayerWallet.Instance.Earn(request.Reward);
             }
-            progress.SetQuestState(best.QuestId, QuestState.Completed);
-            progress.SetQuestGrade(best.QuestId, bestScore.Grade);
-            response = best.ResultText(bestScore.Grade);
-            return true;
+            request.OnCompleted();
+            active = null;
+            return request.ResultText(grade);
         }
     }
 }

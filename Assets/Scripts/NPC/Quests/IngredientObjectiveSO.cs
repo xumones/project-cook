@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using ProjectCook.Core;
 using ProjectCook.Cooking;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>เควสที่ขอวัตถุดิบหลัก: ปลดล็อกให้ร้านขายตอนรับ และให้เกรดจานที่ส่งตามความสุกของวัตถุดิบเหล่านั้น</summary>
+    /// <summary>เควสที่ขอวัตถุดิบหลัก ให้เกรดจานที่ส่งตามความสุกของวัตถุดิบเหล่านั้น</summary>
     [CreateAssetMenu(fileName = "Objective_", menuName = "ProjectCook/NPC/Ingredient Objective")]
     public class IngredientObjectiveSO : QuestObjectiveSO
     {
@@ -13,18 +12,6 @@ namespace ProjectCook.NPC
         [SerializeField] private List<IngredientRequirement> requirements = new List<IngredientRequirement>();
 
         private static readonly List<IngredientInstance> ingredientBuffer = new List<IngredientInstance>();
-
-        public override void OnAccepted()
-        {
-            GameProgress progress = GameProgress.Instance;
-            for (int i = 0; i < requirements.Count; i++)
-            {
-                if (requirements[i].ingredient != null)
-                {
-                    progress.UnlockItem(requirements[i].ingredient.ItemId);
-                }
-            }
-        }
 
         public override DishScore Evaluate(ServingFoodContainer dish)
         {

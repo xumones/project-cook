@@ -22,6 +22,9 @@ namespace ProjectCook.Cooking
         [Tooltip("ระยะเวลาทอดสะสมเพิ่มเติมหลังสุกจนกระทั่งไหม้ (วินาที)")]
         [SerializeField] private float burnTime = 5f;
 
+        [Tooltip("สถานะที่เสิร์ฟตามปกติ เควสสุ่มที่ขอวัตถุดิบนี้จะต้องการสถานะนี้ เช่น ผักสด = Raw")]
+        [SerializeField] private CookingState servedState = CookingState.Cooked;
+
         [Header("Material References")]
         [Tooltip("Material ประจำตัววัตถุดิบที่ใช้ Shader CookingMaterial (กำหนดภาพดิบที่ Base Map และภาพสุกที่ Cooked Map)")]
         [SerializeField] private Material cookingMaterial;
@@ -79,6 +82,7 @@ namespace ProjectCook.Cooking
         public bool IsTwoSidedCooking => isTwoSidedCooking;
         public float CookTime => cookTime;
         public float BurnTime => burnTime;
+        public CookingState ServedState => servedState;
         public Material CookingMaterial => cookingMaterial;
         public Material BurntMaterial => burntMaterial;
         public float TintIntensity => tintIntensity;

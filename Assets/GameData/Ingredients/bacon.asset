@@ -24,7 +24,7 @@ MonoBehaviour:
     m_LocalVariables: []
   prefab: {fileID: 5447725316567452177, guid: 7a4674662135fee4ab5fbd208fdcd876, type: 3}
   gridSize: {x: 2, y: 1}
-  price: 0
+  price: 5
   isTwoSidedCooking: 1
   cookTime: 50
   burnTime: 80

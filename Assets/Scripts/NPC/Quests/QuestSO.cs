@@ -1,76 +1,55 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 using ProjectCook.Core;
+using ProjectCook.Cooking;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>คำขอหนึ่งรายการของ NPC: เงื่อนไขอะไร รับได้เมื่อไหร่ และ NPC พูดว่าอะไรในแต่ละจังหวะ</summary>
+    /// <summary>เควสเนื้อเรื่องหนึ่งรายการ ทำครั้งเดียว: เงื่อนไขอะไร ได้เท่าไหร่ และ NPC พูดว่าอะไรในแต่ละจังหวะ</summary>
     [CreateAssetMenu(fileName = "Quest_", menuName = "ProjectCook/NPC/Quest")]
-    public class QuestSO : ScriptableObject
+    public class QuestSO : ScriptableObject, IQuestRequest
     {
-        [Tooltip("รหัสเควส ใช้เก็บสถานะใน GameProgress ต้องไม่ซ้ำกันทั้งเกม")]
+        [Tooltip("รหัสเควส ใช้จำใน GameProgress ว่าจบแล้ว ต้องไม่ซ้ำกันทั้งเกม")]
         [SerializeField] private string questId;
 
         [SerializeField] private QuestObjectiveSO objective;
 
-        [Tooltip("เควสที่ต้องจบก่อนถึงจะรับอันนี้ได้ จะเป็นของ NPC ไหนก็ได้ เว้นว่าง = รับได้ทันที")]
-        [SerializeField] private List<QuestSO> prerequisites = new List<QuestSO>();
-
-        [Tooltip("ค่าตอบแทนที่ได้ตอนส่งสำเร็จครั้งแรก ส่งซ้ำเพื่อแก้เกรดไม่ได้เงินเพิ่ม")]
+        [Tooltip("ค่าตอบแทนตอนส่งผ่าน")]
         [Min(0)]
         [SerializeField] private int reward;
 
         [Header("Lines")]
-        [Tooltip("ตอนยังรับไม่ได้เพราะเควสก่อนหน้ายังไม่จบ")]
-        [SerializeField] private LocalizedString lockedText;
-
         [Tooltip("ตอนผู้เล่นรับเควส")]
         [SerializeField] private LocalizedString offerText;
 
         [Tooltip("ตอนถามซ้ำระหว่างยังไม่ส่ง")]
         [SerializeField] private LocalizedString reminderText;
 
-        [Tooltip("คำตอบตามเกรดที่ส่งได้ เรียง F, D, C, B, A, S ช่องที่ว่างจะใช้ของเกรดต่ำกว่าที่ใกล้สุด (ไม่มีจึงไล่ขึ้น)")]
-        [SerializeField] private LocalizedString[] resultTexts = new LocalizedString[6];
+        [Tooltip("ส่งไม่ผ่าน (เกรด F) เควสยังค้างอยู่")]
+        [SerializeField] private LocalizedString failText;
+
+        [Tooltip("ส่งผ่าน (เกรด D ถึง A)")]
+        [SerializeField] private LocalizedString passText;
+
+        [Tooltip("ส่งได้เกรด S")]
+        [SerializeField] private LocalizedString excellentText;
 
         public string QuestId => questId;
-        public QuestObjectiveSO Objective => objective;
         public int Reward => reward;
-        public LocalizedString LockedText => lockedText;
         public LocalizedString OfferText => offerText;
         public LocalizedString ReminderText => reminderText;
 
-        public LocalizedString ResultText(QualityGrade grade)
-        {
-            for (int i = (int)grade; i >= 0; i--)
-            {
-                if (HasResultText(i)) return resultTexts[i];
-            }
-            for (int i = (int)grade + 1; i < resultTexts.Length; i++)
-            {
-                if (HasResultText(i)) return resultTexts[i];
-            }
-            return null;
-        }
+        public DishScore Evaluate(ServingFoodContainer dish) => objective.Evaluate(dish);
 
-        private bool HasResultText(int index) =>
-            index < resultTexts.Length && resultTexts[index] != null && !resultTexts[index].IsEmpty;
+        public void Consume(ServingFoodContainer dish) => objective.Consume(dish);
 
-        /// <summary>เควสก่อนหน้าจบครบแล้วหรือยัง</summary>
-        public bool PrerequisitesMet
+        public LocalizedString ResultText(QualityGrade grade) => grade switch
         {
-            get
-            {
-                for (int i = 0; i < prerequisites.Count; i++)
-                {
-                    if (prerequisites[i] != null && GameProgress.Instance.GetQuestState(prerequisites[i].QuestId) != QuestState.Completed)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
+            QualityGrade.F => failText,
+            QualityGrade.S => excellentText,
+            _ => passText
+        };
+
+        public void OnCompleted() => GameProgress.Instance.CompleteQuest(questId);
     }
 }

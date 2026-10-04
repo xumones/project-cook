@@ -14,17 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: bacon
   objective: {fileID: 11400000, guid: bf4ca551a403c31419c7aa109d63e1ee, type: 2}
-  prerequisites: []
   reward: 30
-  lockedText:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: quest.bacon.locked
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -43,52 +33,30 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  resultTexts:
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
+  failText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.bacon.a
+      m_Key: quest.bacon.fail
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  - m_TableReference:
+  passText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.bacon.s
+      m_Key: quest.bacon.pass
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  excellentText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.bacon.excellent
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []

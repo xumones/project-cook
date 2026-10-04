@@ -15,10 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: NPC
   m_TableCollectionNameGuidString: 67d75f3915da58d41a1d291f85b93990
   m_Entries:
-  - m_Id: 4224512499712
-    m_Key: quest.bacon.locked
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224755769344
     m_Key: quest.bacon.offer
     m_Metadata:
@@ -28,15 +24,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224764157953
-    m_Key: quest.bacon.s
+    m_Key: quest.bacon.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546560
-    m_Key: quest.bacon.a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546561
-    m_Key: quest.bunch.locked
+    m_Key: quest.bacon.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546562
@@ -48,15 +40,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546564
-    m_Key: quest.bunch.s
+    m_Key: quest.bunch.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546565
-    m_Key: quest.bunch.a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546566
-    m_Key: quest.egg.locked
+    m_Key: quest.bunch.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546567
@@ -68,15 +56,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546569
-    m_Key: quest.egg.s
+    m_Key: quest.egg.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546570
-    m_Key: quest.egg.a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546571
-    m_Key: quest.fish.locked
+    m_Key: quest.egg.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546572
@@ -88,15 +72,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546574
-    m_Key: quest.fish.s
+    m_Key: quest.fish.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546575
-    m_Key: quest.fish.a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546576
-    m_Key: quest.lettuce.locked
+    m_Key: quest.fish.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546577
@@ -108,15 +88,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546579
-    m_Key: quest.lettuce.s
+    m_Key: quest.lettuce.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546580
-    m_Key: quest.lettuce.a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546581
-    m_Key: quest.sausage.locked
+    m_Key: quest.lettuce.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546582
@@ -128,15 +104,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546584
-    m_Key: quest.sausage.s
+    m_Key: quest.sausage.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546585
-    m_Key: quest.sausage.a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4224772546586
-    m_Key: quest.steak.locked
+    m_Key: quest.sausage.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546587
@@ -148,11 +120,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546589
-    m_Key: quest.steak.s
+    m_Key: quest.steak.excellent
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546590
-    m_Key: quest.steak.a
+    m_Key: quest.steak.pass
     m_Metadata:
       m_Items: []
   - m_Id: 4224772546591
@@ -267,20 +239,96 @@ MonoBehaviour:
     m_Key: ingredient.steak_1
     m_Metadata:
       m_Items: []
-  - m_Id: 63091481059328
-    m_Key: npc.1.received.0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 63091673997312
-    m_Key: npc.2.received.0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 63091673997313
-    m_Key: npc.3.received.0
-    m_Metadata:
-      m_Items: []
   - m_Id: 3979519798562816
     m_Key: ui.label.shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672699756544
+    m_Key: quest.bacon.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672880111616
+    m_Key: quest.egg.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672880111617
+    m_Key: quest.sausage.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672880111618
+    m_Key: quest.steak.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672880111619
+    m_Key: quest.fish.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672880111620
+    m_Key: quest.lettuce.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4711672880111621
+    m_Key: quest.bunch.fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444446171136
+    m_Key: npc.1.order.offer.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444655886336
+    m_Key: npc.1.order.reminder.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444655886337
+    m_Key: npc.1.order.fail.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080640
+    m_Key: npc.1.order.pass.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080641
+    m_Key: npc.1.order.excellent.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080642
+    m_Key: npc.2.order.offer.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080643
+    m_Key: npc.2.order.reminder.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080644
+    m_Key: npc.2.order.fail.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080645
+    m_Key: npc.2.order.pass.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080646
+    m_Key: npc.2.order.excellent.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080647
+    m_Key: npc.3.order.offer.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080648
+    m_Key: npc.3.order.reminder.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080649
+    m_Key: npc.3.order.fail.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080650
+    m_Key: npc.3.order.pass.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4716444660080651
+    m_Key: npc.3.order.excellent.0
     m_Metadata:
       m_Items: []
   m_Metadata:

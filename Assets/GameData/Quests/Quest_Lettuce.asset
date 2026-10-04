@@ -14,18 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: lettuce
   objective: {fileID: 11400000, guid: 507a3b55f323b8d4c8e6a72c2ce170fe, type: 2}
-  prerequisites:
-  - {fileID: 11400000, guid: a4a70e21dd7ee714c974055a0a87b6c8, type: 2}
   reward: 15
-  lockedText:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: quest.lettuce.locked
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -44,52 +33,30 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  resultTexts:
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
+  failText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.lettuce.a
+      m_Key: quest.lettuce.fail
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  - m_TableReference:
+  passText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.lettuce.s
+      m_Key: quest.lettuce.pass
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  excellentText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.lettuce.excellent
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []

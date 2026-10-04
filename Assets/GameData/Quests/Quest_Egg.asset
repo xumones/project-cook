@@ -14,18 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: egg
   objective: {fileID: 11400000, guid: 14210e3710acc7b48b6199b63498adc7, type: 2}
-  prerequisites:
-  - {fileID: 11400000, guid: 2d66065f52e9d6a49beeb4d4034eed49, type: 2}
   reward: 15
-  lockedText:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: quest.egg.locked
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -44,52 +33,30 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  resultTexts:
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
+  failText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.egg.a
+      m_Key: quest.egg.fail
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  - m_TableReference:
+  passText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.egg.s
+      m_Key: quest.egg.pass
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  excellentText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.egg.excellent
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []

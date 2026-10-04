@@ -14,18 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: fish
   objective: {fileID: 11400000, guid: 26b101e235f3331479f104fd62f75588, type: 2}
-  prerequisites:
-  - {fileID: 11400000, guid: a2d631d4362878946902ed18e5829303, type: 2}
   reward: 40
-  lockedText:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: quest.fish.locked
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -44,52 +33,30 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  resultTexts:
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: 
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
+  failText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.fish.a
+      m_Key: quest.fish.fail
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  - m_TableReference:
+  passText:
+    m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
     m_TableEntryReference:
       m_KeyId: 0
-      m_Key: quest.fish.s
+      m_Key: quest.fish.pass
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  excellentText:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: quest.fish.excellent
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []

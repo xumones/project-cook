@@ -48,14 +48,30 @@ namespace ProjectCook.NPC
         [Tooltip("คุยเล่น ใช้โดย NPCChat")]
         [SerializeField] private LineSet chat;
 
-        [Tooltip("ตอบรับเมื่อผู้เล่นส่งของให้เฉย ๆ โดยไม่มีเควส ใช้โดย NPCReceiver")]
-        [SerializeField] private LineSet received;
+        [Header("Random Orders")]
+        [Tooltip("ประโยคของเควสสุ่ม ใส่ {0:list:{}|, | and } ตรงที่จะแทรกรายชื่อวัตถุดิบ และต้องเปิด Smart ใน String Table")]
+        [SerializeField] private LineSet orderOffer;
+
+        [SerializeField] private LineSet orderReminder;
+
+        [Tooltip("ส่งไม่ผ่าน (เกรด F)")]
+        [SerializeField] private LineSet orderFail;
+
+        [Tooltip("ส่งผ่าน (เกรด D ถึง A)")]
+        [SerializeField] private LineSet orderPass;
+
+        [Tooltip("ส่งได้เกรด S")]
+        [SerializeField] private LineSet orderExcellent;
 
         public LocalizedString DisplayName => displayName;
         public TMP_FontAsset Font => font;
         public Sprite CharacterSprite => characterSprite;
         public LineSet Greeting => greeting;
         public LineSet Chat => chat;
-        public LineSet Received => received;
+        public LineSet OrderOffer => orderOffer;
+        public LineSet OrderReminder => orderReminder;
+        public LineSet OrderFail => orderFail;
+        public LineSet OrderPass => orderPass;
+        public LineSet OrderExcellent => orderExcellent;
     }
 }

@@ -28,6 +28,7 @@ MonoBehaviour:
   isTwoSidedCooking: 0
   cookTime: 40
   burnTime: 70
+  servedState: 0
   cookingMaterial: {fileID: 0}
   burntMaterial: {fileID: 0}
   tintIntensity: 0.5

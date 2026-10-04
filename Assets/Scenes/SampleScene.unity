@@ -3988,9 +3988,9 @@ RectTransform:
   - {fileID: 517068582}
   m_Father: {fileID: 1953355366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 606.9166, y: -47.85}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &466207648
@@ -4997,9 +4997,9 @@ RectTransform:
   - {fileID: 735045328}
   m_Father: {fileID: 1953355366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 105.38333, y: -47.85}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &569189623
@@ -5485,7 +5485,6 @@ GameObject:
   - component: {fileID: 595181173}
   - component: {fileID: 595181172}
   - component: {fileID: 595181171}
-  - component: {fileID: 595181174}
   - component: {fileID: 595181176}
   - component: {fileID: 595181175}
   m_Layer: 6
@@ -5602,9 +5601,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e942c0fa1cb5149b7d9f1009a35ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCQuestGiver
-  quests:
+  storyQuests:
   - {fileID: 11400000, guid: 2d66065f52e9d6a49beeb4d4034eed49, type: 2}
   - {fileID: 11400000, guid: 72b45d4f6615d1c41945c0617722712f, type: 2}
+  orderIngredients:
+  - {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
+  - {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
+  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
   askLabel:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -5620,6 +5626,15 @@ MonoBehaviour:
     m_TableEntryReference:
       m_KeyId: 0
       m_Key: ui.label.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  deliverLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.deliver
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -5663,30 +5678,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCCharacter
   profile: {fileID: 11400000, guid: 122a6c5e93d71f34eb62a8e1e11d7842, type: 2}
---- !u!114 &595181174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 595181164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90d3fea0719c11a4f8bb76547ccc45a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCReceiver
-  deliverLabel:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: ui.label.deliver
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!114 &595181175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5725,20 +5716,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: ProjectCook.Inventory::ProjectCook.Inventory.Shop
   title: SHOP
   stock:
-  - item: {fileID: 11400000, guid: 8660f88e451ba1841aeba28b3e0cf8ea, type: 2}
-    requiresUnlock: 0
-  - item: {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
-    requiresUnlock: 1
-  - item: {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
-    requiresUnlock: 1
-  - item: {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
-    requiresUnlock: 1
-  - item: {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
-    requiresUnlock: 1
-  - item: {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
-    requiresUnlock: 1
-  - item: {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
-    requiresUnlock: 1
+  - {fileID: 11400000, guid: 8660f88e451ba1841aeba28b3e0cf8ea, type: 2}
+  - {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
+  - {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
+  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
   compartments:
   - size: {x: 4, y: 4}
     position: {x: 0, y: 0}
@@ -6590,7 +6574,6 @@ GameObject:
   - component: {fileID: 731846107}
   - component: {fileID: 731846106}
   - component: {fileID: 731846105}
-  - component: {fileID: 731846108}
   m_Layer: 6
   m_Name: Test NPC#2
   m_TagString: Untagged
@@ -6705,9 +6688,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e942c0fa1cb5149b7d9f1009a35ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCQuestGiver
-  quests:
+  storyQuests:
   - {fileID: 11400000, guid: bbf516d81abf8cb419b4ea6a6206c0a0, type: 2}
   - {fileID: 11400000, guid: a2d631d4362878946902ed18e5829303, type: 2}
+  orderIngredients:
+  - {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
+  - {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
+  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
   askLabel:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -6723,6 +6713,15 @@ MonoBehaviour:
     m_TableEntryReference:
       m_KeyId: 0
       m_Key: ui.label.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  deliverLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.deliver
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -6766,30 +6765,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCCharacter
   profile: {fileID: 11400000, guid: ddbf681a3fef28243823fe63dd84317a, type: 2}
---- !u!114 &731846108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731846097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90d3fea0719c11a4f8bb76547ccc45a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCReceiver
-  deliverLabel:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: ui.label.deliver
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &735045327
 GameObject:
   m_ObjectHideFlags: 0
@@ -7092,7 +7067,6 @@ GameObject:
   - component: {fileID: 750200602}
   - component: {fileID: 750200601}
   - component: {fileID: 750200600}
-  - component: {fileID: 750200603}
   m_Layer: 6
   m_Name: Test NPC#3
   m_TagString: Untagged
@@ -7207,10 +7181,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e942c0fa1cb5149b7d9f1009a35ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCQuestGiver
-  quests:
+  storyQuests:
   - {fileID: 11400000, guid: a4a70e21dd7ee714c974055a0a87b6c8, type: 2}
   - {fileID: 11400000, guid: a9ba1d2272fec5f49a0b7f21fcd5516d, type: 2}
   - {fileID: 11400000, guid: 06e475058482b5f4b980b07f39d66c53, type: 2}
+  orderIngredients:
+  - {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
+  - {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
+  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
   askLabel:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
@@ -7226,6 +7207,15 @@ MonoBehaviour:
     m_TableEntryReference:
       m_KeyId: 0
       m_Key: ui.label.reminder
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  deliverLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.deliver
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -7269,30 +7259,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCCharacter
   profile: {fileID: 11400000, guid: 7e44f9281a9b8894ca160a92074351a3, type: 2}
---- !u!114 &750200603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750200592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90d3fea0719c11a4f8bb76547ccc45a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCReceiver
-  deliverLabel:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: ui.label.deliver
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!1001 &765298094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8654,7 +8620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd1a6d971aa15fc4fada5cb60334c91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Inventory::ProjectCook.Inventory.PlayerWallet
-  startingMoney: 100
+  startingMoney: 25
 --- !u!4 &982780163 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d8a98ce046efb3d409fbf0305507ecb9, type: 3}
@@ -10742,9 +10708,9 @@ RectTransform:
   - {fileID: 356674700}
   m_Father: {fileID: 1953355366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 356.15, y: -47.85}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1186173912
