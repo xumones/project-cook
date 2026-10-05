@@ -1,3 +1,5 @@
+using UnityEngine.SceneManagement;
+
 namespace ProjectCook.Items
 {
     /// <summary>ไอเทมที่ "มีของอยู่ข้างในได้"</summary>
@@ -8,5 +10,8 @@ namespace ProjectCook.Items
 
         /// <summary>ยึดของข้างในให้ติดไปกับภาชนะ หรือคืนอิสระให้มัน</summary>
         void SetFrozen(bool frozen);
+
+        /// <summary>ย้ายของข้างในไปฉากเดียวกับภาชนะ ของในจานจะได้ไม่ถูกทิ้งไว้ตอนถือจานข้ามพื้นที่</summary>
+        void MoveToScene(Scene scene);
     }
 }

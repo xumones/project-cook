@@ -6,7 +6,7 @@ using ProjectCook.Items;
 namespace ProjectCook.Inventory
 {
     /// <summary>จุดเดียวที่ย้ายของระหว่างฉากกับตัวผู้เล่น: หยิบ (เก็บ สวมกระเป๋า ถือ) และวางลงฉาก</summary>
-    // ของที่เก็บเป็นข้อมูล ของในฉากและในมือเป็นวัตถุจริง ข้ามกันได้ผ่าน CaptureStates กับ Spawn ในไฟล์นี้เท่านั้น
+    // ตัวตนของไอเทม (ItemInstance) เป็นตัวเดิมตลอดทาง ข้ามระหว่างวัตถุในฉากกับข้อมูลในที่เก็บผ่าน Item.Capture กับ Spawn ในไฟล์นี้เท่านั้น
     public class PlayerItemTransfer : SceneSingleton<PlayerItemTransfer>, IPickUpHandler
     {
         [Header("Placing")]
@@ -35,7 +35,7 @@ namespace ProjectCook.Inventory
             if (!HasPrefab(item.Definition) || !TryGetPlacePose(item.Definition.Prefab, out Vector3 position, out Quaternion rotation, out RaycastHit surface)) return false;
             if (!storage.Remove(item)) return false;
 
-            FinishPlacing(Spawn(item.Definition, item.States, position, rotation), surface);
+            FinishPlacing(Spawn(item.Instance, position, rotation), surface);
             return true;
         }
 
@@ -51,7 +51,7 @@ namespace ProjectCook.Inventory
             if (!CanWearFromStorage(storage, item) || !storage.Remove(item)) return false;
 
             var bag = (BagDefinitionSO)item.Definition;
-            PlayerInventory.Instance.WearBag(bag, ItemGrid.FromLayouts(bag.Compartments));
+            PlayerInventory.Instance.WearBag(item.Instance, ItemGrid.FromLayouts(bag.Compartments));
             return true;
         }
 
@@ -59,11 +59,11 @@ namespace ProjectCook.Inventory
         public bool DropBag()
         {
             PlayerInventory inventory = PlayerInventory.Instance;
-            BagDefinitionSO bag = inventory.WornBag;
-            if (bag == null || !HasPrefab(bag) || !TryGetPlacePose(bag.Prefab, out Vector3 position, out Quaternion rotation, out RaycastHit surface)) return false;
+            ItemInstance bag = inventory.WornBag;
+            if (bag == null || !HasPrefab(bag.Definition) || !TryGetPlacePose(bag.Definition.Prefab, out Vector3 position, out Quaternion rotation, out RaycastHit surface)) return false;
 
             List<ItemGrid> contents = inventory.TakeOffBag();
-            GameObject spawned = Spawn(bag, null, position, rotation);
+            GameObject spawned = Spawn(bag, position, rotation);
             spawned.GetComponent<BagItem>().PutGrids(contents);
             FinishPlacing(spawned, surface);
             return true;
@@ -82,16 +82,16 @@ namespace ProjectCook.Inventory
 
         private bool TryStore(StorableItem storable)
         {
-            ItemDefinitionSO definition = storable.Definition;
-            if (definition == null)
+            Item item = storable.Item;
+            if (item.Definition == null)
             {
                 Debug.LogWarning($"[PlayerItemTransfer] {storable.name} ยังไม่ได้ตั้ง Definition ของ Item เก็บไม่ได้", storable);
                 return false;
             }
 
-            if (!PlayerInventory.Instance.Storage.TryAdd(new InventoryItem(definition, storable.CaptureStates())))
+            if (!PlayerInventory.Instance.Storage.TryAdd(new InventoryItem(item.Capture())))
             {
-                Debug.Log($"[PlayerItemTransfer] กระเป๋าเต็ม เก็บ {definition.ItemId} ไม่ได้");
+                Debug.Log($"[PlayerItemTransfer] กระเป๋าเต็ม เก็บ {item.Definition.ItemId} ไม่ได้");
                 return false;
             }
 
@@ -110,26 +110,22 @@ namespace ProjectCook.Inventory
                 return false;
             }
 
-            BagDefinitionSO definition = bag.Definition;
-            if (definition == null)
+            if (bag.Definition == null)
             {
                 Debug.LogWarning($"[PlayerItemTransfer] {bag.name} ต้องตั้ง Definition ของ Item เป็น BagDefinitionSO", bag);
                 return false;
             }
 
-            inventory.WearBag(definition, bag.TakeGrids());
+            inventory.WearBag(bag.GetComponent<Item>().Capture(), bag.TakeGrids());
             Destroy(bag.gameObject);
             return true;
         }
 
-        /// <summary>สร้างวัตถุจากข้อมูล แล้วคืนสถานะที่จดไว้ (ถ้ามี)</summary>
-        private GameObject Spawn(ItemDefinitionSO definition, IReadOnlyList<ComponentState> states, Vector3 position, Quaternion rotation)
+        /// <summary>สร้างวัตถุของไอเทมชิ้นนี้ แล้วคืนตัวตนกับสถานะที่จดไว้ให้</summary>
+        private GameObject Spawn(ItemInstance instance, Vector3 position, Quaternion rotation)
         {
-            GameObject spawned = Instantiate(definition.Prefab, position, rotation);
-            if (states != null && spawned.TryGetComponent(out StorableItem storable))
-            {
-                storable.RestoreStates(states);
-            }
+            GameObject spawned = Instantiate(instance.Definition.Prefab, position, rotation);
+            spawned.GetComponent<Item>().Restore(instance);
             return spawned;
         }
 

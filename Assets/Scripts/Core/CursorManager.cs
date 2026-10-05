@@ -6,7 +6,7 @@ namespace ProjectCook.Core
 {
     /// <summary>Singleton ที่เป็นเจ้าของสถานะเคอร์เซอร์เมาส์เพียงจุดเดียวของทั้งเกม (Single Source of Truth)</summary>
     [DisallowMultipleComponent]
-    public class CursorManager : PersistentSingleton<CursorManager>
+    public class CursorManager : SceneSingleton<CursorManager>
     {
         // เก็บรายชื่อระบบที่กำลังขอให้ปลดล็อกเคอร์เซอร์อยู่
         // ใช้ HashSet แทนตัวนับเลข เพื่อกันบั๊กนับเกิน/นับขาดกรณีระบบเดิมเรียกซ้ำหรือลืมคืนสิทธิ์
@@ -19,10 +19,6 @@ namespace ProjectCook.Core
         private Vector2 positionBeforeHide;
         private bool restorePositionOnShow;
         private bool wasVisible;
-
-        // สร้างตั้งแต่เริ่มเกม เคอร์เซอร์จะได้ล็อกกลางจอทันทีโดยไม่ต้องรอให้ระบบอื่นเรียกใช้ก่อน
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void CreateOnStart() => _ = Instance;
 
         /// <summary>ขอปลดล็อกเคอร์เซอร์เพื่อใช้ตัวชี้เมาส์ (เช่น ตอนเปิดหน้าต่างบทสนทนาหรือเมนู)</summary>
         public static void RequestUnlock(Object requester)
@@ -84,10 +80,8 @@ namespace ProjectCook.Core
         public static bool TryGetPointerPosition(out Vector2 position)
         {
             position = default;
-            if (!HasInstance) return false;
-
             CursorManager manager = Instance;
-            if (manager.unlockRequesters.Count == 0) return false;
+            if (manager == null || manager.unlockRequesters.Count == 0) return false;
 
             if (manager.hideRequesters.Count > 0)
             {

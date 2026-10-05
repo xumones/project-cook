@@ -62,8 +62,8 @@ namespace ProjectCook.UI
         {
             if (slot == EquipSlot.Bag)
             {
-                BagDefinitionSO bag = PlayerInventory.Instance != null ? PlayerInventory.Instance.WornBag : null;
-                return bag != null ? bag.GetDisplayName() : null;
+                ItemInstance bag = PlayerInventory.Instance != null ? PlayerInventory.Instance.WornBag : null;
+                return bag != null ? bag.Definition.GetDisplayName() : null;
             }
 
             EquippableItem held = EquipmentManager.Instance != null ? EquipmentManager.Instance.GetHeld(Hand) : null;

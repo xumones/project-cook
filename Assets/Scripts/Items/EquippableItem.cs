@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ProjectCook.Core;
 
 namespace ProjectCook.Items
@@ -83,6 +84,9 @@ namespace ProjectCook.Items
             transform.localPosition = holdPose.localPosition;
             transform.localRotation = Quaternion.Euler(holdPose.localEulerAngles);
 
+            // มือผู้เล่นอยู่ใน Core ของที่ถือจึงย้ายมาด้วย ของข้างในต้องตามมาไม่งั้นหายตอนเปลี่ยนพื้นที่
+            contents?.MoveToScene(gameObject.scene);
+
             item.SetLocation(ItemLocation.Hand);
         }
 
@@ -91,6 +95,10 @@ namespace ProjectCook.Items
         {
             transform.SetParent(null, true);
             transform.SetPositionAndRotation(worldPosition, worldRotation);
+
+            // หลุดจากมือแล้วยังค้างอยู่ใน Core ต้องย้ายลงพื้นที่ปัจจุบัน ไม่งั้นจะตามผู้เล่นไปทุกพื้นที่
+            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+            contents?.MoveToScene(gameObject.scene);
 
             heldState.Restore();
 

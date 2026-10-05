@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ProjectCook.Core
 {
     /// <summary>แหล่งความจริงเดียวว่าเกมอยู่โหมดไหน โหมดซ้อนกันได้: ระบบที่เข้าทีหลังอยู่ชั้นบน ออกแล้วกลับไปโหมดชั้นล่างเอง</summary>
-    public class GameModeManager : PersistentSingleton<GameModeManager>
+    public class GameModeManager : SceneSingleton<GameModeManager>
     {
         private struct Layer
         {

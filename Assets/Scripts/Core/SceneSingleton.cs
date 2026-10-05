@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ProjectCook.Core
 {
-    /// <summary>Base Class สำหรับ Manager ที่ผูกอยู่กับ Scene (Scene-Scoped Singleton)</summary>
+    /// <summary>Manager ที่มีตัวเดียวและวางไว้ในฉาก อยู่ใน Core = อยู่ตลอดเกม อยู่ในฉากพื้นที่ = อยู่เท่าพื้นที่นั้น</summary>
     public abstract class SceneSingleton<T> : MonoBehaviour where T : SceneSingleton<T>
     {
         private static T instance;

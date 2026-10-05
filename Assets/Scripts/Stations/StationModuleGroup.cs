@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace ProjectCook.Stations
 {
-    /// <summary>รวบรวมโมดูลของเจ้าของหนึ่งราย (จากตัวเองและลูกๆ บวกโมดูลภายนอก) แล้วสั่งเปิด/ปิดพร้อมกัน</summary>
+    /// <summary>รวบรวมโมดูลของเจ้าของหนึ่งราย (ตัวเองและลูกๆ) แล้วสั่งเปิด/ปิดพร้อมกัน</summary>
     public class StationModuleGroup
     {
         private readonly List<IStationModule> modules = new List<IStationModule>();
 
-        public void Collect(MonoBehaviour owner, MonoBehaviour[] externalModules = null)
+        public void Collect(MonoBehaviour owner)
         {
             modules.Clear();
 
@@ -20,22 +20,6 @@ namespace ProjectCook.Stations
                 if (!ReferenceEquals(component.GetComponentInParent<IStationModuleOwner>(true), owner)) continue;
 
                 Add(localModules[i]);
-            }
-
-            if (externalModules == null) return;
-
-            for (int i = 0; i < externalModules.Length; i++)
-            {
-                if (externalModules[i] == null) continue;
-
-                if (externalModules[i] is IStationModule module)
-                {
-                    Add(module);
-                }
-                else
-                {
-                    Debug.LogWarning($"[{owner.GetType().Name}] '{externalModules[i].GetType().Name}' ไม่ได้ Implement IStationModule จึงถูกข้ามไป", owner);
-                }
             }
         }
 

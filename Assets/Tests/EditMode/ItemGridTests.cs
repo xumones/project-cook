@@ -29,7 +29,7 @@ namespace ProjectCook.Tests
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
             definitions.Add(definition);
-            return new InventoryItem(definition, System.Array.Empty<ComponentState>());
+            return new InventoryItem(new ItemInstance(definition));
         }
 
         [Test]

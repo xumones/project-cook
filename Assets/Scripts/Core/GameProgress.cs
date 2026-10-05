@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace ProjectCook.Core
 {
     /// <summary>ความคืบหน้าถาวรของผู้เล่น เก็บเป็นถังเดียวเพื่อให้ save ทีเดียว แต่เปิดให้ใช้ผ่าน API แบบ typed เท่านั้น</summary>
-    public class GameProgress : PersistentSingleton<GameProgress>
+    public class GameProgress : SceneSingleton<GameProgress>
     {
         private readonly Dictionary<string, int> values = new Dictionary<string, int>();
 

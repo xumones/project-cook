@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ProjectCook.Items;
 
 namespace ProjectCook.Cooking
@@ -63,6 +64,19 @@ namespace ProjectCook.Cooking
         /// <summary>ยึดวัตถุดิบข้างในให้ติดไปกับภาชนะ ภาชนะที่ให้ความร้อนไม่รองรับเพราะอาหารต้องไถลได้</summary>
         public virtual void SetFrozen(bool frozen)
         {
+        }
+
+        public void MoveToScene(Scene scene)
+        {
+            for (int i = 0; i < contents.Count; i++)
+            {
+                GameObject ingredient = contents[i].Ingredient != null ? contents[i].Ingredient.gameObject : null;
+
+                // ย้ายฉากได้เฉพาะ root วัตถุดิบที่ถูก parent ไว้กับอย่างอื่นจะไปตามพ่อของมันเอง
+                if (ingredient == null || ingredient.transform.parent != null || ingredient.scene == scene) continue;
+
+                SceneManager.MoveGameObjectToScene(ingredient, scene);
+            }
         }
 
         protected virtual void Awake()

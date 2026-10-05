@@ -85,6 +85,9 @@ namespace ProjectCook.Player
             if (gameMode != null)
             {
                 gameMode.ModeChanged += HandleModeChanged;
+
+                // โหมดอาจถูกเปลี่ยนก่อนเราสมัครฟัง (เช่น กำลังโหลดพื้นที่แรก) ไม่งั้นจะเดินและตกได้ระหว่างโหลด
+                HandleModeChanged(gameMode.CurrentMode);
             }
         }
 

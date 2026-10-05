@@ -17,10 +17,19 @@ namespace ProjectCook.NPC
         [Tooltip("ข้อความบนหน้ากระดาษ")]
         [SerializeField] private TMP_Text label;
 
+        private const string NpcIdKey = "quest_note";
+
         private string npcId;
 
-        /// <summary>สถานะของโน้ตที่เป็นของ NPC นี้ ใช้สร้างโน้ตลงกระเป๋าโดยไม่ต้องมีวัตถุจริง</summary>
-        public static ComponentState StateFor(string npcId) => new ComponentState(typeof(QuestNote).FullName, npcId);
+        /// <summary>สร้างโน้ตของ NPC นี้เป็นข้อมูล ใช้ใส่ลงที่เก็บโดยไม่ต้องมีวัตถุจริง</summary>
+        public static ItemInstance Create(ItemDefinitionSO noteDefinition, string npcId)
+        {
+            var note = new ItemInstance(noteDefinition);
+            note.SetState(NpcIdKey, npcId);
+            return note;
+        }
+
+        public string StateKey => NpcIdKey;
 
         public string CaptureState() => npcId;
 
@@ -62,16 +71,8 @@ namespace ProjectCook.NPC
             }
         }
 
-        private static bool IsNoteOf(InventoryItem item, string npcId)
-        {
-            if (item.States == null) return false;
-
-            foreach (ComponentState state in item.States)
-            {
-                if (state.ComponentType == typeof(QuestNote).FullName && state.Data == npcId) return true;
-            }
-            return false;
-        }
+        private static bool IsNoteOf(InventoryItem item, string npcId) =>
+            item.Instance.TryGetState(NpcIdKey, out string owner) && owner == npcId;
 
         // เขียนจากเควสที่ NPC ให้อยู่ตอนนี้ จึงเปลี่ยนตามภาษาที่เลือกเอง
         private void Refresh()

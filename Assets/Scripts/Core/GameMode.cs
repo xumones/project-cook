@@ -8,6 +8,8 @@ namespace ProjectCook.Core
         Station,
         Dialogue,
         /// <summary>เปิดหน้าต่างกระเป๋า เมาส์ใช้จัดของ ผู้เล่นเดินและหันกล้องไม่ได้ แต่เวลาในเกมยังเดินต่อ</summary>
-        Inventory
+        Inventory,
+        /// <summary>กำลังย้ายพื้นที่ ทุกระบบหยุดรับอินพุตและผู้เล่นไม่ขยับจนกว่าพื้นที่ใหม่จะพร้อม</summary>
+        Loading
     }
 }

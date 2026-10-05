@@ -51,7 +51,7 @@ namespace ProjectCook.Inventory
             {
                 if (item == null) continue;
 
-                if (!storage.TryAdd(new InventoryItem(item, null)))
+                if (!storage.TryAdd(new InventoryItem(new ItemInstance(item))))
                 {
                     Debug.LogWarning($"[Shop] {name} ที่วางของไม่พอ {item.ItemId} ไม่ได้ขึ้นร้าน", this);
                 }

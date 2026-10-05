@@ -212,6 +212,8 @@ namespace ProjectCook.Cooking
             public float sideB;
         }
 
+        public string StateKey => "cook_times";
+
         // สถานะความสุกและภาพคำนวณจากเวลาทอดได้ทั้งหมด จึงจดแค่เวลา
         public string CaptureState() => JsonUtility.ToJson(new SavedCookTimes
         {

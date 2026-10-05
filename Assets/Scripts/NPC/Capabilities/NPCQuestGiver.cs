@@ -79,7 +79,7 @@ namespace ProjectCook.NPC.Capabilities
         // รับเควสได้เมื่อใส่โน้ตลงกระเป๋าได้เท่านั้น
         private LocalizedString Accept(IQuestRequest request)
         {
-            var note = new InventoryItem(noteDefinition, new[] { QuestNote.StateFor(NpcId) });
+            var note = new InventoryItem(QuestNote.Create(noteDefinition, NpcId));
             if (!PlayerInventory.Instance.Storage.TryAdd(note)) return bagFullText;
 
             active = request;

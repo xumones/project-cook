@@ -24,17 +24,13 @@ namespace ProjectCook.Stations
         [Tooltip("ต้องวางของในมือก่อนถึงจะเข้าได้")]
         [SerializeField] private bool requireEmptyHands;
 
-        [Header("Station Modules")]
-        [Tooltip("โมดูลที่อยู่นอก GameObject นี้และลูกๆ (ต้อง Implement IStationModule) โดยปกติเว้นว่างไว้ได้")]
-        [SerializeField] private MonoBehaviour[] externalModules;
-
         private readonly StationModuleGroup modules = new StationModuleGroup();
 
         protected bool isActive;
 
         protected virtual void Awake()
         {
-            modules.Collect(this, externalModules);
+            modules.Collect(this);
 
             // ค่าที่ Save ไว้ใน Scene ของกล้องสถานีจะเป็น enabled เสมอ ปิดไว้ก่อนกันมันแอบอ่าน mouse look ทั้งที่ยังไม่ได้เข้าสถานี
             CameraManager.SetLookInput(stationCamera, false);

@@ -1,24 +1,14 @@
 namespace ProjectCook.Items
 {
-    /// <summary>component ที่มีสถานะต้องติดไปกับไอเทมตอนไอเทมถูกเก็บเป็นข้อมูล (เข้ากระเป๋า หรือ Save)</summary>
+    /// <summary>component ที่มีสถานะต้องติดไปกับไอเทม ตอนไอเทมกลายเป็นข้อมูล (เข้าที่เก็บ หรือ save)</summary>
     public interface ISavableState
     {
+        /// <summary>รหัสคงที่ของสถานะนี้ ห้ามเปลี่ยนหลังมี save ไอเทมหนึ่งชิ้นห้ามมีรหัสซ้ำกัน</summary>
+        string StateKey { get; }
+
         string CaptureState();
 
-        /// <summary>ตั้งสถานะจากข้อความที่ CaptureState ของ component ชนิดเดียวกันเคยจดไว้</summary>
+        /// <summary>ตั้งสถานะจากข้อความที่ CaptureState เคยจดไว้</summary>
         void RestoreState(string state);
-    }
-
-    /// <summary>สถานะที่จดไว้ของ component หนึ่งตัว ชื่อชนิดใช้ตรวจว่าคืนให้ถูกตัว</summary>
-    public readonly struct ComponentState
-    {
-        public string ComponentType { get; }
-        public string Data { get; }
-
-        public ComponentState(string componentType, string data)
-        {
-            ComponentType = componentType;
-            Data = data;
-        }
     }
 }

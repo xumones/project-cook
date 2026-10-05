@@ -1,16 +1,14 @@
-using System.Collections.Generic;
 using UnityEngine;
 using ProjectCook.Items;
 
 namespace ProjectCook.Inventory
 {
-    /// <summary>ของหนึ่งชิ้นที่อยู่ในตารางกระเป๋า เก็บเป็นข้อมูลล้วน ตำแหน่งและการหมุนตั้งได้จาก ItemGrid เท่านั้น</summary>
+    /// <summary>ตำแหน่งของไอเทมหนึ่งชิ้นในตารางที่เก็บ ตัวไอเทมคือ Instance ตำแหน่งและการหมุนตั้งได้จาก ItemGrid เท่านั้น</summary>
     public class InventoryItem
     {
-        public ItemDefinitionSO Definition { get; }
+        public ItemInstance Instance { get; }
 
-        /// <summary>สถานะที่จดจากวัตถุตอนถูกเก็บ ใช้คืนให้วัตถุใหม่ตอนเอาออก</summary>
-        public IReadOnlyList<ComponentState> States { get; }
+        public ItemDefinitionSO Definition => Instance.Definition;
 
         /// <summary>ช่องมุมซ้ายบนที่ของชิ้นนี้วางอยู่</summary>
         public Vector2Int Position { get; internal set; }
@@ -20,10 +18,9 @@ namespace ProjectCook.Inventory
         /// <summary>จำนวนช่องที่กินจริงหลังคิดการหมุนแล้ว</summary>
         public Vector2Int Size => SizeWhen(IsRotated);
 
-        public InventoryItem(ItemDefinitionSO definition, IReadOnlyList<ComponentState> states)
+        public InventoryItem(ItemInstance instance)
         {
-            Definition = definition;
-            States = states;
+            Instance = instance;
         }
 
         public Vector2Int SizeWhen(bool rotated)

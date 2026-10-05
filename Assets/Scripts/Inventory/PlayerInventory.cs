@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using ProjectCook.Core;
+using ProjectCook.Items;
 
 namespace ProjectCook.Inventory
 {
@@ -26,7 +27,8 @@ namespace ProjectCook.Inventory
         /// <summary>ตารางของกระเป๋าที่สวมอยู่ ว่างเมื่อไม่ได้สวม เปลี่ยนเป็นชุดใหม่ทุกครั้งที่สวมหรือถอด</summary>
         public IReadOnlyList<ItemGrid> BagGrids => bagGrids;
 
-        public BagDefinitionSO WornBag { get; private set; }
+        /// <summary>กระเป๋าที่สวมอยู่ null = ไม่ได้สวม ชนิดของมันเป็น BagDefinitionSO เสมอ</summary>
+        public ItemInstance WornBag { get; private set; }
 
         protected override void Awake()
         {
@@ -37,7 +39,7 @@ namespace ProjectCook.Inventory
         }
 
         /// <summary>สวมกระเป๋าพร้อมของข้างใน ผู้เรียกต้องเช็คก่อนว่ายังไม่ได้สวมใบไหน</summary>
-        public void WearBag(BagDefinitionSO bag, List<ItemGrid> contents)
+        public void WearBag(ItemInstance bag, List<ItemGrid> contents)
         {
             WornBag = bag;
             bagGrids = contents;
