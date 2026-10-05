@@ -153,7 +153,8 @@ namespace ProjectCook.UI
         private AimHint ResolveHint()
         {
             // ระหว่างคุยหรืออยู่ในสถานี ไม่มีอะไรให้ทำกับเป้า
-            if (!GameModeManager.GameplayInputAllowed) return AimHint.None;
+            GameModeManager gameMode = GameModeManager.Instance;
+            if (gameMode != null && gameMode.CurrentMode != GameMode.Exploring) return AimHint.None;
 
             PlayerAiming aiming = PlayerAiming.Instance;
             if (aiming == null) return AimHint.None;

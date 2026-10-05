@@ -51,7 +51,7 @@ namespace ProjectCook.Player
         {
             if (current == null)
             {
-                if (GameModeManager.WorldInputAllowed && holdAction.WasPressedThisFrame()) TryBeginTurn();
+                if (holdAction.WasPressedThisFrame()) TryBeginTurn();
                 return;
             }
 

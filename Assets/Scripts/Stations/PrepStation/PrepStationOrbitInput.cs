@@ -58,7 +58,7 @@ namespace ProjectCook.Stations
         {
             if (!isActive) return;
 
-            SetOrbiting(GameModeManager.InputAllowedIn(GameMode.Station) && orbitHoldAction.IsPressed());
+            SetOrbiting(orbitHoldAction.IsPressed());
         }
 
         /// <summary>เปิดแกนหมุนกล้องพร้อมซ่อนเคอร์เซอร์ระหว่างลาก ให้รู้สึกเหมือนหมุนด้วยมือ</summary>

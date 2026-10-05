@@ -104,7 +104,7 @@ namespace ProjectCook.Cooking
             if (!isActive) return;
 
             // เปิดหน้าต่างทับสถานีอยู่ คลิกเป็นของหน้าต่าง ปล่อยของที่คีบไว้
-            if (!GameModeManager.InputAllowedIn(GameMode.Station))
+            if (GameModeManager.Instance.CurrentMode != GameMode.Station)
             {
                 ReleaseIngredient();
                 return;

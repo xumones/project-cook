@@ -39,7 +39,6 @@ namespace ProjectCook.Player
 
         private void Update()
         {
-            if (!GameModeManager.GameplayInputAllowed) return;
             if (!interactAction.WasPressedThisFrame()) return;
 
             // ค้นหา component เฉพาะตอนกดปุ่ม ไม่ใช่ทุกเฟรม จึงไม่ต้องแคชผลไว้เอง

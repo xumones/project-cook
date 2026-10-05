@@ -92,8 +92,8 @@ namespace ProjectCook.Stations
 
         protected virtual void Update()
         {
-            // หน้าต่างที่เปิดทับ (กระเป๋า) ได้ Esc ก่อน
-            if (isActive && GameModeManager.InputAllowedIn(GameMode.Station) && exitAction.WasPressedThisFrame())
+            // หน้าต่างที่เปิดทับ (กระเป๋า) ปิดชุดปุ่ม Station อยู่ Esc จึงไปที่หน้าต่างก่อน
+            if (isActive && exitAction.WasPressedThisFrame())
             {
                 OnExitPressed();
             }

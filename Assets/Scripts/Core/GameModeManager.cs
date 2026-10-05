@@ -14,26 +14,12 @@ namespace ProjectCook.Core
         }
 
         private readonly List<Layer> layers = new List<Layer>();
-        private int lastChangeFrame = -1;
 
-        /// <summary>โหมดชั้นบนสุด ไม่มีชั้นไหนเลย = เดินสำรวจ</summary>
+        /// <summary>โหมดชั้นบนสุด ไม่มีชั้นไหนเลย = เดินสำรวจ ชุดปุ่มที่ใช้ได้ตามโหมดนี้ (InputContextSwitcher)</summary>
         public GameMode CurrentMode => layers.Count > 0 ? layers[layers.Count - 1].Mode : GameMode.Exploring;
 
         /// <summary>มีการเข้าหรือออกโหมดชั้นใดก็ได้ ส่งโหมดบนสุดมาให้</summary>
         public event Action<GameMode> ModeChanged;
-
-        /// <summary>อินพุตตอนเดินสำรวจเท่านั้น (หยิบ interact) ปิดเมื่อมีโหมดอื่นอยู่บนสุด</summary>
-        public static bool GameplayInputAllowed => InputAllowedIn(GameMode.Exploring);
-
-        /// <summary>อินพุตที่ใช้ได้ทั้งตอนเดินและในสถานี (บิดลูกบิด เปิดกระเป๋า) ปิดตอนคุยหรือเปิดหน้าต่างอยู่</summary>
-        public static bool WorldInputAllowed => Instance == null || Instance.AcceptsInput(GameMode.Exploring, GameMode.Station);
-
-        /// <summary>โหมดนี้อยู่บนสุดและรับอินพุตได้ในเฟรมนี้ เช่น ปุ่มของสถานีต้องหยุดตอนเปิดกระเป๋าทับ</summary>
-        public static bool InputAllowedIn(GameMode mode) => Instance == null || Instance.AcceptsInput(mode, mode);
-
-        // เฟรมที่เพิ่งเปลี่ยนโหมดยังนับปุ่มที่กดเปลี่ยนโหมดอยู่ จึงต้องกันไว้หนึ่งเฟรม
-        private bool AcceptsInput(GameMode a, GameMode b) =>
-            (CurrentMode == a || CurrentMode == b) && Time.frameCount != lastChangeFrame;
 
         /// <summary>มีโหมดนี้อยู่ชั้นใดชั้นหนึ่งไหม เช่น เปิดกระเป๋าทับสถานี สถานียังนับว่าอยู่</summary>
         public bool Contains(GameMode mode)
@@ -71,10 +57,6 @@ namespace ProjectCook.Core
             return false;
         }
 
-        private void NotifyChanged()
-        {
-            lastChangeFrame = Time.frameCount;
-            ModeChanged?.Invoke(CurrentMode);
-        }
+        private void NotifyChanged() => ModeChanged?.Invoke(CurrentMode);
     }
 }

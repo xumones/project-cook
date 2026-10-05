@@ -26,7 +26,7 @@ namespace ProjectCook.Stations
         {
             base.Update();
 
-            if (isActive && current == null && GameModeManager.InputAllowedIn(GameMode.Station) && selectAction.WasPressedThisFrame())
+            if (isActive && current == null && selectAction.WasPressedThisFrame())
             {
                 TryEnterAimedSubStation();
             }

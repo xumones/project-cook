@@ -1051,10 +1051,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148cff07071ff3845a3bcfb0860c8db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Interaction.IngredientDragController
-  gripAction: {fileID: 3001919216989983466, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  distanceAction: {fileID: 6240969308177333660, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  rotateHoldAction: {fileID: -6566517856757430620, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  rotateDeltaAction: {fileID: 6940538419726410420, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  gripAction: {fileID: -8912668314683842127, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  distanceAction: {fileID: -5454504125001710686, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rotateHoldAction: {fileID: 7527863535670474704, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rotateDeltaAction: {fileID: -2050655801598134032, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dragForceMultiplier: 20
   maxDragSpeed: 4
   grippingDamping: 3
@@ -2703,7 +2703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8d47faf7424864a93b5ecf392f0183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Stations::ProjectCook.Stations.PrepStationOrbitInput
-  orbitHoldAction: {fileID: -3687618155938018543, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  orbitHoldAction: {fileID: -3251335118171092666, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &485414634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2725,7 +2725,7 @@ MonoBehaviour:
       Owner: {fileID: 485414636}
       Enabled: 1
       Input:
-        InputAction: {fileID: -5630151704836100654, guid: 1d6e640e716dc4ff6989b73d02023f2b, type: 3}
+        InputAction: {fileID: -2050655801598134032, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: 0.01
         CancelDeltaTime: 1
       InputValue: 0
@@ -2736,7 +2736,7 @@ MonoBehaviour:
       Owner: {fileID: 485414636}
       Enabled: 1
       Input:
-        InputAction: {fileID: -5630151704836100654, guid: 1d6e640e716dc4ff6989b73d02023f2b, type: 3}
+        InputAction: {fileID: -2050655801598134032, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -0.01
         CancelDeltaTime: 1
       InputValue: 0
@@ -2747,7 +2747,7 @@ MonoBehaviour:
       Owner: {fileID: 485414636}
       Enabled: 1
       Input:
-        InputAction: {fileID: 4054940960668514436, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: 6364200063481288577, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -0.75
         CancelDeltaTime: 0
       InputValue: 0
@@ -2755,7 +2755,7 @@ MonoBehaviour:
         AccelTime: 0.1
         DecelTime: 0.1
   PlayerIndex: -1
-  AutoEnableInputs: 1
+  AutoEnableInputs: 0
 --- !u!114 &485414635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4247,7 +4247,7 @@ MonoBehaviour:
   maxTiltAngle: 15
   tiltSmoothSpeed: 15
   autoCenterRotationOnRelease: 1
-  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  moveAction: {fileID: -2042484170622791499, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &684294752
 GameObject:
   m_ObjectHideFlags: 0
@@ -6466,7 +6466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Stations::ProjectCook.Stations.Station
   stationCamera: {fileID: 2121374917}
-  exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  exitAction: {fileID: -5079900453037998932, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   unlockCursor: 1
   requireEmptyHands: 0
 --- !u!114 &1063095469
@@ -7288,7 +7288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Cooking::ProjectCook.Cooking.CookingStation
   stationCamera: {fileID: 485414632}
-  exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  exitAction: {fileID: -5079900453037998932, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   unlockCursor: 1
   requireEmptyHands: 0
 --- !u!4 &1214867057
@@ -7341,10 +7341,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148cff07071ff3845a3bcfb0860c8db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Interaction.IngredientDragController
-  gripAction: {fileID: 3001919216989983466, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  distanceAction: {fileID: 6240969308177333660, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  rotateHoldAction: {fileID: -6566517856757430620, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  rotateDeltaAction: {fileID: 6940538419726410420, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  gripAction: {fileID: -8912668314683842127, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  distanceAction: {fileID: -5454504125001710686, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rotateHoldAction: {fileID: 7527863535670474704, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rotateDeltaAction: {fileID: -2050655801598134032, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dragForceMultiplier: 12.5
   maxDragSpeed: 20
   grippingDamping: 0
@@ -10915,7 +10915,7 @@ MonoBehaviour:
       Owner: {fileID: 1699777269}
       Enabled: 1
       Input:
-        InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: -2050655801598134032, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: 0.035
         CancelDeltaTime: 1
       InputValue: 0
@@ -10926,7 +10926,7 @@ MonoBehaviour:
       Owner: {fileID: 1699777269}
       Enabled: 1
       Input:
-        InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: -2050655801598134032, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -0.035
         CancelDeltaTime: 1
       InputValue: 0
@@ -10934,7 +10934,7 @@ MonoBehaviour:
         AccelTime: 0.1
         DecelTime: 0.1
   PlayerIndex: -1
-  AutoEnableInputs: 1
+  AutoEnableInputs: 0
 --- !u!4 &1728912957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f51bc459c3f27d64daab304d192f45a5, type: 3}
@@ -14062,10 +14062,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Cooking::ProjectCook.Cooking.Stove
   stationCamera: {fileID: 1219894960}
-  exitAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  exitAction: {fileID: -5079900453037998932, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   unlockCursor: 1
   requireEmptyHands: 1
-  selectAction: {fileID: 3001919216989983466, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  selectAction: {fileID: -8912668314683842127, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &919132149190547337
 GameObject:
   m_ObjectHideFlags: 0

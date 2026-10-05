@@ -1958,9 +1958,9 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  advanceAction: {fileID: 2064916234097673511, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  navigateAction: {fileID: 3710738434707379630, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  submitAction: {fileID: 2064916234097673511, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  advanceAction: {fileID: -5183604625994445159, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  navigateAction: {fileID: 164136893651949814, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  submitAction: {fileID: -5183604625994445159, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dialogueUI: {fileID: 347662168}
   references:
     version: 2
@@ -4881,7 +4881,7 @@ MonoBehaviour:
       Owner: {fileID: 1563954943}
       Enabled: 1
       Input:
-        InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: -5194998333526576303, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: 0.035
         CancelDeltaTime: 1
       InputValue: 0
@@ -4892,7 +4892,7 @@ MonoBehaviour:
       Owner: {fileID: 1563954943}
       Enabled: 1
       Input:
-        InputAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        InputAction: {fileID: -5194998333526576303, guid: 052faaac586de48259a63d0c4782560b, type: 3}
         Gain: -0.035
         CancelDeltaTime: 1
       InputValue: 0
@@ -4900,7 +4900,7 @@ MonoBehaviour:
         AccelTime: 0.1
         DecelTime: 0.1
   PlayerIndex: -1
-  AutoEnableInputs: 1
+  AutoEnableInputs: 0
 --- !u!114 &1563954943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5204,9 +5204,9 @@ MonoBehaviour:
   crouchTransitionSpeed: 10
   orientation: {fileID: 330585546}
   mainBody: {fileID: 55747202}
-  moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  crouchAction: {fileID: 5064262545289094806, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  moveAction: {fileID: -8416700385697219783, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sprintAction: {fileID: 591477522117437375, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  crouchAction: {fileID: -4752131593527061328, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!143 &1597820349
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5244,7 +5244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39a20ec958c1e3040b84a70be28639a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectCook.Interaction.PlayerInteractor
-  interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  interactAction: {fileID: 9075364972663779240, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   pickUpHandler: {fileID: 380807967}
 --- !u!114 &1597820351
 MonoBehaviour:
@@ -5258,8 +5258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eaf34efe3ab7284d942b234e95aeecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Player::ProjectCook.Player.PlayerDragControl
-  holdAction: {fileID: 3001919216989983466, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  deltaAction: {fileID: 6940538419726410420, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  holdAction: {fileID: 7118904349568316227, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  deltaAction: {fileID: -7279060487589398050, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   movement: {fileID: 1597820348}
 --- !u!1 &1636333416
 GameObject:
@@ -5453,8 +5453,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6919c96841b7864da3bcbac6ff5170e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.UI::ProjectCook.UI.InventoryScreen
-  toggleAction: {fileID: -2787600964015087675, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  closeAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  openAction: {fileID: 7219925146391201389, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  closeAction: {fileID: 4001915849150772731, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   slider: {fileID: 1650171397}
   slots:
   - {fileID: 1728425282}
@@ -5477,8 +5477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93eec1c9ce7c7e748ba6a67bf78535f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.UI::ProjectCook.UI.ItemDragController
-  rotateAction: {fileID: 4373572344369599753, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  quickMoveAction: {fileID: -3957903275514897066, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  rotateAction: {fileID: 4390188811662894131, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  quickMoveAction: {fileID: 7456185404388077271, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   panels:
   - {fileID: 679369188}
   - {fileID: 1129774337}
@@ -5501,7 +5501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 637e779d4de3f1e4ea5f9868e6b1d787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.UI::ProjectCook.UI.InventoryPanelSlider
-  pointAction: {fileID: -1654692200621890270, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  pointAction: {fileID: 3040172603832498022, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   playerPanel: {fileID: 679369192}
   containerPanel: {fileID: 1129774341}
   leftEdge: {fileID: 902331993}
@@ -5856,6 +5856,7 @@ GameObject:
   - component: {fileID: 1763093739}
   - component: {fileID: 1763093742}
   - component: {fileID: 1763093743}
+  - component: {fileID: 1763093744}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -5954,8 +5955,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 610d64f9979db1740abccb0b88365d5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.SaveService
-  toggleAction: {fileID: 2613883775805743354, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  toggleAction: {fileID: 5846941468194903024, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   autosaveInterval: 30
+--- !u!114 &1763093744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763093736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abd99544432904a4998d6e3fa33f79f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.InputContextSwitcher
+  modeMaps:
+  - mode: 0
+    maps:
+    - Gameplay
+    - View
+    - World
+  - mode: 1
+    maps:
+    - Station
+    - World
+  - mode: 2
+    maps:
+    - Dialogue
+    - View
+  - mode: 3
+    maps:
+    - Menu
+  - mode: 4
+    maps: []
+  alwaysOn:
+  - Dev
 --- !u!1 &1855475304
 GameObject:
   m_ObjectHideFlags: 0

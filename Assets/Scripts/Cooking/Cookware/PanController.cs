@@ -105,8 +105,8 @@ namespace ProjectCook.Cooking
         {
             if (isControllerActive)
             {
-                // เปิดหน้าต่างทับสถานีอยู่ ปล่อยให้กระทะคืนมุมเหมือนปล่อยปุ่ม
-                Vector2 input = GameModeManager.InputAllowedIn(GameMode.Station) ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+                // เปิดหน้าต่างทับสถานีอยู่ ชุดปุ่ม Station ปิด ค่าเป็นศูนย์ กระทะจึงคืนมุมเหมือนปล่อยปุ่ม
+                Vector2 input = moveAction.ReadValue<Vector2>();
 
                 if (input.sqrMagnitude > 0.001f)
                 {

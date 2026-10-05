@@ -11,10 +11,10 @@ namespace ProjectCook.UI
     public class InventoryScreen : MonoBehaviour
     {
         [Header("Input")]
-        [Tooltip("Action เปิด/ปิดหน้าต่าง (Tab)")]
-        [SerializeField] private InputActionReference toggleAction;
+        [Tooltip("Action เปิดหน้าต่าง (World/OpenInventory)")]
+        [SerializeField] private InputActionReference openAction;
 
-        [Tooltip("Action ปิดหน้าต่าง (Esc)")]
+        [Tooltip("Action ปิดหน้าต่าง (Menu/Close)")]
         [SerializeField] private InputActionReference closeAction;
 
         [Tooltip("ตัวเลื่อนแผงซ้าย/ขวาเข้าออก")]
@@ -67,15 +67,9 @@ namespace ProjectCook.UI
 
         private void Update()
         {
-            if (!isOpen)
-            {
-                // เปิดได้ทั้งตอนเดินและในสถานี ปิดแล้วกลับไปโหมดเดิม
-                if (GameModeManager.WorldInputAllowed && toggleAction.WasPressedThisFrame()) Open(null, null);
-            }
-            else if (toggleAction.WasPressedThisFrame() || closeAction.WasPressedThisFrame())
-            {
-                Close();
-            }
+            // ปุ่มเปิดอยู่ในชุด World (เดินและในสถานี) ปุ่มปิด (Tab/Esc) อยู่ในชุด Menu ที่เปิดเฉพาะตอนหน้าต่างอยู่บนสุด
+            if (!isOpen && openAction.WasPressedThisFrame()) Open(null, null);
+            else if (isOpen && closeAction.WasPressedThisFrame()) Close();
         }
 
         private void Open(ItemStorage with, string title)
