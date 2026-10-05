@@ -16,6 +16,10 @@ namespace ProjectCook.NPC
 
         public NPCProfileSO Profile => profile;
 
+        /// <summary>ตัวสุ่มประโยคของ NPC ตัวนี้ ความสามารถทุกตัวใช้ร่วมกัน</summary>
+        public LinePicker Lines { get; } = new LinePicker();
+
+        public string SpeakerId => profile.NpcId;
         public LocalizedString DisplayName => profile.DisplayName;
         public TMP_FontAsset Font => profile.Font;
         public Sprite Portrait => profile.CharacterSprite;
@@ -38,7 +42,7 @@ namespace ProjectCook.NPC
             DialogueRunner.Instance?.Begin(this);
         }
 
-        public bool TryGetGreeting(out LocalizedString greeting) => profile.Greeting.TryPick(out greeting);
+        public bool TryGetGreeting(out LocalizedString greeting) => Lines.TryPick(profile.Greeting, out greeting);
 
         public void CollectOptions(List<DialogueOption> options)
         {

@@ -1,0 +1,22 @@
+{
+    "name": "ProjectCook.Quests",
+    "rootNamespace": "ProjectCook.Quests",
+    "references": [
+        "ProjectCook.Core",
+        "ProjectCook.Items",
+        "ProjectCook.Inventory",
+        "ProjectCook.Cooking",
+        "ProjectCook.Dialogue",
+        "Unity.Localization",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

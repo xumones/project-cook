@@ -8,6 +8,9 @@ namespace ProjectCook.Dialogue
     /// <summary>คู่สนทนาที่ DialogueRunner คุยด้วย ให้ระบบบทสนทนาไม่ต้องรู้จัก NPC โดยตรง</summary>
     public interface IDialogueSpeaker
     {
+        /// <summary>รหัสคงที่ของผู้พูด ระบบอื่นใช้อ้างถึง เช่น เควส "ไปคุยกับ"</summary>
+        string SpeakerId { get; }
+
         LocalizedString DisplayName { get; }
         TMP_FontAsset Font { get; }
         Sprite Portrait { get; }

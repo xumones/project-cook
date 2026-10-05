@@ -74,6 +74,23 @@ namespace ProjectCook.Inventory
             return true;
         }
 
+        /// <summary>ทิ้งของทุกชิ้นที่ตรงเงื่อนไข ไม่ผ่านกฎของที่เก็บ ใช้กับของที่หมดความหมายแล้ว เช่น โน้ตของเควสที่จบ</summary>
+        public void RemoveAll(Predicate<InventoryItem> match)
+        {
+            bool removed = false;
+            foreach (ItemGrid grid in grids)
+            {
+                for (int i = grid.Items.Count - 1; i >= 0; i--)
+                {
+                    if (!match(grid.Items[i])) continue;
+
+                    grid.Remove(grid.Items[i]);
+                    removed = true;
+                }
+            }
+            if (removed) Changed?.Invoke();
+        }
+
         public void Clear()
         {
             foreach (ItemGrid grid in grids)

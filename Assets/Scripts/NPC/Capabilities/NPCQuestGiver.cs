@@ -6,10 +6,12 @@ using ProjectCook.Cooking;
 using ProjectCook.Dialogue;
 using ProjectCook.Inventory;
 using ProjectCook.Items;
+using ProjectCook.Quests;
 
 namespace ProjectCook.NPC.Capabilities
 {
-    /// <summary>ให้เควสทีละอันต่อ NPC: เควสเนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มเควสจากวัตถุดิบ และรับจานที่ผู้เล่นถือมาส่ง</summary>
+    /// <summary>ทางเข้าเควสในบทสนทนา: ให้เควสทีละอันต่อ NPC (เนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มจากวัตถุดิบ) และรับจานที่ผู้เล่นถือมาส่ง</summary>
+    // ความคืบหน้า การจบเควส และรางวัลเป็นของ QuestLog ตัวนี้แค่แปลงเป็นตัวเลือกในเมนูคุย
     public class NPCQuestGiver : NPCCapability
     {
         [Tooltip("เควสเนื้อเรื่องตามลำดับ ทำครั้งเดียว ตัวแรกที่ยังไม่จบคือเควสที่เสนอ")]
@@ -30,78 +32,73 @@ namespace ProjectCook.NPC.Capabilities
         [SerializeField] private LocalizedString reminderLabel;
         [SerializeField] private LocalizedString deliverLabel;
 
-        // เควสที่ให้อยู่ตอนนี้ null = ว่าง ขอเควสใหม่ได้
-        private IQuestRequest active;
+        private readonly List<IngredientSnapshot> dishBuffer = new List<IngredientSnapshot>();
 
-        public string NpcId => Npc.Profile.NpcId;
-        public LocalizedString DisplayName => Npc.Profile.DisplayName;
-        public IQuestRequest Active => active;
+        private string NpcId => Npc.Profile.NpcId;
 
         public override void BuildOptions(List<DialogueOption> options)
         {
-            if (active == null)
+            QuestLog log = QuestLog.Instance;
+            if (log == null) return;
+
+            ActiveQuest given = log.FindByGiver(NpcId);
+            if (given == null)
             {
-                IQuestRequest next = NextRequest();
+                IQuestDefinition next = NextRequest(log);
                 if (next != null)
                 {
                     var ask = new DialogueOption { Label = askLabel };
-                    ask.OnSelected = () => ask.Response = Accept(next);
+                    ask.OnSelected = () => ask.Response = Accept(log, next);
                     options.Add(ask);
                 }
-                return;
+            }
+            else
+            {
+                options.Add(new DialogueOption { Label = reminderLabel, Response = given.Definition.ReminderText });
             }
 
-            options.Add(new DialogueOption { Label = reminderLabel, Response = active.ReminderText });
-
-            if (EquipmentManager.TryGetHeld(out ServingFoodContainer dish) && dish.HasContents)
+            // ส่งได้ทั้งเควสของตัวเองและเควสของคนอื่นที่ระบุให้มาส่งที่นี่
+            if (log.TryFindDelivery(NpcId, out ActiveQuest delivery)
+                && EquipmentManager.TryGetHeld(out ServingFoodContainer dish) && dish.HasContents)
             {
                 // คำตอบขึ้นกับผลประเมิน จึงตั้งตอนกดเลือก
                 var option = new DialogueOption { Label = deliverLabel };
-                option.OnSelected = () => option.Response = Deliver(dish);
+                option.OnSelected = () => option.Response = Deliver(log, delivery, dish);
                 options.Add(option);
             }
         }
 
-        private IQuestRequest NextRequest()
+        private IQuestDefinition NextRequest(QuestLog log)
         {
-            GameProgress progress = GameProgress.Instance;
             foreach (QuestSO quest in storyQuests)
             {
-                if (quest != null && !progress.IsQuestCompleted(quest.QuestId)) return quest;
+                if (quest != null && log.CanStart(quest)) return quest;
             }
 
             // ขอได้เฉพาะเควสที่เงินตอนนี้พอซื้อวัตถุดิบ
             return PlayerWallet.Instance != null
-                ? IngredientOrder.TryCreate(orderIngredients, PlayerWallet.Instance.Money, Npc.Profile)
+                ? IngredientOrder.TryCreate(orderIngredients, PlayerWallet.Instance.Money, Npc.Profile, Npc.Lines)
                 : null;
         }
 
         // รับเควสได้เมื่อใส่โน้ตลงกระเป๋าได้เท่านั้น
-        private LocalizedString Accept(IQuestRequest request)
+        private LocalizedString Accept(QuestLog log, IQuestDefinition request)
         {
-            var note = new InventoryItem(QuestNote.Create(noteDefinition, NpcId));
-            if (!PlayerInventory.Instance.Storage.TryAdd(note)) return bagFullText;
+            var quest = new ActiveQuest(request, NpcId, Npc.Profile.DisplayName);
+            if (!PlayerInventory.Instance.Storage.TryAdd(new InventoryItem(QuestNote.Create(noteDefinition, quest)))) return bagFullText;
 
-            active = request;
+            log.Begin(quest);
             return request.OfferText;
         }
 
         // ไม่ผ่าน = จานยังอยู่กับผู้เล่น แก้แล้วส่งใหม่ได้
-        private LocalizedString Deliver(ServingFoodContainer dish)
+        private LocalizedString Deliver(QuestLog log, ActiveQuest quest, ServingFoodContainer dish)
         {
-            IQuestRequest request = active;
-            QualityGrade grade = request.Evaluate(dish).Grade;
-            if (grade == QualityGrade.F) return request.ResultText(grade);
+            dish.GetSnapshot(dishBuffer);
+            QualityGrade grade = log.Deliver(quest, NpcId, dishBuffer).Grade;
+            if (grade != QualityGrade.F) dish.ConsumeAll();
 
-            request.Consume(dish);
-            if (PlayerWallet.Instance != null)
-            {
-                PlayerWallet.Instance.Earn(request.Reward);
-            }
-            request.OnCompleted();
-            active = null;
-            QuestNote.Discard(NpcId);
-            return request.ResultText(grade);
+            return quest.Definition.ResultText(grade);
         }
     }
 }

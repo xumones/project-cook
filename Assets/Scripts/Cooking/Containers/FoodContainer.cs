@@ -35,13 +35,16 @@ namespace ProjectCook.Cooking
 
         public bool HasContents => contents.Count > 0;
 
-        /// <summary>เติมรายชื่อวัตถุดิบข้างในลง list ที่ผู้เรียกเตรียมมา</summary>
-        public void GetIngredients(List<IngredientInstance> buffer)
+        /// <summary>เติมภาพนิ่งของวัตถุดิบข้างในลง list ที่ผู้เรียกเตรียมมา</summary>
+        public void GetSnapshot(List<IngredientSnapshot> buffer)
         {
             buffer.Clear();
             for (int i = 0; i < contents.Count; i++)
             {
-                buffer.Add(contents[i].Ingredient);
+                IngredientInstance ingredient = contents[i].Ingredient;
+                if (ingredient == null) continue;
+
+                buffer.Add(new IngredientSnapshot(ingredient.Data, ingredient.CurrentCookingState, ingredient.CookProgress));
             }
         }
 

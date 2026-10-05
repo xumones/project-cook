@@ -35,7 +35,7 @@ namespace ProjectCook.Cooking
 
         private static readonly List<bool> usedBuffer = new List<bool>();
 
-        public static DishScore Evaluate(IReadOnlyList<IngredientRequirement> requirements, IReadOnlyList<IngredientInstance> ingredients)
+        public static DishScore Evaluate(IReadOnlyList<IngredientRequirement> requirements, IReadOnlyList<IngredientSnapshot> ingredients)
         {
             if (requirements == null || requirements.Count == 0) return new DishScore(0f, QualityGrade.F);
 
@@ -50,7 +50,7 @@ namespace ProjectCook.Cooking
                 float bestScore = 0f;
                 for (int i = 0; i < ingredients.Count; i++)
                 {
-                    if (usedBuffer[i] || ingredients[i] == null || ingredients[i].Data != requirements[r].ingredient) continue;
+                    if (usedBuffer[i] || ingredients[i].Data != requirements[r].ingredient) continue;
 
                     float score = ScoreDoneness(ingredients[i], requirements[r].idealState);
                     if (best < 0 || score > bestScore)
@@ -71,9 +71,9 @@ namespace ProjectCook.Cooking
             return new DishScore(average, ToGrade(average));
         }
 
-        private static float ScoreDoneness(IngredientInstance ingredient, CookingState ideal)
+        private static float ScoreDoneness(IngredientSnapshot ingredient, CookingState ideal)
         {
-            CookingState state = ingredient.CurrentCookingState;
+            CookingState state = ingredient.State;
             if (state == ideal) return 1f;
 
             if (ideal == CookingState.Raw)
@@ -89,7 +89,7 @@ namespace ProjectCook.Cooking
             // ideal = Cooked (Cooking/Burnt ไม่ใช้เป็น ideal)
             switch (state)
             {
-                case CookingState.Cooking: return ingredient.CookProgress * 0.5f;
+                case CookingState.Cooking: return ingredient.Progress * 0.5f;
                 case CookingState.Burnt: return BurntWhenCookedWanted;
                 default: return 0f;
             }

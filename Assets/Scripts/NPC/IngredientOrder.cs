@@ -3,33 +3,39 @@ using UnityEngine;
 using UnityEngine.Localization;
 using ProjectCook.Core;
 using ProjectCook.Cooking;
+using ProjectCook.Items;
+using ProjectCook.Quests;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>เควสสุ่มหนึ่งรายการ: วัตถุดิบไม่ซ้ำกันที่ราคารวมน้อยกว่างบของผู้เล่น ทำซ้ำได้ ประโยคมาจาก NPC ที่ให้</summary>
-    public class IngredientOrder : IQuestRequest
+    /// <summary>เควสสุ่มหนึ่งรายการ: ส่งจานที่มีวัตถุดิบไม่ซ้ำกันซึ่งราคารวมน้อยกว่างบของผู้เล่น ทำซ้ำได้ ประโยคมาจาก NPC ที่ให้</summary>
+    // เป็นทั้งเนื้อหาเควสและเป้าหมายข้อเดียวของมันเอง
+    public class IngredientOrder : IQuestDefinition, IDeliveryObjective
     {
         private const int MinIngredients = 2;
         private const int MaxIngredients = 4;
         private const float RewardMultiplier = 1.5f;
 
         private static readonly List<IngredientDataSO> shuffled = new List<IngredientDataSO>();
-        private static readonly List<IngredientInstance> ingredientBuffer = new List<IngredientInstance>();
 
         private readonly List<IngredientRequirement> requirements;
         private readonly NPCProfileSO profile;
+        private readonly LinePicker lines;
+        private readonly IQuestObjective[] objectives;
 
         public int Reward { get; }
 
-        private IngredientOrder(List<IngredientRequirement> requirements, int reward, NPCProfileSO profile)
+        private IngredientOrder(List<IngredientRequirement> requirements, int reward, NPCProfileSO profile, LinePicker lines)
         {
             this.requirements = requirements;
             this.profile = profile;
+            this.lines = lines;
+            objectives = new IQuestObjective[] { this };
             Reward = reward;
         }
 
         /// <summary>สุ่มจาก pool ให้ราคารวมน้อยกว่า budget คืน null ถ้าจัดได้ไม่ถึงจำนวนต่ำสุด</summary>
-        public static IngredientOrder TryCreate(IReadOnlyList<IngredientDataSO> pool, int budget, NPCProfileSO profile)
+        public static IngredientOrder TryCreate(IReadOnlyList<IngredientDataSO> pool, int budget, NPCProfileSO profile, LinePicker lines)
         {
             shuffled.Clear();
             foreach (IngredientDataSO ingredient in pool)
@@ -54,23 +60,18 @@ namespace ProjectCook.NPC
             }
 
             return picked.Count >= MinIngredients
-                ? new IngredientOrder(picked, Mathf.CeilToInt(total * RewardMultiplier), profile)
+                ? new IngredientOrder(picked, Mathf.CeilToInt(total * RewardMultiplier), profile, lines)
                 : null;
         }
+
+        // ทำซ้ำได้ จึงไม่มีรหัสให้จดว่าจบ
+        public string QuestId => string.Empty;
+
+        public IReadOnlyList<IQuestObjective> Objectives => objectives;
 
         public LocalizedString OfferText => Line(profile.OrderOffer);
 
         public LocalizedString ReminderText => Line(profile.OrderReminder);
-
-        public DishScore Evaluate(ServingFoodContainer dish)
-        {
-            dish.GetIngredients(ingredientBuffer);
-            return DishEvaluator.Evaluate(requirements, ingredientBuffer);
-        }
-
-        public void Consume(ServingFoodContainer dish) => dish.ConsumeAll();
-
-        public string Describe() => IngredientRequirement.Describe(requirements);
 
         public LocalizedString ResultText(QualityGrade grade) => Line(grade switch
         {
@@ -79,13 +80,24 @@ namespace ProjectCook.NPC
             _ => profile.OrderPass
         });
 
-        // ทำซ้ำได้ จึงไม่มีอะไรต้องจด
-        public void OnCompleted() { }
+        public int Required => 1;
+
+        public string RecipientId => string.Empty;
+
+        public DishScore Evaluate(IReadOnlyList<IngredientSnapshot> dish) => DishEvaluator.Evaluate(requirements, dish);
+
+        public string Describe() => IngredientRequirement.Describe(requirements);
+
+        public int OnItemCollected(ItemInstance item) => 0;
+
+        public int OnWorldEvent(string eventId) => 0;
+
+        public int OnTalkedTo(string speakerId) => 0;
 
         // สร้างสำเนาใหม่ทุกครั้ง ไม่แก้ LocalizedString ที่อยู่ใน profile ซึ่งเป็นข้อมูลของ asset
-        private LocalizedString Line(NPCProfileSO.LineSet lines)
+        private LocalizedString Line(NPCProfileSO.LineSet set)
         {
-            if (!lines.TryPick(out LocalizedString line)) return null;
+            if (!lines.TryPick(set, out LocalizedString line)) return null;
 
             return new LocalizedString(line.TableReference, line.TableEntryReference)
             {

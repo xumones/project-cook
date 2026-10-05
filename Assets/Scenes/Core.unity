@@ -5700,10 +5700,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1763093738}
-  - component: {fileID: 1763093737}
   - component: {fileID: 1763093741}
   - component: {fileID: 1763093740}
   - component: {fileID: 1763093739}
+  - component: {fileID: 1763093742}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -5711,18 +5711,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1763093737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1763093736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bbf04897051aef46bca016b4ef65305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.GameProgress
 --- !u!4 &1763093738
 Transform:
   m_ObjectHideFlags: 0
@@ -5780,6 +5768,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3994d7465ce2a614f9d6676d2faa3931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.GameModeManager
+--- !u!114 &1763093742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763093736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da40c943f9373142aa40016c45042ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Quests::ProjectCook.Quests.QuestLog
+  triggeredQuests:
+  - {fileID: 11400000, guid: 9c66941313e910543890391480d469b4, type: 2}
+  - {fileID: 11400000, guid: 7649737808f0d5e43ad578e2c14e4d9c, type: 2}
 --- !u!1 &1855475304
 GameObject:
   m_ObjectHideFlags: 0

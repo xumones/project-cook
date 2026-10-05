@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Quest_Bacon
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: bacon
-  objective: {fileID: 11400000, guid: bf4ca551a403c31419c7aa109d63e1ee, type: 2}
+  objectives:
+  - {fileID: 11400000, guid: bf4ca551a403c31419c7aa109d63e1ee, type: 2}
   reward: 30
+  startItem: {fileID: 0}
+  startEvent: 
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990

@@ -5,7 +5,11 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "ProjectCook.Items",
-        "ProjectCook.Inventory"
+        "ProjectCook.Inventory",
+        "ProjectCook.Core",
+        "ProjectCook.Cooking",
+        "ProjectCook.Quests",
+        "Unity.Localization"
     ],
     "includePlatforms": [
         "Editor"

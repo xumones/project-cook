@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Quest_Egg
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: egg
-  objective: {fileID: 11400000, guid: 14210e3710acc7b48b6199b63498adc7, type: 2}
+  objectives:
+  - {fileID: 11400000, guid: 14210e3710acc7b48b6199b63498adc7, type: 2}
   reward: 15
+  startItem: {fileID: 0}
+  startEvent: 
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990

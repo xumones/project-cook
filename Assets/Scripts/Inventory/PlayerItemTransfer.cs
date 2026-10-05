@@ -18,6 +18,15 @@ namespace ProjectCook.Inventory
 
         public bool TryPickUp(Collider target)
         {
+            Item item = target.GetComponentInParent<Item>();
+            if (item == null || !TryTake(target)) return false;
+
+            MessageBus<ItemCollected>.Publish(new ItemCollected(item.Instance));
+            return true;
+        }
+
+        private bool TryTake(Collider target)
+        {
             StorableItem storable = target.GetComponentInParent<StorableItem>();
             if (storable != null) return TryStore(storable);
 

@@ -61,6 +61,7 @@ namespace ProjectCook.Dialogue
 
             speaker = newSpeaker;
             GameModeManager.Instance?.Enter(this, GameMode.Dialogue);
+            MessageBus<DialogueStarted>.Publish(new DialogueStarted(speaker.SpeakerId));
 
             dialogueUI.ShowUI();
             dialogueUI.SetFont(speaker.Font);

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Quest_Steak
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.QuestSO
   questId: steak
-  objective: {fileID: 11400000, guid: b36e53f791fbb6c4f87f14737219855b, type: 2}
+  objectives:
+  - {fileID: 11400000, guid: b36e53f791fbb6c4f87f14737219855b, type: 2}
   reward: 50
+  startItem: {fileID: 0}
+  startEvent: 
   offerText:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990

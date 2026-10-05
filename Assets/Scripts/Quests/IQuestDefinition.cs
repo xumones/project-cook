@@ -1,0 +1,25 @@
+using System.Collections.Generic;
+using UnityEngine.Localization;
+using ProjectCook.Core;
+
+namespace ProjectCook.Quests
+{
+    /// <summary>เนื้อหาของเควสหนึ่งเรื่อง ไม่ว่าจะเป็นเควสเนื้อเรื่องจาก asset หรือเควสสุ่มที่สร้างตอนเล่น</summary>
+    public interface IQuestDefinition
+    {
+        /// <summary>รหัสเควสที่ทำครั้งเดียว ว่าง = ทำซ้ำได้ ไม่จดว่าจบ</summary>
+        string QuestId { get; }
+
+        int Reward { get; }
+
+        /// <summary>ต้องครบทุกข้อเควสถึงจะจบ ทำข้อไหนก่อนก็ได้</summary>
+        IReadOnlyList<IQuestObjective> Objectives { get; }
+
+        LocalizedString OfferText { get; }
+
+        LocalizedString ReminderText { get; }
+
+        /// <summary>คำตอบตอนส่งอาหารตามเกรด F = ไม่ผ่าน</summary>
+        LocalizedString ResultText(QualityGrade grade);
+    }
+}

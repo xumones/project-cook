@@ -12,7 +12,7 @@ namespace ProjectCook.NPC.Capabilities
 
         public override void BuildOptions(List<DialogueOption> options)
         {
-            if (!Npc.Profile.Chat.TryPick(out LocalizedString line)) return;
+            if (!Npc.Lines.TryPick(Npc.Profile.Chat, out LocalizedString line)) return;
 
             options.Add(new DialogueOption { Label = chatLabel, Response = line });
         }

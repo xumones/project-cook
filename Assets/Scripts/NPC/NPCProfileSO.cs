@@ -8,30 +8,15 @@ namespace ProjectCook.NPC
     [CreateAssetMenu(fileName = "NPC_", menuName = "ProjectCook/NPC/Profile")]
     public class NPCProfileSO : ScriptableObject
     {
-        /// <summary>ชุดประโยคให้สุ่ม ไม่พูดซ้ำอันเดิมติดกัน</summary>
+        /// <summary>ชุดประโยคให้สุ่ม การสุ่มทำผ่าน LinePicker ของ NPC แต่ละตัว</summary>
         [System.Serializable]
         public class LineSet
         {
             [SerializeField] private LocalizedString[] variants;
 
-            [System.NonSerialized] private int lastIndex = -1;
+            public int Count => variants != null ? variants.Length : 0;
 
-            public bool TryPick(out LocalizedString line)
-            {
-                int count = variants != null ? variants.Length : 0;
-                if (count == 0)
-                {
-                    line = null;
-                    return false;
-                }
-
-                int index = Random.Range(0, count);
-                if (count > 1 && index == lastIndex) index = (index + 1) % count;
-
-                lastIndex = index;
-                line = variants[index];
-                return true;
-            }
+            public LocalizedString this[int index] => variants[index];
         }
 
         [Header("Identity")]
