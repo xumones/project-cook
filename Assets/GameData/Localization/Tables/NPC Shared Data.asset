@@ -331,6 +331,14 @@ MonoBehaviour:
     m_Key: npc.3.order.excellent.0
     m_Metadata:
       m_Items: []
+  - m_Id: 4722078952529920
+    m_Key: item.quest_note
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4722079082553344
+    m_Key: ui.quest.bagfull
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

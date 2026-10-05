@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProjectCook.Cooking
@@ -11,5 +12,16 @@ namespace ProjectCook.Cooking
 
         [Tooltip("สถานะที่ต้องการ เช่น Cooked สำหรับเนื้อ, Raw สำหรับผักสด ห่างจากนี้คะแนนยิ่งลด")]
         public CookingState idealState;
+
+        /// <summary>ชื่อวัตถุดิบตามภาษาที่เลือก คั่นด้วยจุลภาค</summary>
+        public static string Describe(IReadOnlyList<IngredientRequirement> requirements)
+        {
+            var names = new string[requirements.Count];
+            for (int i = 0; i < requirements.Count; i++)
+            {
+                names[i] = requirements[i].ingredient != null ? requirements[i].ingredient.GetDisplayName() : "?";
+            }
+            return string.Join(", ", names);
+        }
     }
 }

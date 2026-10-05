@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd0a63c90a630b419a51173910e5469, type: 3}
+  m_Name: quest_note
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.ItemDefinitionSO
+  itemId: quest_note
+  displayName:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: item.quest_note
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  prefab: {fileID: 881267600963672186, guid: 2d12b304d910f0946b03e57195385372, type: 3}
+  gridSize: {x: 1, y: 1}
+  price: 0
+  references:
+    version: 2
+    RefIds: []

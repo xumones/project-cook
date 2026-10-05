@@ -43,6 +43,8 @@ namespace ProjectCook.NPC
 
         public void Consume(ServingFoodContainer dish) => objective.Consume(dish);
 
+        public string Describe() => objective.Describe();
+
         public LocalizedString ResultText(QualityGrade grade) => grade switch
         {
             QualityGrade.F => failText,

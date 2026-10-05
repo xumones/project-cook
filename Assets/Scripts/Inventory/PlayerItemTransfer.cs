@@ -32,10 +32,10 @@ namespace ProjectCook.Inventory
         /// <summary>เอาของออกจากที่เก็บใดก็ได้ (ตัวผู้เล่น ตู้เย็น) วางลงฉากตรงจุดที่เล็ง</summary>
         public bool DropFromStorage(ItemStorage storage, InventoryItem item)
         {
-            if (!HasPrefab(item.Definition) || !TryGetPlacePose(item.Definition.Prefab, out Vector3 position, out Quaternion rotation)) return false;
+            if (!HasPrefab(item.Definition) || !TryGetPlacePose(item.Definition.Prefab, out Vector3 position, out Quaternion rotation, out RaycastHit surface)) return false;
             if (!storage.Remove(item)) return false;
 
-            Spawn(item.Definition, item.States, position, rotation);
+            FinishPlacing(Spawn(item.Definition, item.States, position, rotation), surface);
             return true;
         }
 
@@ -60,10 +60,12 @@ namespace ProjectCook.Inventory
         {
             PlayerInventory inventory = PlayerInventory.Instance;
             BagDefinitionSO bag = inventory.WornBag;
-            if (bag == null || !HasPrefab(bag) || !TryGetPlacePose(bag.Prefab, out Vector3 position, out Quaternion rotation)) return false;
+            if (bag == null || !HasPrefab(bag) || !TryGetPlacePose(bag.Prefab, out Vector3 position, out Quaternion rotation, out RaycastHit surface)) return false;
 
             List<ItemGrid> contents = inventory.TakeOffBag();
-            Spawn(bag, null, position, rotation).GetComponent<BagItem>().PutGrids(contents);
+            GameObject spawned = Spawn(bag, null, position, rotation);
+            spawned.GetComponent<BagItem>().PutGrids(contents);
+            FinishPlacing(spawned, surface);
             return true;
         }
 
@@ -71,10 +73,10 @@ namespace ProjectCook.Inventory
         {
             EquipmentManager equipment = EquipmentManager.Instance;
             EquippableItem held = equipment != null ? equipment.GetHeld(side) : null;
-            if (held == null || !TryGetPlacePose(held.gameObject, out Vector3 position, out Quaternion rotation)) return false;
+            if (held == null || !TryGetPlacePose(held.gameObject, out Vector3 position, out Quaternion rotation, out RaycastHit surface)) return false;
             if (!equipment.Release(held, position, rotation)) return false;
 
-            LimitDepenetration(held.gameObject);
+            FinishPlacing(held.gameObject, surface);
             return true;
         }
 
@@ -128,32 +130,37 @@ namespace ProjectCook.Inventory
             {
                 storable.RestoreStates(states);
             }
-            LimitDepenetration(spawned);
             return spawned;
         }
 
         /// <summary>หาท่าวางตรงที่เล็งที่ของรูปทรงเดียวกับ shape ลงได้โดยไม่ทับอะไร false = ไม่มีที่ว่าง</summary>
-        private bool TryGetPlacePose(GameObject shape, out Vector3 position, out Quaternion rotation)
+        private bool TryGetPlacePose(GameObject shape, out Vector3 position, out Quaternion rotation, out RaycastHit surface)
         {
             if (PlayerAiming.Instance == null)
             {
                 position = default;
                 rotation = default;
+                surface = default;
                 return false;
             }
 
-            if (ItemPlacement.TryFindPose(shape, PlayerAiming.Instance.AimRay, placeDistance, out position, out rotation)) return true;
+            if (ItemPlacement.TryFindPose(shape, PlayerAiming.Instance.AimRay, placeDistance, out position, out rotation, out surface)) return true;
 
             Debug.Log($"[PlayerItemTransfer] ไม่มีที่ว่างพอวาง {shape.name} ตรงที่เล็ง");
             return false;
         }
 
-        // กันพลาดชั้นสอง: ถ้ายังทับอะไรอยู่นิดหน่อย ให้ค่อยๆ ไหลออกแทนการดีดกระเด็น
-        private void LimitDepenetration(GameObject placed)
+        private void FinishPlacing(GameObject placed, RaycastHit surface)
         {
+            // กันพลาดชั้นสอง: ถ้ายังทับอะไรอยู่นิดหน่อย ให้ค่อยๆ ไหลออกแทนการดีดกระเด็น
             foreach (Rigidbody body in placed.GetComponentsInChildren<Rigidbody>())
             {
                 body.maxDepenetrationVelocity = maxDepenetrationVelocity;
+            }
+
+            foreach (IPlacementReceiver receiver in placed.GetComponentsInChildren<IPlacementReceiver>())
+            {
+                receiver.OnPlaced(surface);
             }
         }
 

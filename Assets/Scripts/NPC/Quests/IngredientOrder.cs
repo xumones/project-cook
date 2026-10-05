@@ -70,6 +70,8 @@ namespace ProjectCook.NPC
 
         public void Consume(ServingFoodContainer dish) => dish.ConsumeAll();
 
+        public string Describe() => IngredientRequirement.Describe(requirements);
+
         public LocalizedString ResultText(QualityGrade grade) => Line(grade switch
         {
             QualityGrade.F => profile.OrderFail,

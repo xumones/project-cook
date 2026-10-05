@@ -20,5 +20,7 @@ namespace ProjectCook.NPC
         }
 
         public override void Consume(ServingFoodContainer dish) => dish.ConsumeAll();
+
+        public override string Describe() => IngredientRequirement.Describe(requirements);
     }
 }

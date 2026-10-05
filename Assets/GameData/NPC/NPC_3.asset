@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59a58266419ebb46a19b38b7d74bee9, type: 3}
   m_Name: NPC_3
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCProfileSO
+  npcId: npc_3
   displayName:
     m_TableReference:
       m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990

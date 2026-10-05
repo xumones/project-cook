@@ -12,8 +12,8 @@ namespace ProjectCook.Items
         // ไม่ชนอะไรเลย = ลอยไว้ไม่ไกลนักแล้วให้ตกเอง
         private const float MissFraction = 0.6f;
 
-        /// <summary>ท่าวาง item ตามเส้นเล็ง ไกลสุด maxDistance false = ไม่มีที่ว่าง</summary>
-        public static bool TryFindPose(GameObject item, Ray aim, float maxDistance, out Vector3 position, out Quaternion rotation)
+        /// <summary>ท่าวาง item ตามเส้นเล็ง ไกลสุด maxDistance พร้อมผิวที่หยุดชน (collider เป็น null ถ้าไม่ชนอะไร) false = ไม่มีที่ว่าง</summary>
+        public static bool TryFindPose(GameObject item, Ray aim, float maxDistance, out Vector3 position, out Quaternion rotation, out RaycastHit surface)
         {
             rotation = FacingRotation(aim.direction);
             Bounds bounds = MeasureBounds(item);
@@ -25,11 +25,12 @@ namespace ProjectCook.Items
             if (Physics.CheckBox(aim.origin, bounds.extents, rotation, mask, QueryTriggerInteraction.Ignore))
             {
                 position = default;
+                surface = default;
                 return false;
             }
 
-            float travel = Physics.BoxCast(aim.origin, bounds.extents, aim.direction, out RaycastHit hit, rotation, maxDistance, mask, QueryTriggerInteraction.Ignore)
-                ? Mathf.Max(hit.distance - Skin, 0f)
+            float travel = Physics.BoxCast(aim.origin, bounds.extents, aim.direction, out surface, rotation, maxDistance, mask, QueryTriggerInteraction.Ignore)
+                ? Mathf.Max(surface.distance - Skin, 0f)
                 : maxDistance * MissFraction;
             Vector3 boxCenter = aim.GetPoint(travel);
             position = boxCenter - rotation * bounds.center;

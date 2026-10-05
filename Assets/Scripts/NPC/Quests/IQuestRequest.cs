@@ -13,6 +13,9 @@ namespace ProjectCook.NPC
 
         LocalizedString ReminderText { get; }
 
+        /// <summary>สิ่งที่ขอแบบสั้น ใช้เขียนบนโน้ต เช่น "Egg, Bacon"</summary>
+        string Describe();
+
         DishScore Evaluate(ServingFoodContainer dish);
 
         void Consume(ServingFoodContainer dish);

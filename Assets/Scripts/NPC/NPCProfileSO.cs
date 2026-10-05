@@ -35,6 +35,9 @@ namespace ProjectCook.NPC
         }
 
         [Header("Identity")]
+        [Tooltip("รหัส NPC ไม่ซ้ำกันทั้งเกม ใช้ผูกโน้ตเควสกับ NPC")]
+        [SerializeField] private string npcId;
+
         [SerializeField] private LocalizedString displayName;
         [SerializeField] private TMP_FontAsset font;
 
@@ -63,6 +66,7 @@ namespace ProjectCook.NPC
         [Tooltip("ส่งได้เกรด S")]
         [SerializeField] private LineSet orderExcellent;
 
+        public string NpcId => npcId;
         public LocalizedString DisplayName => displayName;
         public TMP_FontAsset Font => font;
         public Sprite CharacterSprite => characterSprite;

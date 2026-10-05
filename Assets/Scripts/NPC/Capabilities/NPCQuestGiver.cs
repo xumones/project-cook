@@ -18,6 +18,13 @@ namespace ProjectCook.NPC.Capabilities
         [Tooltip("วัตถุดิบที่ NPC นี้สั่งได้ในเควสสุ่มหลังเนื้อเรื่องจบ ว่าง = ไม่มีเควสสุ่ม")]
         [SerializeField] private List<IngredientDataSO> orderIngredients = new List<IngredientDataSO>();
 
+        [Header("Quest Note")]
+        [Tooltip("ข้อมูลไอเทมโน้ต post-it ที่ให้ผู้เล่นตอนรับเควส")]
+        [SerializeField] private ItemDefinitionSO noteDefinition;
+
+        [Tooltip("ตอบเมื่อกระเป๋าเต็มจนรับโน้ตไม่ได้ เควสจะยังไม่ถูกรับ")]
+        [SerializeField] private LocalizedString bagFullText;
+
         [Header("Labels")]
         [SerializeField] private LocalizedString askLabel;
         [SerializeField] private LocalizedString reminderLabel;
@@ -26,6 +33,10 @@ namespace ProjectCook.NPC.Capabilities
         // เควสที่ให้อยู่ตอนนี้ null = ว่าง ขอเควสใหม่ได้
         private IQuestRequest active;
 
+        public string NpcId => Npc.Profile.NpcId;
+        public LocalizedString DisplayName => Npc.Profile.DisplayName;
+        public IQuestRequest Active => active;
+
         public override void BuildOptions(List<DialogueOption> options)
         {
             if (active == null)
@@ -33,7 +44,9 @@ namespace ProjectCook.NPC.Capabilities
                 IQuestRequest next = NextRequest();
                 if (next != null)
                 {
-                    options.Add(new DialogueOption { Label = askLabel, Response = next.OfferText, OnSelected = () => active = next });
+                    var ask = new DialogueOption { Label = askLabel };
+                    ask.OnSelected = () => ask.Response = Accept(next);
+                    options.Add(ask);
                 }
                 return;
             }
@@ -63,6 +76,16 @@ namespace ProjectCook.NPC.Capabilities
                 : null;
         }
 
+        // รับเควสได้เมื่อใส่โน้ตลงกระเป๋าได้เท่านั้น
+        private LocalizedString Accept(IQuestRequest request)
+        {
+            var note = new InventoryItem(noteDefinition, new[] { QuestNote.StateFor(NpcId) });
+            if (!PlayerInventory.Instance.Storage.TryAdd(note)) return bagFullText;
+
+            active = request;
+            return request.OfferText;
+        }
+
         // ไม่ผ่าน = จานยังอยู่กับผู้เล่น แก้แล้วส่งใหม่ได้
         private LocalizedString Deliver(ServingFoodContainer dish)
         {
@@ -77,6 +100,7 @@ namespace ProjectCook.NPC.Capabilities
             }
             request.OnCompleted();
             active = null;
+            QuestNote.Discard(NpcId);
             return request.ResultText(grade);
         }
     }

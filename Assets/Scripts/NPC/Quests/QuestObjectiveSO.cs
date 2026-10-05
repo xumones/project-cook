@@ -8,6 +8,9 @@ namespace ProjectCook.NPC
     {
         public abstract DishScore Evaluate(ServingFoodContainer dish);
 
+        /// <summary>สิ่งที่ขอแบบสั้น ใช้เขียนบนโน้ต</summary>
+        public abstract string Describe();
+
         public abstract void Consume(ServingFoodContainer dish);
     }
 }
