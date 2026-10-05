@@ -33,7 +33,24 @@ namespace ProjectCook.Core
         public event System.Action<LocationSO> Arrived;
 
         // พื้นที่แรกไม่ผ่าน CanTravelTo: เปิดฉากทดสอบค้างไว้แล้วกด Play ต้องเริ่มที่นั่นได้เสมอ
-        private void Start() => StartCoroutine(Travel(ResolveStartLocation(), null));
+        private void Start()
+        {
+            LocationSO start = ResolveStartLocation();
+            UnloadOtherOpenLocations(start);
+            StartCoroutine(Travel(start, null));
+        }
+
+        // กด Play ใน Editor ฉากที่เปิดค้างไว้ถูกโหลดมาทั้งหมด เหลือไว้แค่พื้นที่เริ่มต้นกับ Core
+        private void UnloadOtherOpenLocations(LocationSO start)
+        {
+            for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+            {
+                Scene scene = SceneManager.GetSceneAt(i);
+                if (scene == gameObject.scene || scene.name == start.SceneName || !scene.isLoaded) continue;
+
+                SceneManager.UnloadSceneAsync(scene);
+            }
+        }
 
         public bool CanTravelTo(LocationSO destination) =>
             destination != null
@@ -41,9 +58,9 @@ namespace ProjectCook.Core
             && Application.CanStreamedLevelBeLoaded(destination.SceneName);
 
         /// <summary>ฉากนี้เป็นพื้นที่ข้างนอกบ้านไหม ใช้ตัดสินที่มาของไอเทมที่เกิดในฉากนั้น</summary>
-        public bool IsOutside(Scene scene)
+        public bool IsOutside(string sceneName)
         {
-            LocationSO location = FindLocation(scene.name);
+            LocationSO location = FindLocation(sceneName);
             return location != null && location.IsOutside;
         }
 
@@ -69,7 +86,7 @@ namespace ProjectCook.Core
                 }
                 hiddenRoots.Remove(destination.SceneName);
             }
-            else
+            else if (!SceneManager.GetSceneByName(destination.SceneName).isLoaded)
             {
                 yield return SceneManager.LoadSceneAsync(destination.SceneName, LoadSceneMode.Additive);
             }

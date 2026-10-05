@@ -13,37 +13,38 @@ namespace ProjectCook.Cooking
     [RequireComponent(typeof(Item))]
     public class IngredientInstance : MonoBehaviour, ISavableState
     {
+        // หันเกินมุมนี้จากแนวผิวกระทะถือว่าด้านนั้นแตะผิว น้อยกว่านี้ = ตะแคง ทอดสองด้านพร้อมกัน
+        private const float SideContactDot = 0.35f;
+
+        [Serializable]
+        private struct SavedCookTimes
+        {
+            public float omni;
+            public float sideA;
+            public float sideB;
+        }
+
         // มาจาก Definition ของ Item จะได้ตั้งข้อมูลวัตถุดิบไว้ที่เดียว
         private IngredientDataSO data;
 
         private IngredientVisuals visualsComponent;
         private Rigidbody[] bodies;
+        private CookingProgress progress;
+        private bool isVisualsDirty;
 
         /// <summary>ชิ้นฟิสิกส์ทั้งหมดของวัตถุดิบนี้ ระบบภายนอกต้องอ่านจากตรงนี้แทนการหา Rigidbody เอง</summary>
         public IReadOnlyList<Rigidbody> Bodies => bodies;
 
-        /// <summary>Callback Event แจ้งเตือนเมื่อสถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)</summary>
+        /// <summary>สถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)</summary>
         public event Action<CookingState> OnStateChanged;
 
-        // Dynamic Runtime States
-        private CookingState currentCookingState = CookingState.Raw;
-        private CookingSide currentActiveSide = CookingSide.Omni;
-
-        private float omniCookTime = 0f;
-        private float sideACookTime = 0f;
-        private float sideBCookTime = 0f;
-
-        private bool isVisualsDirty = false;
-
-        // Getters
         public IngredientDataSO Data => data;
-        public CookingState CurrentCookingState => currentCookingState;
+        public CookingState CurrentCookingState => progress != null ? progress.State : CookingState.Raw;
+        public float CookProgress => progress != null ? progress.Progress : 0f;
+        public bool IsBurnt => CurrentCookingState == CookingState.Burnt;
 
-        public float CookProgress => data != null && data.CookTime > 0 
-            ? (data.IsTwoSidedCooking ? Mathf.Clamp01((sideACookTime + sideBCookTime) / (data.CookTime * 2f)) : Mathf.Clamp01(omniCookTime / data.CookTime)) 
-            : 0f;
-
-        public bool IsBurnt => currentCookingState == CookingState.Burnt;
+        /// <summary>ชิ้นที่คีมกำลังจับอยู่ null = ไม่ได้ถูกจับ ชิ้นอื่นยังเป็นอิสระตามฟิสิกส์</summary>
+        public Rigidbody GrippedBody { get; set; }
 
         private void Awake()
         {
@@ -51,6 +52,10 @@ namespace ProjectCook.Cooking
             if (data == null)
             {
                 Debug.LogError($"[IngredientInstance] {name} ต้องตั้ง Definition ของ Item เป็น IngredientDataSO", this);
+            }
+            else
+            {
+                progress = new CookingProgress(data);
             }
 
             bodies = GetComponentsInChildren<Rigidbody>(true);
@@ -65,7 +70,22 @@ namespace ProjectCook.Cooking
 
             visualsComponent = GetComponent<IngredientVisuals>();
             visualsComponent.Init();
-            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
+            visualsComponent.Configure(data, 0f, 0f, 0f);
+        }
+
+        private void OnEnable()
+        {
+            if (data != null) data.OnDataChanged += HandleDataChanged;
+        }
+
+        private void OnDisable()
+        {
+            if (data != null) data.OnDataChanged -= HandleDataChanged;
+        }
+
+        private void HandleDataChanged()
+        {
+            visualsComponent.Configure(data, progress.SideATime, progress.SideBTime, progress.OmniTime);
         }
 
         /// <summary>อัปเดตการแสดงผลหากมีการเปลี่ยนแปลง ถูกเรียกจากภาชนะที่วัตถุดิบชิ้นนี้อยู่</summary>
@@ -74,185 +94,51 @@ namespace ProjectCook.Cooking
             if (!isVisualsDirty) return;
 
             isVisualsDirty = false;
-            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
+            visualsComponent.ApplyVisuals(data, progress.SideATime, progress.SideBTime, progress.OmniTime);
         }
 
-        private void OnEnable()
-        {
-            SubscribeToDataEvents();
-        }
-
-        private void OnDisable()
-        {
-            UnsubscribeFromDataEvents();
-        }
-
-        private void SubscribeToDataEvents()
-        {
-            if (data != null)
-            {
-                data.OnDataChanged += HandleDataSOChanged;
-            }
-        }
-
-        private void UnsubscribeFromDataEvents()
-        {
-            if (data != null)
-            {
-                data.OnDataChanged -= HandleDataSOChanged;
-            }
-        }
-
-        private void HandleDataSOChanged()
-        {
-            visualsComponent.Configure(data, sideACookTime, sideBCookTime, omniCookTime);
-        }
-
-        /// <summary>รับความร้อนจากกระทะ/เตา และคำนวณการสะสมความสุก (พร้อมคำนวณทิศทางการพลิกด้าน)</summary>
+        /// <summary>รับความร้อนจากกระทะ/เตา ด้านที่โดนทอดดูจากทิศของวัตถุดิบเทียบกับผิวกระทะ</summary>
         public void ApplyHeat(float deltaHeatTime, Vector3 panUpVector)
         {
-            if (data == null || currentCookingState == CookingState.Burnt) return;
+            if (progress == null) return;
 
-            if (data.IsTwoSidedCooking)
-            {
-                DetermineActiveSide(panUpVector);
-
-                if (currentActiveSide == CookingSide.SideA)
-                {
-                    sideACookTime += deltaHeatTime;
-                }
-                else if (currentActiveSide == CookingSide.SideB)
-                {
-                    sideBCookTime += deltaHeatTime;
-                }
-                else
-                {
-                    sideACookTime += deltaHeatTime * 0.5f;
-                    sideBCookTime += deltaHeatTime * 0.5f;
-                }
-
-                EvaluateTwoSidedCookingState();
-            }
-            else
-            {
-                currentActiveSide = CookingSide.Omni;
-                omniCookTime += deltaHeatTime;
-                EvaluateCookingState();
-            }
-
+            if (progress.AddHeat(deltaHeatTime, ContactSide(panUpVector))) HandleStateChanged();
             isVisualsDirty = true;
         }
 
-        /// <summary>ตรวจสอบการหันของวัตถุดิบเทียบกับกระทะด้วย Vector Dot Product (Zero Allocation)</summary>
-        private void DetermineActiveSide(Vector3 panUpVector)
+        private CookingSide ContactSide(Vector3 panUpVector)
         {
             float dot = Vector3.Dot(transform.up, panUpVector);
-            if (dot > 0.35f)
-            {
-                currentActiveSide = CookingSide.SideA;
-            }
-            else if (dot < -0.35f)
-            {
-                currentActiveSide = CookingSide.SideB;
-            }
-            else
-            {
-                currentActiveSide = CookingSide.Omni;
-            }
-        }
-
-        /// <summary>ประเมินสถานะความสุกสำหรับการทอดรอบทิศทาง (Omni)</summary>
-        private void EvaluateCookingState()
-        {
-            float totalTargetTime = data.CookTime + data.BurnTime;
-
-            if (omniCookTime >= totalTargetTime)
-            {
-                SetState(CookingState.Burnt);
-            }
-            else if (omniCookTime >= data.CookTime)
-            {
-                SetState(CookingState.Cooked);
-            }
-            else if (omniCookTime > 0)
-            {
-                SetState(CookingState.Cooking);
-            }
-        }
-
-        /// <summary>ประเมินสถานะความสุกสำหรับการทอดแบบสองด้าน (Two-Sided)</summary>
-        private void EvaluateTwoSidedCookingState()
-        {
-            float totalTargetTime = data.CookTime + data.BurnTime;
-
-            if (sideACookTime >= totalTargetTime || sideBCookTime >= totalTargetTime)
-            {
-                SetState(CookingState.Burnt);
-                return;
-            }
-
-            bool isSideACooked = sideACookTime >= data.CookTime;
-            bool isSideBCooked = sideBCookTime >= data.CookTime;
-
-            if (isSideACooked && isSideBCooked)
-            {
-                SetState(CookingState.Cooked);
-            }
-            else if (sideACookTime > 0 || sideBCookTime > 0)
-            {
-                SetState(CookingState.Cooking);
-            }
-        }
-
-        [Serializable]
-        private struct SavedCookTimes
-        {
-            public float omni;
-            public float sideA;
-            public float sideB;
+            if (dot > SideContactDot) return CookingSide.SideA;
+            if (dot < -SideContactDot) return CookingSide.SideB;
+            return CookingSide.Omni;
         }
 
         public string StateKey => "cook_times";
 
         // สถานะความสุกและภาพคำนวณจากเวลาทอดได้ทั้งหมด จึงจดแค่เวลา
-        public string CaptureState() => JsonUtility.ToJson(new SavedCookTimes
+        public string CaptureState() => progress == null ? string.Empty : JsonUtility.ToJson(new SavedCookTimes
         {
-            omni = omniCookTime,
-            sideA = sideACookTime,
-            sideB = sideBCookTime
+            omni = progress.OmniTime,
+            sideA = progress.SideATime,
+            sideB = progress.SideBTime
         });
 
         public void RestoreState(string state)
         {
+            if (progress == null || string.IsNullOrEmpty(state)) return;
+
             SavedCookTimes saved = JsonUtility.FromJson<SavedCookTimes>(state);
-            omniCookTime = saved.omni;
-            sideACookTime = saved.sideA;
-            sideBCookTime = saved.sideB;
-
-            if (data == null) return;
-
-            if (data.IsTwoSidedCooking)
-            {
-                EvaluateTwoSidedCookingState();
-            }
-            else
-            {
-                EvaluateCookingState();
-            }
-            visualsComponent.ApplyVisuals(data, sideACookTime, sideBCookTime, omniCookTime);
+            CookingState before = progress.State;
+            progress.Restore(saved.omni, saved.sideA, saved.sideB);
+            if (progress.State != before) HandleStateChanged();
+            visualsComponent.ApplyVisuals(data, progress.SideATime, progress.SideBTime, progress.OmniTime);
         }
 
-        private void SetState(CookingState newState)
+        private void HandleStateChanged()
         {
-            if (currentCookingState == newState) return;
-
-            currentCookingState = newState;
-            visualsComponent.UpdateMaterialForState(newState, data);
-
-            OnStateChanged?.Invoke(currentCookingState);
+            visualsComponent.UpdateMaterialForState(progress.State, data);
+            OnStateChanged?.Invoke(progress.State);
         }
-
-        /// <summary>ชิ้นที่คีมกำลังจับอยู่ null = ไม่ได้ถูกจับ ชิ้นอื่นยังเป็นอิสระตามฟิสิกส์</summary>
-        public Rigidbody GrippedBody { get; set; }
     }
 }

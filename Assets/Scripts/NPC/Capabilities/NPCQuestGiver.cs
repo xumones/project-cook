@@ -36,14 +36,22 @@ namespace ProjectCook.NPC.Capabilities
 
         private string NpcId => Npc.Profile.NpcId;
 
-        // เควสสุ่มสร้างจากประโยคของ NPC ตัวนี้ จึงต้องรอให้ NPC โหลดก่อนถึงสร้างคืนจาก save ได้
+        // แคชไว้ตอนลงทะเบียน จะได้ถอนได้แม้ QuestLog ถูกทำลายก่อน
+        private QuestLog log;
+
+        // เควสสุ่มสร้างจากประโยคของ NPC ตัวนี้ จึงต้องให้ NPC เป็นคนสร้างคืนจาก save
         private void Start()
         {
-            QuestLog.Instance?.ResolvePending(saved =>
-                saved.kind == IngredientOrder.Kind && saved.giverId == NpcId
-                    ? IngredientOrder.FromSave(saved.definition, Npc.Profile, Npc.Lines)
-                    : null);
+            log = QuestLog.Instance;
+            log?.RegisterResolver(ResolveOrder);
         }
+
+        private void OnDestroy() => log?.UnregisterResolver(ResolveOrder);
+
+        private IQuestDefinition ResolveOrder(SavedQuest saved) =>
+            saved.kind == IngredientOrder.Kind && saved.giverId == NpcId
+                ? IngredientOrder.FromSave(saved.definition, Npc.Profile, Npc.Lines)
+                : null;
 
         public override void BuildOptions(List<DialogueOption> options)
         {

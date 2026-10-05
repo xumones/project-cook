@@ -29,8 +29,7 @@ namespace ProjectCook.Quests
 
         // เควสจาก save ที่ยังสร้างเนื้อหาคืนไม่ได้ เพราะผู้ให้ (เช่น NPC ที่สร้างเควสสุ่ม) ยังไม่โหลด
         private readonly List<SavedQuest> pending = new List<SavedQuest>();
-
-        public IReadOnlyList<ActiveQuest> Active => active;
+        private readonly List<Func<SavedQuest, IQuestDefinition>> resolvers = new List<Func<SavedQuest, IQuestDefinition>>();
 
         /// <summary>มีเควสเริ่ม เดินหน้า หรือจบ</summary>
         public event Action Changed;
@@ -84,11 +83,21 @@ namespace ProjectCook.Quests
                 else if (saved.kind != QuestSO.Kind) pending.Add(saved);
                 else Debug.LogWarning($"[QuestLog] ไม่พบเควส '{saved.definition}' ในรายการ Quests ข้ามเควสนี้", this);
             }
+
+            foreach (Func<SavedQuest, IQuestDefinition> resolver in resolvers) ResolvePending(resolver);
             Changed?.Invoke();
         }
 
-        /// <summary>ผู้ให้เควสที่เพิ่งโหลดสร้างเนื้อหาเควสของตัวเองคืน resolve คืน null ถ้าไม่ใช่เควสของมัน</summary>
-        public void ResolvePending(Func<SavedQuest, IQuestDefinition> resolve)
+        /// <summary>ผู้ให้เควสที่สร้างเนื้อหาเควสเองลงทะเบียนตัวสร้างคืน (คืน null ถ้าไม่ใช่เควสของมัน) ใช้ได้ทั้งก่อนและหลังโหลด save</summary>
+        public void RegisterResolver(Func<SavedQuest, IQuestDefinition> resolver)
+        {
+            resolvers.Add(resolver);
+            ResolvePending(resolver);
+        }
+
+        public void UnregisterResolver(Func<SavedQuest, IQuestDefinition> resolver) => resolvers.Remove(resolver);
+
+        private void ResolvePending(Func<SavedQuest, IQuestDefinition> resolve)
         {
             for (int i = pending.Count - 1; i >= 0; i--)
             {

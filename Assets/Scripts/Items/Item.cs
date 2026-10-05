@@ -21,7 +21,8 @@ namespace ProjectCook.Items
         private ItemInstance instance;
 
         // ที่มาดูจากฉากที่เกิด ไม่ใช่ที่ที่ถูกหยิบ ของที่พาออกไปเองจึงไม่กลายเป็นของที่หาได้ข้างนอก
-        private bool bornOutside;
+        // จดแค่ฉากตอนเกิด แล้วค่อยถามตอนสร้างตัวตน เพราะตอนกด Play ทุกฉากเริ่มพร้อมกัน LocationLoader อาจยังไม่พร้อม
+        private string bornSceneName;
 
         public ItemDefinitionSO Definition => definition;
 
@@ -33,13 +34,13 @@ namespace ProjectCook.Items
 
         private void Awake()
         {
-            bornOutside = LocationLoader.Instance != null && LocationLoader.Instance.IsOutside(gameObject.scene);
+            bornSceneName = gameObject.scene.name;
         }
 
         private ItemInstance CreateInstance()
         {
             var created = new ItemInstance(definition);
-            if (bornOutside) created.AddFlag(ItemFlags.FoundOutside);
+            if (LocationLoader.Instance != null && LocationLoader.Instance.IsOutside(bornSceneName)) created.AddFlag(ItemFlags.FoundOutside);
             return created;
         }
 
