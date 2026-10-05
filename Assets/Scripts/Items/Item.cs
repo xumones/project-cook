@@ -49,6 +49,20 @@ namespace ProjectCook.Items
             Location = next;
         }
 
+        /// <summary>สร้างวัตถุของไอเทมชิ้นนี้จาก prefab ของชนิดมัน แล้วคืนตัวตนกับสถานะที่จดไว้ให้ null ถ้าชนิดนี้ไม่มี prefab</summary>
+        public static Item Spawn(ItemInstance existing, Vector3 position, Quaternion rotation)
+        {
+            if (existing.Definition.Prefab == null)
+            {
+                Debug.LogWarning($"[Item] {existing.Definition.ItemId} ยังไม่ได้ตั้ง Prefab สร้างวัตถุไม่ได้", existing.Definition);
+                return null;
+            }
+
+            Item spawned = Instantiate(existing.Definition.Prefab, position, rotation).GetComponent<Item>();
+            spawned.Restore(existing);
+            return spawned;
+        }
+
         /// <summary>จดสถานะของ component ทุกตัวลงตัวตน แล้วคืนตัวตนนั้น ใช้ก่อนไอเทมกลายเป็นข้อมูล</summary>
         public ItemInstance Capture()
         {

@@ -8,7 +8,7 @@ namespace ProjectCook.Inventory
     /// <summary>กระเป๋าที่วางอยู่ในฉาก สวมได้ด้วยปุ่มหยิบ และเก็บของข้างในไว้กับตัวระหว่างไม่ได้สวม</summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Item))]
-    public class BagItem : MonoBehaviour, IAimHintProvider
+    public class BagItem : MonoBehaviour, IAimHintProvider, ISavableState
     {
         // null = ยังไม่เคยถูกสวม จะสร้างตารางเปล่าตามแบบตอนสวมครั้งแรก
         private List<ItemGrid> grids;
@@ -34,6 +34,23 @@ namespace ProjectCook.Inventory
         public void PutGrids(List<ItemGrid> contents)
         {
             grids = contents;
+        }
+
+        public string StateKey => "bag_contents";
+
+        // ของข้างในกระเป๋าที่วางอยู่ในฉาก ตอนสวมอยู่ PlayerInventory เป็นคน save แทน
+        public string CaptureState() => grids != null ? JsonUtility.ToJson(StorageSaveData.From(grids)) : string.Empty;
+
+        public void RestoreState(string state)
+        {
+            if (string.IsNullOrEmpty(state))
+            {
+                grids = null;
+                return;
+            }
+
+            grids = ItemGrid.FromLayouts(Definition.Compartments);
+            JsonUtility.FromJson<StorageSaveData>(state).RestoreInto(grids);
         }
     }
 }

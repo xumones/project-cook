@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f5a7ebc39d77e4d9b84439538d7837, type: 3}
+  m_Name: ItemDatabase
+  m_EditorClassIdentifier: ProjectCook.Items::ProjectCook.Items.ItemDatabaseSO
+  items:
+  - {fileID: 11400000, guid: 9dcae45691e50dd4492dff867af17c81, type: 2}
+  - {fileID: 11400000, guid: cc20a0ee83a66794da76db7f13fcb379, type: 2}
+  - {fileID: 11400000, guid: a1dc6ce8b74a89c4592b83ec3a0b319c, type: 2}
+  - {fileID: 11400000, guid: a9b9814218ad4f940958720354c5932e, type: 2}
+  - {fileID: 11400000, guid: 82b4cbefb7f47f8449792f2ca1ca8cad, type: 2}
+  - {fileID: 11400000, guid: ae66f3b25474c50489ab773005d8fb20, type: 2}
+  - {fileID: 11400000, guid: 8660f88e451ba1841aeba28b3e0cf8ea, type: 2}
+  - {fileID: 11400000, guid: c2d48dcc645abe940b63e0ede4d1316e, type: 2}
+  - {fileID: 11400000, guid: 8c2c6b79657493545bdf8a9fa2af02db, type: 2}

@@ -21,13 +21,22 @@ namespace ProjectCook.Quests
         public LocalizedString GiverName { get; }
 
         public ActiveQuest(IQuestDefinition definition, string giverId, LocalizedString giverName)
+            : this(definition, giverId, giverName, Guid.NewGuid().ToString("N"), null)
         {
-            Id = Guid.NewGuid().ToString("N");
+        }
+
+        /// <summary>สร้างคืนจาก save รหัสเดิมทำให้โน้ตที่จดไว้ยังชี้มาที่เควสนี้ได้</summary>
+        public ActiveQuest(IQuestDefinition definition, string giverId, LocalizedString giverName, string id, int[] savedProgress)
+        {
+            Id = id;
             Definition = definition;
             GiverId = giverId ?? string.Empty;
             GiverName = giverName;
             progress = new int[definition.Objectives.Count];
+            if (savedProgress != null) Array.Copy(savedProgress, progress, Math.Min(savedProgress.Length, progress.Length));
         }
+
+        public int[] CopyProgress() => (int[])progress.Clone();
 
         public bool IsComplete
         {

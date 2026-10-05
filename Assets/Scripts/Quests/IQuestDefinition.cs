@@ -21,5 +21,11 @@ namespace ProjectCook.Quests
 
         /// <summary>คำตอบตอนส่งอาหารตามเกรด F = ไม่ผ่าน</summary>
         LocalizedString ResultText(QualityGrade grade);
+
+        /// <summary>ชนิดของเนื้อหาเควส ใช้เลือกผู้สร้างคืนตอนโหลด save</summary>
+        string SaveKind { get; }
+
+        /// <summary>ข้อมูลที่ต้องใช้สร้างเนื้อหาเควสนี้คืน</summary>
+        string SaveDefinition();
     }
 }

@@ -109,6 +109,8 @@ namespace ProjectCook.Tests
             public LocalizedString OfferText => null;
             public LocalizedString ReminderText => null;
             public LocalizedString ResultText(QualityGrade grade) => null;
+            public string SaveKind => "fake";
+            public string SaveDefinition() => string.Empty;
         }
 
         private class FakeDelivery : IDeliveryObjective

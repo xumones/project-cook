@@ -31,6 +31,8 @@ namespace ProjectCook.Items
 
         public void AddFlag(ItemFlags flag) => Flags |= flag;
 
+        public IReadOnlyDictionary<string, string> States => states;
+
         public bool TryGetState(string key, out string data) => states.TryGetValue(key, out data);
 
         public void SetState(string key, string data) => states[key] = data;

@@ -23,7 +23,44 @@ namespace ProjectCook.NPC
         private readonly LinePicker lines;
         private readonly IQuestObjective[] objectives;
 
+        public const string Kind = "ingredient_order";
+
+        [System.Serializable]
+        private class SaveData
+        {
+            public int reward;
+            public List<string> ingredients = new List<string>();
+            public List<CookingState> states = new List<CookingState>();
+        }
+
         public int Reward { get; }
+
+        public string SaveKind => Kind;
+
+        public string SaveDefinition()
+        {
+            var data = new SaveData { reward = Reward };
+            foreach (IngredientRequirement requirement in requirements)
+            {
+                data.ingredients.Add(requirement.ingredient.ItemId);
+                data.states.Add(requirement.idealState);
+            }
+            return JsonUtility.ToJson(data);
+        }
+
+        /// <summary>สร้างเควสสุ่มคืนจาก save null ถ้าวัตถุดิบบางชนิดไม่มีในเกมแล้ว</summary>
+        public static IngredientOrder FromSave(string json, NPCProfileSO profile, LinePicker lines)
+        {
+            var data = JsonUtility.FromJson<SaveData>(json);
+            var restored = new List<IngredientRequirement>(data.ingredients.Count);
+            for (int i = 0; i < data.ingredients.Count; i++)
+            {
+                if (!(ItemDatabaseSO.Instance.Find(data.ingredients[i]) is IngredientDataSO ingredient)) return null;
+
+                restored.Add(new IngredientRequirement { ingredient = ingredient, idealState = data.states[i] });
+            }
+            return new IngredientOrder(restored, data.reward, profile, lines);
+        }
 
         private IngredientOrder(List<IngredientRequirement> requirements, int reward, NPCProfileSO profile, LinePicker lines)
         {

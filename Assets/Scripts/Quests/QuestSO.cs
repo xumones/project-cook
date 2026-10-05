@@ -51,6 +51,12 @@ namespace ProjectCook.Quests
         public LocalizedString OfferText => offerText;
         public LocalizedString ReminderText => reminderText;
 
+        public const string Kind = "story";
+
+        public string SaveKind => Kind;
+
+        public string SaveDefinition() => questId;
+
         public LocalizedString ResultText(QualityGrade grade) => grade switch
         {
             QualityGrade.F => failText,

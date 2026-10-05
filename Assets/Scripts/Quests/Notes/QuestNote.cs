@@ -50,13 +50,20 @@ namespace ProjectCook.Quests
 
         public string StateKey => QuestKey;
 
-        public string CaptureState() => questId;
+        // จดว่าแปะบอร์ดอยู่ด้วย ไม่งั้นโหลด save แล้วโน้ตบนบอร์ดจะร่วงลงพื้น
+        public string CaptureState() => IsStuck ? questId + StuckSuffix : questId;
 
         public void RestoreState(string state)
         {
-            questId = state;
+            bool stuck = state.EndsWith(StuckSuffix);
+            questId = stuck ? state.Substring(0, state.Length - StuckSuffix.Length) : state;
+            if (stuck && TryGetComponent(out Rigidbody body)) body.isKinematic = true;
             Refresh();
         }
+
+        private const string StuckSuffix = "|stuck";
+
+        private bool IsStuck => TryGetComponent(out Rigidbody body) && body.isKinematic;
 
         private void OnEnable()
         {
@@ -84,11 +91,14 @@ namespace ProjectCook.Quests
 
         public void OnPlaced(RaycastHit surface)
         {
-            if (surface.collider == null || surface.collider.GetComponentInParent<QuestBoard>() == null) return;
+            bool onBoard = surface.collider != null && surface.collider.GetComponentInParent<QuestBoard>() != null;
 
-            // หันหน้ากระดาษออกจากกระดาน วางชิดผิว แล้วหยุดฟิสิกส์ให้ติดอยู่ตรงนั้น
+            // โน้ตที่เคยแปะบอร์ดพกสถานะ "ติดอยู่" มาด้วย วางที่อื่นต้องคืนฟิสิกส์ให้ตกตามปกติ
+            if (TryGetComponent(out Rigidbody body)) body.isKinematic = onBoard;
+            if (!onBoard) return;
+
+            // หันหน้ากระดาษออกจากกระดาน วางชิดผิวให้ติดอยู่ตรงนั้น
             transform.SetPositionAndRotation(surface.point + surface.normal * StickOffset, Quaternion.LookRotation(-surface.normal, Vector3.up));
-            if (TryGetComponent(out Rigidbody body)) body.isKinematic = true;
         }
 
         // เขียนจากเควสตอนนี้ จึงเปลี่ยนตามความคืบหน้าและภาษาที่เลือกเอง

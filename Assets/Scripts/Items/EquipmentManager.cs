@@ -5,8 +5,15 @@ using ProjectCook.Core;
 namespace ProjectCook.Items
 {
     /// <summary>มือทั้งสองของผู้เล่น: ยกไอเทมเข้ามือ และปล่อยไอเทมออกจากมือไปวางที่จุดที่กำหนด</summary>
-    public class EquipmentManager : SceneSingleton<EquipmentManager>
+    public class EquipmentManager : SceneSingleton<EquipmentManager>, ISaveSection
     {
+        [Serializable]
+        private class HandsSaveData
+        {
+            public ItemSaveData left;
+            public ItemSaveData right;
+        }
+
         [Header("Hand Anchors")]
         [Tooltip("Transform ที่ไอเทมจะ parent เข้าตอนถืออยู่มือซ้าย")]
         [SerializeField] private Transform leftHandAnchor;
@@ -21,6 +28,38 @@ namespace ProjectCook.Items
         public event Action HandsChanged;
 
         public EquippableItem GetHeld(HandSide side) => side == HandSide.Left ? leftItem : rightItem;
+
+        private void Start() => SaveService.Instance?.Register(this);
+
+        protected override void OnDestroy()
+        {
+            SaveService.Instance?.Unregister(this);
+            base.OnDestroy();
+        }
+
+        public string SectionKey => "hands";
+
+        public string Capture() => JsonUtility.ToJson(new HandsSaveData { left = SaveHand(leftItem), right = SaveHand(rightItem) });
+
+        public void Restore(string data)
+        {
+            var saved = JsonUtility.FromJson<HandsSaveData>(data);
+            RestoreHand(saved.left, HandSide.Left);
+            RestoreHand(saved.right, HandSide.Right);
+        }
+
+        private static ItemSaveData SaveHand(EquippableItem held) =>
+            held != null ? ItemSaveData.From(held.GetComponent<Item>().Capture()) : null;
+
+        private void RestoreHand(ItemSaveData saved, HandSide side)
+        {
+            // JsonUtility เขียนช่องว่างเป็น object เปล่า ไม่ใช่ null
+            ItemInstance instance = saved != null && !string.IsNullOrEmpty(saved.itemId) ? saved.ToInstance() : null;
+            if (instance == null) return;
+
+            Item spawned = Item.Spawn(instance, AnchorOf(side).position, AnchorOf(side).rotation);
+            if (spawned != null) TryEquip(spawned.GetComponent<EquippableItem>(), side);
+        }
 
         /// <summary>มีของอยู่ในมือข้างใดข้างหนึ่งหรือไม่</summary>
         public bool IsHoldingAnything => leftItem != null || rightItem != null;
@@ -46,7 +85,10 @@ namespace ProjectCook.Items
         }
 
         /// <summary>สวมไอเทมเข้ามือที่ว่าง โดยลองมือซ้ายก่อน</summary>
-        public bool TryEquip(EquippableItem equippable)
+        public bool TryEquip(EquippableItem equippable) =>
+            TryEquip(equippable, leftItem == null ? HandSide.Left : HandSide.Right);
+
+        private bool TryEquip(EquippableItem equippable, HandSide side)
         {
             if (equippable == null) return false;
 
@@ -56,7 +98,6 @@ namespace ProjectCook.Items
                 return false;
             }
 
-            HandSide side = leftItem == null ? HandSide.Left : HandSide.Right;
             if (GetHeld(side) != null)
             {
                 Debug.Log($"[EquipmentManager] มือไม่ว่างทั้งสองข้าง ยก {equippable.name} ไม่ได้");

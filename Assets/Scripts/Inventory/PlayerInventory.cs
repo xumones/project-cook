@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,8 +8,16 @@ using ProjectCook.Items;
 namespace ProjectCook.Inventory
 {
     /// <summary>ของที่ผู้เล่นเก็บไว้เป็นข้อมูล: ช่องบนตัว กระเป๋าที่สวม และตารางของกระเป๋า</summary>
-    public class PlayerInventory : SceneSingleton<PlayerInventory>
+    public class PlayerInventory : SceneSingleton<PlayerInventory>, ISaveSection
     {
+        [Serializable]
+        private class SaveData
+        {
+            public StorageSaveData body;
+            public ItemSaveData wornBag;
+            public StorageSaveData bag;
+        }
+
         [Header("Body")]
         [Tooltip("ช่องย่อยบนตัวผู้เล่น มีอยู่เสมอไม่ว่าจะสวมกระเป๋าหรือไม่")]
         [SerializeField] private CompartmentLayout[] bodyCompartments =
@@ -38,6 +47,14 @@ namespace ProjectCook.Inventory
             Storage = new ItemStorage(bodyGrids);
         }
 
+        private void Start() => SaveService.Instance?.Register(this);
+
+        protected override void OnDestroy()
+        {
+            SaveService.Instance?.Unregister(this);
+            base.OnDestroy();
+        }
+
         /// <summary>สวมกระเป๋าพร้อมของข้างใน ผู้เรียกต้องเช็คก่อนว่ายังไม่ได้สวมใบไหน</summary>
         public void WearBag(ItemInstance bag, List<ItemGrid> contents)
         {
@@ -54,6 +71,37 @@ namespace ProjectCook.Inventory
             bagGrids = new List<ItemGrid>();
             Storage.SetGrids(bodyGrids);
             return contents;
+        }
+
+        public string SectionKey => "player_inventory";
+
+        public string Capture() => JsonUtility.ToJson(new SaveData
+        {
+            body = StorageSaveData.From(bodyGrids),
+            wornBag = WornBag != null ? ItemSaveData.From(WornBag) : null,
+            bag = StorageSaveData.From(bagGrids)
+        });
+
+        public void Restore(string data)
+        {
+            var saved = JsonUtility.FromJson<SaveData>(data);
+
+            bodyGrids = ItemGrid.FromLayouts(bodyCompartments);
+            saved.body.RestoreInto(bodyGrids);
+
+            // JsonUtility เขียนช่องว่างเป็น object เปล่า ไม่ใช่ null
+            ItemInstance bag = saved.wornBag != null && !string.IsNullOrEmpty(saved.wornBag.itemId) ? saved.wornBag.ToInstance() : null;
+            if (bag != null && bag.Definition is BagDefinitionSO bagDefinition)
+            {
+                List<ItemGrid> contents = ItemGrid.FromLayouts(bagDefinition.Compartments);
+                saved.bag.RestoreInto(contents);
+                WearBag(bag, contents);
+                return;
+            }
+
+            WornBag = null;
+            bagGrids = new List<ItemGrid>();
+            Storage.SetGrids(bodyGrids);
         }
     }
 }

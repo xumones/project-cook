@@ -1177,6 +1177,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Dev",
+            "id": "d9fe71ad-aea2-46ec-af7d-9dd3fb6c1b22",
+            "actions": [
+                {
+                    "name": "ToggleSave",
+                    "type": "Button",
+                    "id": "3073cb74-7979-44db-8720-0ed1e3919e85",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "43941a38-30c9-4b29-a4f8-a2e91375d33e",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ToggleSave",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

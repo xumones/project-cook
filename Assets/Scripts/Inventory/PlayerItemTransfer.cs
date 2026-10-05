@@ -125,18 +125,15 @@ namespace ProjectCook.Inventory
                 return false;
             }
 
-            inventory.WearBag(bag.GetComponent<Item>().Capture(), bag.TakeGrids());
+            // เอาตารางออกก่อนจดสถานะ ตัวตนของกระเป๋าที่สวมจะได้ไม่พกสำเนาของข้างในที่ PlayerInventory ดูแลอยู่แล้ว
+            List<ItemGrid> contents = bag.TakeGrids();
+            inventory.WearBag(bag.GetComponent<Item>().Capture(), contents);
             Destroy(bag.gameObject);
             return true;
         }
 
-        /// <summary>สร้างวัตถุของไอเทมชิ้นนี้ แล้วคืนตัวตนกับสถานะที่จดไว้ให้</summary>
-        private GameObject Spawn(ItemInstance instance, Vector3 position, Quaternion rotation)
-        {
-            GameObject spawned = Instantiate(instance.Definition.Prefab, position, rotation);
-            spawned.GetComponent<Item>().Restore(instance);
-            return spawned;
-        }
+        private static GameObject Spawn(ItemInstance instance, Vector3 position, Quaternion rotation) =>
+            Item.Spawn(instance, position, rotation).gameObject;
 
         /// <summary>หาท่าวางตรงที่เล็งที่ของรูปทรงเดียวกับ shape ลงได้โดยไม่ทับอะไร false = ไม่มีที่ว่าง</summary>
         private bool TryGetPlacePose(GameObject shape, out Vector3 position, out Quaternion rotation, out RaycastHit surface)

@@ -36,6 +36,15 @@ namespace ProjectCook.NPC.Capabilities
 
         private string NpcId => Npc.Profile.NpcId;
 
+        // เควสสุ่มสร้างจากประโยคของ NPC ตัวนี้ จึงต้องรอให้ NPC โหลดก่อนถึงสร้างคืนจาก save ได้
+        private void Start()
+        {
+            QuestLog.Instance?.ResolvePending(saved =>
+                saved.kind == IngredientOrder.Kind && saved.giverId == NpcId
+                    ? IngredientOrder.FromSave(saved.definition, Npc.Profile, Npc.Lines)
+                    : null);
+        }
+
         public override void BuildOptions(List<DialogueOption> options)
         {
             QuestLog log = QuestLog.Instance;

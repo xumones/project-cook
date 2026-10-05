@@ -29,6 +29,9 @@ namespace ProjectCook.Core
 
         public LocationSO Current { get; private set; }
 
+        /// <summary>ผู้เล่นถึงพื้นที่ใหม่และพื้นที่พร้อมเล่นแล้ว</summary>
+        public event System.Action<LocationSO> Arrived;
+
         // พื้นที่แรกไม่ผ่าน CanTravelTo: เปิดฉากทดสอบค้างไว้แล้วกด Play ต้องเริ่มที่นั่นได้เสมอ
         private void Start() => StartCoroutine(Travel(ResolveStartLocation(), null));
 
@@ -78,6 +81,7 @@ namespace ProjectCook.Core
 
             GameModeManager.Instance.Exit(this);
             isTraveling = false;
+            Arrived?.Invoke(destination);
         }
 
         private IEnumerator Leave(LocationSO location)

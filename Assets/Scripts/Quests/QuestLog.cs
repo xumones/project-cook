@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using ProjectCook.Core;
 using ProjectCook.Cooking;
 using ProjectCook.Dialogue;
@@ -10,13 +11,24 @@ using ProjectCook.Items;
 namespace ProjectCook.Quests
 {
     /// <summary>เจ้าของเควสทั้งหมดของผู้เล่น: เควสที่รับอยู่ เควสที่จบแล้ว ความคืบหน้าจากข่าวในเกม และการจ่ายรางวัล</summary>
-    public class QuestLog : SceneSingleton<QuestLog>
+    public class QuestLog : SceneSingleton<QuestLog>, ISaveSection
     {
-        [Tooltip("เควสที่เริ่มเองเมื่อหยิบไอเทมหรือเกิดเหตุการณ์ตามที่ตั้งไว้ในเควส")]
-        [SerializeField] private List<QuestSO> triggeredQuests = new List<QuestSO>();
+        [Serializable]
+        private class SaveData
+        {
+            public List<string> completed = new List<string>();
+            public List<SavedQuest> active = new List<SavedQuest>();
+        }
+
+        [Tooltip("เควสเนื้อเรื่องทุกเรื่องในเกม ใช้หาเควสคืนตอนโหลด save และเริ่มเควสที่ตั้ง Start Item / Start Event ไว้")]
+        [FormerlySerializedAs("triggeredQuests")]
+        [SerializeField] private List<QuestSO> quests = new List<QuestSO>();
 
         private readonly List<ActiveQuest> active = new List<ActiveQuest>();
         private readonly HashSet<string> completed = new HashSet<string>();
+
+        // เควสจาก save ที่ยังสร้างเนื้อหาคืนไม่ได้ เพราะผู้ให้ (เช่น NPC ที่สร้างเควสสุ่ม) ยังไม่โหลด
+        private readonly List<SavedQuest> pending = new List<SavedQuest>();
 
         public IReadOnlyList<ActiveQuest> Active => active;
 
@@ -35,6 +47,58 @@ namespace ProjectCook.Quests
             MessageBus<ItemCollected>.Unsubscribe(HandleItemCollected);
             MessageBus<WorldEventTriggered>.Unsubscribe(HandleWorldEvent);
             MessageBus<DialogueStarted>.Unsubscribe(HandleDialogueStarted);
+        }
+
+        private void Start() => SaveService.Instance?.Register(this);
+
+        protected override void OnDestroy()
+        {
+            SaveService.Instance?.Unregister(this);
+            base.OnDestroy();
+        }
+
+        public string SectionKey => "quests";
+
+        public string Capture()
+        {
+            var data = new SaveData { completed = new List<string>(completed), active = new List<SavedQuest>(pending) };
+            foreach (ActiveQuest quest in active)
+            {
+                data.active.Add(SavedQuest.From(quest));
+            }
+            return JsonUtility.ToJson(data);
+        }
+
+        public void Restore(string json)
+        {
+            var data = JsonUtility.FromJson<SaveData>(json);
+            completed.Clear();
+            completed.UnionWith(data.completed);
+            active.Clear();
+            pending.Clear();
+
+            foreach (SavedQuest saved in data.active)
+            {
+                QuestSO story = saved.kind == QuestSO.Kind ? quests.Find(q => q != null && q.QuestId == saved.definition) : null;
+                if (story != null) active.Add(saved.ToQuest(story));
+                else if (saved.kind != QuestSO.Kind) pending.Add(saved);
+                else Debug.LogWarning($"[QuestLog] ไม่พบเควส '{saved.definition}' ในรายการ Quests ข้ามเควสนี้", this);
+            }
+            Changed?.Invoke();
+        }
+
+        /// <summary>ผู้ให้เควสที่เพิ่งโหลดสร้างเนื้อหาเควสของตัวเองคืน resolve คืน null ถ้าไม่ใช่เควสของมัน</summary>
+        public void ResolvePending(Func<SavedQuest, IQuestDefinition> resolve)
+        {
+            for (int i = pending.Count - 1; i >= 0; i--)
+            {
+                IQuestDefinition definition = resolve(pending[i]);
+                if (definition == null) continue;
+
+                active.Add(pending[i].ToQuest(definition));
+                pending.RemoveAt(i);
+                Changed?.Invoke();
+            }
         }
 
         public bool IsCompleted(string questId) => !string.IsNullOrEmpty(questId) && completed.Contains(questId);
@@ -112,7 +176,7 @@ namespace ProjectCook.Quests
 
         private void StartTriggered(Predicate<QuestSO> startsOn)
         {
-            foreach (QuestSO quest in triggeredQuests)
+            foreach (QuestSO quest in quests)
             {
                 if (quest != null && startsOn(quest) && CanStart(quest)) Begin(new ActiveQuest(quest, null, null));
             }

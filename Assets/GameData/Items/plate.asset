@@ -22,8 +22,9 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  prefab: {fileID: 0}
+  prefab: {fileID: 1155482338569503706, guid: 587c4549e25bb0246b1a348bd2c819bc, type: 3}
   gridSize: {x: 2, y: 2}
+  price: 0
   references:
     version: 2
     RefIds: []
