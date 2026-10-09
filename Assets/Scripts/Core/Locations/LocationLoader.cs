@@ -22,6 +22,8 @@ namespace ProjectCook.Core
         [Tooltip("ตัวผู้เล่น (root ที่มี CharacterController)")]
         [SerializeField] private Transform player;
 
+        [SerializeField] private ScreenFader fader;
+
         // root ที่เปิดอยู่ตอนซ่อนฉาก จะได้เปิดคืนเฉพาะตัวเดิม
         private readonly Dictionary<string, List<GameObject>> hiddenRoots = new Dictionary<string, List<GameObject>>();
 
@@ -75,6 +77,7 @@ namespace ProjectCook.Core
         {
             isTraveling = true;
             GameModeManager.Instance.Enter(this, GameMode.Loading);
+            yield return fader.FadeOut();
 
             if (Current != null) yield return Leave(Current);
 
@@ -96,9 +99,16 @@ namespace ProjectCook.Core
             Current = destination;
             PlacePlayer(scene, spawnId);
 
+            // รอให้กล้องกับของในฉากใหม่เข้าที่ก่อนเปิดจอ
+            yield return null;
+            yield return null;
+
             GameModeManager.Instance.Exit(this);
-            isTraveling = false;
             Arrived?.Invoke(destination);
+
+            // ผู้เล่นขยับได้ระหว่างจอสว่าง แต่ยังเดินทางซ้อนไม่ได้จนจอสว่างเต็ม
+            yield return fader.FadeIn();
+            isTraveling = false;
         }
 
         private IEnumerator Leave(LocationSO location)

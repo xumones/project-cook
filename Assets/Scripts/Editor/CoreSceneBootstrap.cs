@@ -27,6 +27,15 @@ namespace ProjectCook.Editor
         {
             // ค่าค้างจากวิธีเดิมที่บังคับเริ่มจากไฟล์ Core
             EditorSceneManager.playModeStartScene = null;
+
+            // เริ่มจากเมนูให้เดินตามเกมจริง: ปุ่ม Play โหลด Core เอง และเริ่มที่พื้นที่แรก
+            if (SceneManager.GetSceneByName(SceneFlow.MainMenuScene).isLoaded)
+            {
+                SessionState.SetString(LocationLoader.EditorStartSceneKey, string.Empty);
+                SessionState.SetBool(AddedCoreKey, false);
+                return;
+            }
+
             SessionState.SetString(LocationLoader.EditorStartSceneKey, OpenLocationSceneName());
 
             bool added = !SceneManager.GetSceneByPath(CoreScenePath).isLoaded;

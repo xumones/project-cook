@@ -9,6 +9,8 @@
 ## 1. ฉาก (Scene)
 
 ```
+[MainMenu]  ฉากแรกของเกม ปุ่ม Play/Exit ผ่าน SceneFlow (Play = โหลด Core แบบ Single)
+        │
 [Core] โหลดค้างตลอดเกม
   Systems: GameModeManager, CursorManager, LocationLoader, QuestLog, SaveService, InputContextSwitcher
   ผู้เล่น กล้อง UI หลัก (GameCanvas) บทสนทนา EventSystem
@@ -21,7 +23,8 @@
 - หนึ่งพื้นที่ = หนึ่งฉาก + หนึ่ง `LocationSO` (`GameData/Locations/`) ในนั้นมีช่องติ๊ก **Keep Loaded** (ออกไปแล้วซ่อนไว้), **Dev Only** และ **Is Outside** (ข้างนอก: ไม่ save และของที่เกิดที่นี่ติดป้าย FoundOutside)
 - ฉากพื้นที่จะเป็นฉากหลัก (Active Scene) เสมอ ของที่สร้างตอนเล่นจึงไปอยู่ในพื้นที่ และแสงกับท้องฟ้ามาจากพื้นที่
 - object ในฉากหนึ่งอ้างถึง object ในอีกฉากไม่ได้ (Unity ไม่รองรับ) ให้หาผ่าน Singleton ใน Core แทน
-- **กด Play ใน Editor** จากฉากพื้นที่ไหนก็ได้ `CoreSceneBootstrap` จะเปิด Core เพิ่มให้ก่อนเข้า Play แล้วปิดคืนเมื่อหยุด ไม่ต้องบันทึกฉากก่อนกด Play
+- **กด Play ใน Editor** จากฉากพื้นที่ไหนก็ได้ `CoreSceneBootstrap` จะเปิด Core เพิ่มให้ก่อนเข้า Play แล้วปิดคืนเมื่อหยุด ไม่ต้องบันทึกฉากก่อนกด Play ยกเว้นกด Play จาก MainMenu ซึ่งเดินแบบเกมจริง (ปุ่ม Play โหลด Core เอง)
+- ฉาก MainMenu ห้ามมี script เกมที่หา Singleton ของ Core เพราะตอนอยู่เมนู Core ยังไม่ถูกโหลด
 
 ## 2. Assembly (กล่องโค้ด)
 
