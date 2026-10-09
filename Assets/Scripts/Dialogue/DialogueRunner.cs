@@ -175,6 +175,7 @@ namespace ProjectCook.Dialogue
         private void Select(DialogueOption option)
         {
             dialogueUI.HideChoices();
+            MessageBus<DialogueOptionSelected>.Publish(new DialogueOptionSelected(speaker.SpeakerId));
             option.OnSelected?.Invoke();
 
             if (option.Response != null && !option.Response.IsEmpty)
