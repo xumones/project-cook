@@ -140,10 +140,16 @@ namespace ProjectCook.Core
                 return;
             }
 
+            PlacePlayerAt(spawn.transform.position);
+        }
+
+        /// <summary>ย้ายตัวผู้เล่นไปตำแหน่งนี้ทันที</summary>
+        public void PlacePlayerAt(Vector3 position)
+        {
             // CharacterController เขียนตำแหน่งเดิมทับ ต้องปิดก่อนย้าย
             var controller = player.GetComponent<CharacterController>();
             if (controller != null) controller.enabled = false;
-            player.position = spawn.transform.position;
+            player.position = position;
             if (controller != null) controller.enabled = true;
         }
 

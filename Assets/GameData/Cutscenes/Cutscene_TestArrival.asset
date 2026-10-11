@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298f13fa011b0a948ac48d24fd465de0, type: 3}
+  m_Name: Cutscene_TestArrival
+  m_EditorClassIdentifier: ProjectCook.Cinematics::ProjectCook.Cinematics.CutsceneSO
+  cutsceneId: test_arrival
+  trigger: 0
+  triggerId: testarea_cutscene
+  requiredQuests: []
+  playOnce: 1
+  content: 0
+  video: {fileID: 0}
+  slides: []
+  kind: 0
+  transitionIn: 0
+  transitionOut: 0
+  allowLook: 1
+  finishEvent: 
+  references:
+    version: 2
+    RefIds: []

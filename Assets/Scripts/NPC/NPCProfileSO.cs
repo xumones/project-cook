@@ -1,12 +1,12 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
+using ProjectCook.Dialogue;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>ข้อมูลประจำตัว NPC หนึ่งคน: ชื่อ หน้าตา font และประโยคที่พูดเป็นของตัวเอง</summary>
+    /// <summary>ข้อมูลประจำตัว NPC หนึ่งคน: ชื่อ หน้าตา สไตล์ตัวหนังสือ และประโยคที่พูดเป็นของตัวเอง</summary>
     [CreateAssetMenu(fileName = "NPC_", menuName = "ProjectCook/NPC/Profile")]
-    public class NPCProfileSO : ScriptableObject
+    public class NPCProfileSO : ScriptableObject, ISpeakerIdentity
     {
         /// <summary>ชุดประโยคให้สุ่ม การสุ่มทำผ่าน LinePicker ของ NPC แต่ละตัว</summary>
         [System.Serializable]
@@ -24,7 +24,9 @@ namespace ProjectCook.NPC
         [SerializeField] private string npcId;
 
         [SerializeField] private LocalizedString displayName;
-        [SerializeField] private TMP_FontAsset font;
+
+        [Tooltip("font และขนาดตัวหนังสือในหน้าต่างคุย เว้นว่าง = หน้าตาปกติ")]
+        [SerializeField] private DialogueTextStyleSO textStyle;
 
         [Tooltip("ภาพตัวละคร แสดงในหน้าต่างคุย เว้นว่าง = ซ่อนรูป")]
         [SerializeField] private Sprite characterSprite;
@@ -53,8 +55,12 @@ namespace ProjectCook.NPC
 
         public string NpcId => npcId;
         public LocalizedString DisplayName => displayName;
-        public TMP_FontAsset Font => font;
+        public DialogueTextStyleSO TextStyle => textStyle;
         public Sprite CharacterSprite => characterSprite;
+
+        // บทพูดใน cutscene ใช้ไฟล์นี้เป็นผู้พูดได้ตรงๆ โดยไม่ต้องมีตัว NPC ในฉาก
+        string ISpeakerIdentity.SpeakerId => npcId;
+        Sprite ISpeakerIdentity.Portrait => characterSprite;
         public LineSet Greeting => greeting;
         public LineSet Chat => chat;
         public LineSet OrderOffer => orderOffer;

@@ -1283,6 +1283,65 @@
             ]
         },
         {
+            "name": "Cutscene",
+            "id": "84aab61c-c5a2-4a5e-8784-588b0716005d",
+            "actions": [
+                {
+                    "name": "Skip",
+                    "type": "Button",
+                    "id": "a1e400e7-b262-4e83-9cf0-947fe9eb8f5e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold(duration=1)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Advance",
+                    "type": "Button",
+                    "id": "ed27a02c-9f0f-4d7f-bf06-1ecce9e0fca0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "db901d17-0f0b-4c4b-b494-cb151ca58c0c",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Skip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f2dce10f-8022-43c3-9245-c951491f3c7e",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Advance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca0e0415-fc38-46b0-a781-e27ec6b1395d",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Advance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Dev",
             "id": "d9fe71ad-aea2-46ec-af7d-9dd3fb6c1b22",
             "actions": [

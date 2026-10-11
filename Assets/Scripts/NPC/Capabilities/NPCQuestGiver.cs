@@ -64,7 +64,7 @@ namespace ProjectCook.NPC.Capabilities
                 IQuestDefinition next = NextRequest(log);
                 if (next != null)
                 {
-                    var ask = new DialogueOption { Label = askLabel };
+                    var ask = new DialogueOption { Label = askLabel, Shot = DialogueShot.CloseUp };
                     ask.OnSelected = () => ask.Response = Accept(log, next);
                     options.Add(ask);
                 }

@@ -17,6 +17,20 @@ namespace ProjectCook.Core
             return action != null && action.enabled && action.WasReleasedThisFrame();
         }
 
+        /// <summary>ปุ่มที่มี interaction (เช่น Hold) ทำงานครบในเฟรมนี้</summary>
+        public static bool WasPerformedThisFrame(this InputActionReference reference)
+        {
+            InputAction action = reference != null ? reference.action : null;
+            return action != null && action.enabled && action.WasPerformedThisFrame();
+        }
+
+        /// <summary>ความคืบหน้าของการกดค้าง 0–1 ของปุ่มที่ใช้ Hold</summary>
+        public static float HoldProgress(this InputActionReference reference)
+        {
+            InputAction action = reference != null ? reference.action : null;
+            return action != null && action.enabled ? action.GetTimeoutCompletionPercentage() : 0f;
+        }
+
         public static bool IsPressed(this InputActionReference reference)
         {
             InputAction action = reference != null ? reference.action : null;

@@ -128,6 +128,7 @@ namespace ProjectCook.Quests
         {
             active.Add(quest);
             Changed?.Invoke();
+            MessageBus<QuestStarted>.Publish(new QuestStarted(quest.Definition.QuestId));
         }
 
         /// <summary>เควสแรกที่รอให้ผู้รับคนนี้รับอาหาร</summary>
@@ -209,6 +210,7 @@ namespace ProjectCook.Quests
             if (PlayerWallet.Instance != null) PlayerWallet.Instance.Earn(quest.Definition.Reward);
             QuestNote.Discard(quest.Id);
             Changed?.Invoke();
+            MessageBus<QuestCompleted>.Publish(new QuestCompleted(quest.Definition.QuestId));
         }
     }
 }

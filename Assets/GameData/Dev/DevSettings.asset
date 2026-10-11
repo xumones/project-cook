@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f14f90a92c4529f4aa871d55aac98199, type: 3}
   m_Name: DevSettings
   m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.DevSettingsSO
-  devLocationsEnabled: 1
+  devLocationsEnabled: 0

@@ -9,6 +9,7 @@
         "ProjectCook.Core",
         "ProjectCook.Cooking",
         "ProjectCook.Quests",
+        "ProjectCook.Cinematics",
         "Unity.Localization"
     ],
     "includePlatforms": [

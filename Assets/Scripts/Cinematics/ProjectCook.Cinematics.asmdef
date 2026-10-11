@@ -1,0 +1,25 @@
+{
+    "name": "ProjectCook.Cinematics",
+    "rootNamespace": "ProjectCook.Cinematics",
+    "references": [
+        "ProjectCook.Core",
+        "ProjectCook.Player",
+        "ProjectCook.Quests",
+        "ProjectCook.Dialogue",
+        "ProjectCook.NPC",
+        "Unity.Localization",
+        "Unity.InputSystem",
+        "Unity.Cinemachine",
+        "Unity.Timeline",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

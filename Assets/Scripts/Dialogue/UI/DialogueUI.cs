@@ -37,13 +37,25 @@ namespace ProjectCook.Dialogue.UI
         // ข้อความดิบของแต่ละตัวเลือก (ไม่รวม prefix ไฮไลต์) เก็บไว้ใช้สร้างข้อความใหม่ตอนสลับไฮไลต์
         private List<string> choiceBaseTexts = new List<string>();
 
-        // font ของผู้พูดคนปัจจุบัน เก็บไว้ใส่ให้ปุ่มที่เพิ่งสร้างใหม่ใน pool ด้วย
-        private TMP_FontAsset currentFont;
-        private TMP_FontAsset defaultFont;
+        // หน้าตาเดิมจาก scene ใช้คืนค่าเมื่อสไตล์ของผู้พูดไม่ได้กำหนดเอง
+        private TMP_FontAsset defaultNameFont;
+        private TMP_FontAsset defaultDialogueFont;
+        private float defaultNameFontSize;
+        private float defaultDialogueFontSize;
 
         private void Awake()
         {
-            if (dialogueText != null) defaultFont = dialogueText.font;
+            if (speakerNameText != null)
+            {
+                defaultNameFont = speakerNameText.font;
+                defaultNameFontSize = speakerNameText.fontSize;
+            }
+
+            if (dialogueText != null)
+            {
+                defaultDialogueFont = dialogueText.font;
+                defaultDialogueFontSize = dialogueText.fontSize;
+            }
 
             if (dialoguePanel != null)
             {
@@ -71,27 +83,22 @@ namespace ProjectCook.Dialogue.UI
             HideChoices();
         }
 
-        /// <summary>ใช้ font ประจำตัวผู้พูดกับทุกข้อความในหน้าต่าง ส่ง null เพื่อกลับไปใช้ font ของ prefab</summary>
-        public void SetFont(TMP_FontAsset font)
+        /// <summary>ใช้สไตล์ของผู้พูดกับชื่อและประโยค ปุ่มคำตอบของผู้เล่นคงหน้าตาเดิม ส่ง null = หน้าตาเดิมทั้งหมด</summary>
+        public void SetTextStyle(DialogueTextStyleSO style)
         {
-            currentFont = font != null ? font : defaultFont;
-            if (currentFont == null) return;
+            bool hasStyle = style != null;
+            TMP_FontAsset font = hasStyle ? style.Font : null;
 
-            if (speakerNameText != null) speakerNameText.font = currentFont;
-            if (dialogueText != null) dialogueText.font = currentFont;
-
-            foreach (GameObject btnObj in buttonPool)
-            {
-                ApplyFont(btnObj);
-            }
+            ApplyStyle(speakerNameText, font, hasStyle ? style.NameFontSize : 0f, defaultNameFont, defaultNameFontSize);
+            ApplyStyle(dialogueText, font, hasStyle ? style.DialogueFontSize : 0f, defaultDialogueFont, defaultDialogueFontSize);
         }
 
-        private void ApplyFont(GameObject btnObj)
+        private static void ApplyStyle(TextMeshProUGUI text, TMP_FontAsset font, float fontSize, TMP_FontAsset defaultFont, float defaultFontSize)
         {
-            if (currentFont == null || btnObj == null) return;
+            if (text == null) return;
 
-            TextMeshProUGUI btnText = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-            if (btnText != null) btnText.font = currentFont;
+            text.font = font != null ? font : defaultFont;
+            text.fontSize = fontSize > 0f ? fontSize : defaultFontSize;
         }
 
         /// <summary>กำหนดข้อมูลผู้พูดและภาพตัวละคร</summary>
@@ -225,7 +232,6 @@ namespace ProjectCook.Dialogue.UI
             }
 
             GameObject newBtn = Instantiate(choiceButtonPrefab, choiceButtonContainer);
-            ApplyFont(newBtn);
             buttonPool.Add(newBtn);
             return newBtn;
         }

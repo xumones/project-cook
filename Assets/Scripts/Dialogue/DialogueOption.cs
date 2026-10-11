@@ -15,5 +15,8 @@ namespace ProjectCook.Dialogue
 
         /// <summary>true = จบการคุยหลังตอบ แทนที่จะกลับไปเมนู</summary>
         public bool EndsDialogue;
+
+        /// <summary>มุมกล้องตอนผู้พูดตอบตัวเลือกนี้ ปกติ = สายตาผู้เล่น ใช้มุมอื่นเฉพาะจังหวะที่อยากเน้น</summary>
+        public DialogueShot Shot;
     }
 }

@@ -12,7 +12,8 @@
 [MainMenu]  ฉากแรกของเกม ปุ่ม Play/Exit ผ่าน SceneFlow (Play = โหลด Core แบบ Single)
         │
 [Core] โหลดค้างตลอดเกม
-  Systems: GameModeManager, CursorManager, LocationLoader, QuestLog, SaveService, InputContextSwitcher
+  Systems: GameModeManager, CursorManager, LocationLoader, QuestLog, SaveService, InputContextSwitcher,
+           CutscenePlayer, CutsceneScheduler
   ผู้เล่น กล้อง UI หลัก (GameCanvas) บทสนทนา EventSystem
         │ LocationLoader สลับพื้นที่
 [Home]      บ้าน ทำมือ save ได้ ออกไปแล้วถูกซ่อนไว้ (ไม่ปลด) ของในบ้านจึงอยู่ครบ
@@ -31,6 +32,7 @@
 แต่ละกล่องอ้างถึงได้เฉพาะกล่องที่อยู่ชั้นล่างกว่า ถ้าเผลออ้างกลับขึ้นไป Unity จะ compile ไม่ผ่าน
 
 ```
+Cinematics ─────► NPC, Quests, Dialogue, Player, Core
 UI ─────────────► Inventory, Items, Core
 NPC ────────────► Quests, Cooking, Inventory, Dialogue, Items, Core
 Quests ─────────► Cooking, Inventory, Dialogue, Items, Core
@@ -46,7 +48,7 @@ Editor             (เครื่องมือใน Editor เท่าน�
 ## 3. ระบบหลัก
 
 ### โหมดเกมและปุ่ม
-- `GameModeManager` เก็บโหมดเป็นชั้นซ้อนกัน (Exploring / Station / Dialogue / Inventory / Loading) เช่น เปิดกระเป๋าทับสถานี ปิดกระเป๋าแล้วกลับไปที่สถานี
+- `GameModeManager` เก็บโหมดเป็นชั้นซ้อนกัน (Exploring / Station / Dialogue / Inventory / Loading / Cutscene) เช่น เปิดกระเป๋าทับสถานี ปิดกระเป๋าแล้วกลับไปที่สถานี
 - `InputContextSwitcher` เปิดชุดปุ่ม (action map) ตามโหมดบนสุด และเป็นที่เดียวที่เปิด/ปิดปุ่มได้
 
 | โหมด | ชุดปุ่ม |
@@ -56,6 +58,7 @@ Editor             (เครื่องมือใน Editor เท่าน�
 | Dialogue | Dialogue, View |
 | Inventory | Menu |
 | Loading | – |
+| Cutscene | Cutscene, View |
 
   ชุด Dev เปิดตลอด
 - script อ่านปุ่มผ่าน `InputActionReference` + extension ใน Core ปุ่มในชุดที่ปิดอยู่จะอ่านได้ว่า "ไม่ได้กด" เอง
@@ -95,13 +98,25 @@ Editor             (เครื่องมือใน Editor เท่าน�
 - UI ของสถานีมี Canvas ของตัวเองอยู่ใต้สถานี (เช่น `Discplayer/DiscPlayerCanvas`) เพราะ object อ้างข้ามฉากไม่ได้
 
 ### ช่องข่าวกลาง
-- `MessageBus<T>` ใช้ประกาศว่า "เกิดอะไรขึ้น" ข่าวที่มีตอนนี้: `ItemCollected`, `DialogueStarted`, `WorldEventTriggered` ส่วนการสั่งให้ทำอะไร ให้เรียกเมธอดตรงๆ
+- `MessageBus<T>` ใช้ประกาศว่า "เกิดอะไรขึ้น" ข่าวที่มีตอนนี้: `ItemCollected`, `DialogueStarted`, `DialogueBeatStarted`, `DialogueEnded`, `WorldEventTriggered`, `QuestStarted`, `QuestCompleted` ส่วนการสั่งให้ทำอะไร ให้เรียกเมธอดตรงๆ
+- `DialogueEnded` ถูกส่งก่อนออกจากโหมด Dialogue ระบบที่รอให้คุยจบจึงเปิดคำขอทันก่อนเกมกลับไปเดินสำรวจ
 
 ### เควส
 - `QuestLog` (Core) เป็นเจ้าของเควสทั้งหมด: รับข่าวเพื่อเดินความคืบหน้า จ่ายรางวัล และเริ่มเควสที่ตั้ง Start Item / Start Event ไว้ให้เอง
 - เนื้อหาเควสมาจาก `IQuestDefinition` ได้สองแบบ: `QuestSO` (เนื้อเรื่อง ทำครั้งเดียว) และ `IngredientOrder` (เควสสุ่มของ NPC ทำซ้ำได้)
 - เป้าหมาย 4 แบบ: `DeliverDishObjectiveSO`, `CollectItemObjectiveSO`, `ReachLocationObjectiveSO`, `TalkToObjectiveSO` ความคืบหน้าเก็บใน `ActiveQuest` ไม่เก็บใน asset
 - `NPCQuestGiver` เป็นแค่ทางเข้าในบทสนทนา ส่วน `QuestNote` คือโน้ตที่ผูกกับเควสด้วยรหัสของ `ActiveQuest`
+
+### Cutscene
+แยก 3 หน้าที่ไม่ปนกัน (วิธีทำฉากทีละขั้นอยู่ที่ `docs/CUTSCENE_GUIDE.md`)
+- **เล่นเมื่อไหร่** — `CutsceneScheduler` (Core) ฟังข่าว `WorldEventTriggered`, `QuestStarted`, `QuestCompleted`, `DialogueEnded` เทียบกับตัวกระตุ้นของ `CutsceneSO` และเงื่อนไข "ต้องจบเควสเหล่านี้ก่อน" แล้วเปิด "คำขอ" ไว้ใน `CutsceneQueue` คำขออยู่จนกว่า cutscene จะเล่นจบจริงและลง save ด้วย (ตัวกระตุ้นเกิดครั้งเดียว ทิ้งคำขอแล้ว cutscene จะหายไปเลย) เล่นได้เมื่ออยู่โหมด Exploring และ Stage ของมันอยู่ในฉากที่เปิด
+- **เล่นยังไง** — `CutscenePlayer` (Core) ประตูเดียวเข้าออก: โหมด Cutscene, ภาพเข้าออก (Blend / Fade / Cut), หยุดเวลาทั้งเกมเมื่อเป็นชนิด Full, ปุ่ม Enter ค้างเพื่อข้าม, และผลตอนจบ ดูจบกับกดข้ามผ่าน `Finish` ทางเดียวกัน ผลจึงเหมือนกันเสมอ
+- **เล่นอะไร** — `CutsceneStage` + `PlayableDirector` ในฉากพื้นที่ ถือ Timeline กล้อง และนักแสดง แถวกล้องของ Timeline ถูกผูกกับ Brain ใน Core ตอนเริ่มเล่น
+- ข้อมูลอยู่ใน `CutsceneSO` (รหัส, ตัวกระตุ้น + รหัส, เควสที่ต้องจบก่อน, เล่นครั้งเดียว, ชนิด, ภาพเข้าออก, หันกล้องได้ไหม, ข่าวตอนจบ) ข่าวตอนจบส่งเป็น `WorldEventTriggered` เควสจึงเริ่มต่อจาก cutscene ได้โดยไม่ต้องรู้จักระบบนี้
+- บทพูดใน cutscene: แถว `DialogueLineTrack` + clip `DialogueLineClip` (ผู้พูด = `NPCProfileSO`, ข้อความ, รอกดไหม) `CutscenePlayer` ส่งบรรทัดให้ `DialogueRunner.PlayLine` และอ่านปุ่ม Cutscene/Advance เอง ถ้าบรรทัดยังไม่ถูกอ่านตอน clip จบ Timeline จะค้าง (ความเร็ว 0) จนกดไปต่อ clip ที่ต่อกันพอดีถูกต่อคิว ไม่แสดงทับกัน
+- cutscene แบบสื่อ (`Content` = Video / Slides) ไม่ต้องมี Stage เล่นได้ทุกที่ แสดงผ่าน `MediaCutsceneView` (ใต้ GameCanvas ชั้นล่างสุด หน้าต่างคุยจึงอยู่บนภาพ) เข้าออกด้วยจอดำ หยุดเวลาและ `AudioListener.pause` เสมอ เสียงวิดีโอออกทาง AudioSource ที่ไม่สนการหยุดเสียง
+- กล้องในบทสนทนาปกติ: `DialogueRunner` ประกาศ `DialogueBeatStarted` (Greeting / Response / Menu) แล้ว `DialogueShotDirector` (Core) เลือกมุมจาก `DialogueShotRig` ของผู้พูด (ลูกของ NPC) ด้วยการยก Priority (สายตาผู้เล่นเป็นมุมหลัก มุมอื่นใช้เฉพาะเมื่อ `DialogueOption.Shot` ของตัวเลือกที่กดขอ เมนูค้างมุมเดิม จบคุยกลับสายตาผู้เล่น) ระหว่างที่เป็นมุม NPC จะล็อกการหันกล้องของผู้เล่น `NPCFacing` หัน NPC หาผู้เล่นตอนเริ่มคุย มุมทั้งหมดจึงอยู่ฝั่งผู้เล่น (กฎ 180 องศา) ชื่อกล้อง `DialogueShot_CloseUp` / `DialogueShot_Medium` ถูกตั้งให้ตัดภาพในไฟล์ blends
+- ภาพเลื่อนเข้าออกใช้เวลาและเส้นโค้งจาก `Main Camera Custom Blends` (กล้องผู้เล่น ↔ ANY) ปรับที่ไฟล์นั้นที่เดียว
 
 ### Save
 - `SaveService` เขียนไฟล์ JSON ก้อนเดียว (มีเวอร์ชัน) ที่ `Application.persistentDataPath/save.json`
@@ -125,13 +140,15 @@ Editor             (เครื่องมือใน Editor เท่าน�
 | สถานีใหม่ | subclass หรือใช้ `Station` ตรงๆ ของที่เปิด/ปิดตามการเข้าออกทำเป็น `IStationModule` แล้ววางเป็นลูกของสถานี |
 | ปุ่มใหม่ | ใส่ใน action map ของสถานการณ์ที่ใช้ แล้วอ้างผ่าน `InputActionReference` |
 | ระบบที่ต้อง save | `ISaveSection` + `SaveService.Instance.Register(this)` ใน Start |
+| cutscene ใหม่ | `CutsceneSO` (รหัสไม่ซ้ำ + Trigger + Trigger Id) → ใส่ในรายการ `Cutscenes` ของ CutsceneScheduler → ในฉากวาง `CutsceneStage` + Timeline (ดู `docs/CUTSCENE_GUIDE.md`) |
 
 ## 5. เครื่องมือตอนพัฒนา
 
 - **Backspace**: เปิดหรือปิด save (จำค่าข้ามการกด Play)
 - `GameData/Dev/DevSettings` → **Dev Locations Enabled**: เปิดหรือปิดประตูไปพื้นที่ทดสอบ
+- `GameData/Dev/DevSettings` → **Skip Cutscenes**: ข้ามทุก cutscene ทันที (ผลตอนจบยังถูกใส่ครบ)
 - `DynamicFontSaveCleaner`: ล้างตัวอักษรที่ฟอนต์ TMP แบบ Dynamic สร้างระหว่างใช้งานก่อนบันทึก ไฟล์ฟอนต์จึงไม่เปลี่ยนใน git
-- test: Window → General → Test Runner → EditMode (ครอบคลุม grid, สถานะไอเทม, เควส, save, การทำอาหาร)
+- test: Window → General → Test Runner → EditMode (ครอบคลุม grid, สถานะไอเทม, เควส, save, การทำอาหาร, คิว cutscene)
 
 ## 6. ที่ยังไม่ทำ (ตั้งใจเลื่อนไว้)
 
@@ -146,3 +163,4 @@ Editor             (เครื่องมือใน Editor เท่าน�
 - Unreal Subsystems และ Lyra (ระบุอายุของ service ให้ชัด, ส่งข้อความระหว่างระบบ)
 - Zero Sievert (save เฉพาะในฐาน), Escape from Tarkov ("Found in raid")
 - Robert Nystrom, [Game Programming Patterns: Singleton](https://gameprogrammingpatterns.com/singleton.html)
+- Cutscene: Chop Chop [Scripts/Cutscenes](https://github.com/UnityTechnologies/open-project-1/tree/main/UOP1_Project/Assets/Scripts/Cutscenes) (ผูก Timeline ตอนเล่น, ค้างไทม์ไลน์ด้วยความเร็ว 0), Pixel Crushers [Cutscene Sequences](https://www.pixelcrushers.com/dialogue_system/manual2x/html/cutscene_sequences.html) (คำสั่ง `required` = ผลที่ต้องเกิดแม้กดข้าม), [Cinemachine 3.1 + Timeline](https://docs.unity3d.com/Packages/com.unity.cinemachine@3.1/manual/concept-timeline.html), Witcher 3 GDC 2016 (cutscene ทำมือเฉพาะจุดสำคัญ ที่เหลือเป็นบทสนทนาแบบระบบ)

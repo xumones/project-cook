@@ -22,7 +22,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  font: {fileID: 0}
+  textStyle: {fileID: 0}
   characterSprite: {fileID: 0}
   greeting:
     variants:

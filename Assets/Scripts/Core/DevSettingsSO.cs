@@ -9,6 +9,11 @@ namespace ProjectCook.Core
         [Tooltip("เปิดพื้นที่ที่ติ๊ก Dev Only (ประตูไปพื้นที่ทดสอบจะโผล่)")]
         [SerializeField] private bool devLocationsEnabled = true;
 
+        [Tooltip("ข้ามทุก cutscene ทันที ผลตอนจบยังถูกใส่ครบ ใช้ตอนทดสอบระบบอื่น")]
+        [SerializeField] private bool skipCutscenes;
+
         public bool DevLocationsEnabled => devLocationsEnabled && Debug.isDebugBuild;
+
+        public bool SkipCutscenes => skipCutscenes && Debug.isDebugBuild;
     }
 }

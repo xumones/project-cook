@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using ProjectCook.Core;
@@ -21,7 +20,7 @@ namespace ProjectCook.NPC
 
         public string SpeakerId => profile.NpcId;
         public LocalizedString DisplayName => profile.DisplayName;
-        public TMP_FontAsset Font => profile.Font;
+        public DialogueTextStyleSO TextStyle => profile.TextStyle;
         public Sprite Portrait => profile.CharacterSprite;
 
         private void Awake()

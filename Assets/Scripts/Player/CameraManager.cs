@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Unity.Cinemachine;
 using ProjectCook.Core;
 
@@ -16,13 +17,16 @@ namespace ProjectCook.Player
         [SerializeField] private int activePriority = 1;
         [SerializeField] private int inactivePriority = 0;
 
-        [Header("Dialogue Look Settings")]
-        [Tooltip("มุมกวาดแนวนอนทั้งหมดที่หมุนได้ระหว่างคุย (องศา) ต้องมาปรับจูนอีกทีตอนทดสอบจริง")]
-        [SerializeField] private float dialoguePanRange = 70f;
-        [Tooltip("มุมก้ม/เงยต่ำสุดที่หมุนได้ระหว่างคุย (องศา) ต้องมาปรับจูนอีกทีตอนทดสอบจริง")]
-        [SerializeField] private float dialogueTiltMin = -15f;
-        [Tooltip("มุมก้ม/เงยสูงสุดที่หมุนได้ระหว่างคุย (องศา) ต้องมาปรับจูนอีกทีตอนทดสอบจริง")]
-        [SerializeField] private float dialogueTiltMax = 40f;
+        [Header("Limited Look (Dialogue / Cutscene)")]
+        [Tooltip("มุมกวาดแนวนอนทั้งหมดที่หมุนได้ระหว่างคุยหรือดู cutscene (องศา)")]
+        [FormerlySerializedAs("dialoguePanRange")]
+        [SerializeField] private float limitedPanRange = 70f;
+        [Tooltip("มุมก้ม/เงยต่ำสุดที่หมุนได้ระหว่างคุยหรือดู cutscene (องศา)")]
+        [FormerlySerializedAs("dialogueTiltMin")]
+        [SerializeField] private float limitedTiltMin = -15f;
+        [Tooltip("มุมก้ม/เงยสูงสุดที่หมุนได้ระหว่างคุยหรือดู cutscene (องศา)")]
+        [FormerlySerializedAs("dialogueTiltMax")]
+        [SerializeField] private float limitedTiltMax = 40f;
 
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance คืน null ไปแล้ว แต่ยังต้องถอน event ให้ครบ
         private GameModeManager gameMode;
@@ -42,6 +46,9 @@ namespace ProjectCook.Player
         private StationCameraHandler stationHandler;
 
         private bool InStation => activeModes.Contains(GameMode.Station);
+
+        /// <summary>กล้องสายตาผู้เล่น (มุม POV)</summary>
+        public CinemachineCamera PlayerCamera => playerCamera;
 
         /// <summary>ตั้งกล้องสถานี เรียกก่อนเข้าโหมด Station หรือระหว่างอยู่ในสถานีเพื่อสลับมุมกล้อง</summary>
         public void SetStationCamera(CinemachineCamera camera)
@@ -67,7 +74,8 @@ namespace ProjectCook.Player
             stationHandler = new StationCameraHandler(playerCamera, activePriority, inactivePriority,
                 () => stationCamera, SetHeldItemVisible);
             modeHandlers[GameMode.Station] = stationHandler;
-            modeHandlers[GameMode.Dialogue] = new DialogueCameraHandler(playerCamera, dialoguePanRange, dialogueTiltMin, dialogueTiltMax);
+            modeHandlers[GameMode.Dialogue] = new LimitedLookHandler(playerCamera, limitedPanRange, limitedTiltMin, limitedTiltMax);
+            modeHandlers[GameMode.Cutscene] = new LimitedLookHandler(playerCamera, limitedPanRange, limitedTiltMin, limitedTiltMax);
         }
 
         private void Start()

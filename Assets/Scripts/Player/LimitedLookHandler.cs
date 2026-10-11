@@ -3,8 +3,8 @@ using Unity.Cinemachine;
 
 namespace ProjectCook.Player
 {
-    /// <summary>ปฏิกิริยากล้องตอนเข้า/ออกโหมด Dialogue: จำกัดมุมกล้องไว้รอบทิศที่เล็งอยู่ตอนเริ่มคุย แล้วคืนขอบเขตเดิมตอนจบ</summary>
-    public class DialogueCameraHandler : ICameraModeHandler
+    /// <summary>จำกัดมุมกล้องผู้เล่นไว้รอบทิศที่เล็งอยู่ตอนเข้าโหมด แล้วคืนขอบเขตเดิมตอนออก ใช้กับโหมดที่ควรมองแค่สิ่งตรงหน้า (คุย, cutscene)</summary>
+    public class LimitedLookHandler : ICameraModeHandler
     {
         private readonly CinemachineCamera playerCamera;
         private readonly float panRange;
@@ -16,7 +16,7 @@ namespace ProjectCook.Player
         private bool savedPanWrap;
         private bool rangeSaved;
 
-        public DialogueCameraHandler(CinemachineCamera playerCamera, float panRange, float tiltMin, float tiltMax)
+        public LimitedLookHandler(CinemachineCamera playerCamera, float panRange, float tiltMin, float tiltMax)
         {
             this.playerCamera = playerCamera;
             this.panRange = panRange;
@@ -31,7 +31,7 @@ namespace ProjectCook.Player
             var panTilt = playerCamera.GetComponent<CinemachinePanTilt>();
             if (panTilt == null) return;
 
-            // บันทึกขอบเขตเดิมไว้คืนตอนจบบทสนทนา (กันเคสเผลอเรียกซ้ำโดยไม่ได้ OnExit ก่อน)
+            // บันทึกขอบเขตเดิมไว้คืนตอนออกจากโหมด (กันเคสเผลอเรียกซ้ำโดยไม่ได้ OnExit ก่อน)
             if (!rangeSaved)
             {
                 savedPanRange = panTilt.PanAxis.Range;

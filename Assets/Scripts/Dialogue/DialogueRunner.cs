@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,9 @@ using ProjectCook.Dialogue.UI;
 
 namespace ProjectCook.Dialogue
 {
-    /// <summary>วงจรการคุย: ทักทาย → เมนูตัวเลือก → NPC ตอบ → กลับเมนู จนกว่าจะเลือกตัวเลือกที่จบการคุย</summary>
+    /// <summary>วงจรการคุย: ทักทาย → เมนูตัวเลือก → NPC ตอบ → กลับเมนู จนกว่าจะเลือกตัวเลือกที่จบการคุย
+    /// และแสดงบทพูดทีละบรรทัดให้ระบบอื่น (เช่น cutscene) ผ่าน PlayLine</summary>
+    // บรรทัดเดี่ยวไม่อ่านปุ่มเอง ผู้เรียกเป็นเจ้าของปุ่มของโหมดตัวเองแล้วสั่ง AdvanceLine
     public class DialogueRunner : SceneSingleton<DialogueRunner>
     {
         private enum Phase { Idle, Typing, Menu, AwaitClose }
@@ -37,10 +40,16 @@ namespace ProjectCook.Dialogue
         private Coroutine typingCoroutine;
         private string currentText;
         private bool endAfterLine;
-        private WaitForSeconds typingDelay;
+        private WaitForSecondsRealtime typingDelay;
+
+        // โหมดบรรทัดเดี่ยว: มีค่า = มีบรรทัดค้างอยู่ รอผู้เรียกสั่งไปต่อ
+        private bool lineMode;
+        private Action lineAdvanced;
 
         private void Update()
         {
+            if (lineMode) return;
+
             switch (phase)
             {
                 case Phase.Typing:
@@ -57,18 +66,19 @@ namespace ProjectCook.Dialogue
 
         public void Begin(IDialogueSpeaker newSpeaker)
         {
-            if (newSpeaker == null || phase != Phase.Idle) return;
+            if (newSpeaker == null || phase != Phase.Idle || lineMode) return;
 
             speaker = newSpeaker;
             GameModeManager.Instance?.Enter(this, GameMode.Dialogue);
             MessageBus<DialogueStarted>.Publish(new DialogueStarted(speaker.SpeakerId));
 
             dialogueUI.ShowUI();
-            dialogueUI.SetFont(speaker.Font);
+            dialogueUI.SetTextStyle(speaker.TextStyle);
             dialogueUI.SetSpeakerInfo(Resolve(speaker.DisplayName), speaker.Portrait);
 
             if (speaker.TryGetGreeting(out LocalizedString greeting))
             {
+                PublishBeat(DialogueBeat.Greeting);
                 Say(greeting, endAfter: false);
             }
             else
@@ -81,13 +91,60 @@ namespace ProjectCook.Dialogue
         {
             if (typingCoroutine != null) StopCoroutine(typingCoroutine);
 
+            string speakerId = speaker.SpeakerId;
             phase = Phase.Idle;
             options.Clear();
             optionTexts.Clear();
             speaker = null;
 
             dialogueUI.HideUI();
+            // ส่งก่อนออกจากโหมด ระบบที่รอให้คุยจบ (เช่น cutscene) จะเปิดคำขอทันก่อนเกมกลับไปเดินสำรวจ
+            MessageBus<DialogueEnded>.Publish(new DialogueEnded(speakerId));
             GameModeManager.Instance?.Exit(this);
+        }
+
+        /// <summary>แสดงหนึ่งบรรทัดแบบพิมพ์ทีละตัว onAdvanced ถูกเรียกครั้งเดียวเมื่อผู้เล่นอ่านจบแล้วกดไปต่อ
+        /// หน้าต่างยังค้างจนกว่าจะเรียก HideLine หรือบรรทัดถัดไป speaker = null คือไม่แสดงชื่อ</summary>
+        public void PlayLine(ISpeakerIdentity lineSpeaker, LocalizedString line, Action onAdvanced)
+        {
+            if (phase != Phase.Idle && !lineMode) return;
+
+            lineMode = true;
+            lineAdvanced = onAdvanced;
+            dialogueUI.ShowUI();
+            dialogueUI.SetTextStyle(lineSpeaker?.TextStyle);
+            dialogueUI.SetSpeakerInfo(Resolve(lineSpeaker?.DisplayName), lineSpeaker?.Portrait);
+            Say(line, endAfter: true);
+        }
+
+        /// <summary>กดไปต่อของบรรทัดเดี่ยว: กำลังพิมพ์ = แสดงทั้งบรรทัด, พิมพ์จบแล้ว = แจ้งผู้เรียก</summary>
+        public void AdvanceLine()
+        {
+            if (!lineMode) return;
+
+            if (phase == Phase.Typing)
+            {
+                SkipTyping();
+                return;
+            }
+
+            if (phase != Phase.AwaitClose) return;
+
+            phase = Phase.Idle;
+            Action advanced = lineAdvanced;
+            lineAdvanced = null;
+            advanced?.Invoke();
+        }
+
+        public void HideLine()
+        {
+            if (!lineMode) return;
+
+            if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+            phase = Phase.Idle;
+            lineMode = false;
+            lineAdvanced = null;
+            dialogueUI.HideUI();
         }
 
         private void Say(LocalizedString line, bool endAfter)
@@ -103,7 +160,7 @@ namespace ProjectCook.Dialogue
         private IEnumerator TypeTextRoutine(string fullText)
         {
             int totalCharacters = dialogueUI.PrepareTypewriterText(fullText);
-            WaitForSeconds delay = GetTypingDelay();
+            WaitForSecondsRealtime delay = GetTypingDelay();
 
             for (int i = 1; i <= totalCharacters; i++)
             {
@@ -148,6 +205,7 @@ namespace ProjectCook.Dialogue
 
             selectedIndex = -1;
             phase = Phase.Menu;
+            PublishBeat(DialogueBeat.Menu);
             dialogueUI.DisplayChoices(optionTexts);
         }
 
@@ -180,6 +238,7 @@ namespace ProjectCook.Dialogue
 
             if (option.Response != null && !option.Response.IsEmpty)
             {
+                PublishBeat(DialogueBeat.Response, option.Shot);
                 Say(option.Response, option.EndsDialogue);
             }
             else if (option.EndsDialogue)
@@ -192,12 +251,16 @@ namespace ProjectCook.Dialogue
             }
         }
 
+        private void PublishBeat(DialogueBeat beat, DialogueShot shot = DialogueShot.Player) =>
+            MessageBus<DialogueBeatStarted>.Publish(new DialogueBeatStarted(speaker.SpeakerId, beat, shot));
+
         private static string Resolve(LocalizedString text) =>
             text != null && !text.IsEmpty ? text.GetLocalizedString() : string.Empty;
 
-        private WaitForSeconds GetTypingDelay()
+        // ใช้เวลาจริง ยังพิมพ์ได้ตอน cutscene เต็มหยุดเวลาของเกม
+        private WaitForSecondsRealtime GetTypingDelay()
         {
-            if (typingDelay == null) typingDelay = new WaitForSeconds(typingSpeed);
+            if (typingDelay == null) typingDelay = new WaitForSecondsRealtime(typingSpeed);
             return typingDelay;
         }
 
