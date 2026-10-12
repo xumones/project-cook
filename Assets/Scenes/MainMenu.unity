@@ -2152,7 +2152,7 @@ GameObject:
   m_Component:
   - component: {fileID: 553131129}
   - component: {fileID: 553131128}
-  m_Layer: 20
+  m_Layer: 0
   m_Name: roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2676,7 +2676,7 @@ GameObject:
   - component: {fileID: 797840037}
   - component: {fileID: 797840036}
   - component: {fileID: 797840035}
-  m_Layer: 20
+  m_Layer: 3
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3595,7 +3595,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7683509380599290654, guid: afe7e393406e65146bd68da82d863457, type: 3}
       propertyPath: m_Layer
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7683509380599290654, guid: afe7e393406e65146bd68da82d863457, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3611,7 +3611,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6580239747827487796, guid: afe7e393406e65146bd68da82d863457, type: 3}
       propertyPath: m_Layer
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -6580239747827487796, guid: afe7e393406e65146bd68da82d863457, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -9455,11 +9455,11 @@ ParticleSystem:
     radiusScale: 0.45
     collidesWith:
       serializedVersion: 2
-      m_Bits: 1048584
+      m_Bits: 9
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 1
+    collisionMessages: 0
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -10592,7 +10592,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1563824888}
   - component: {fileID: 1563824887}
-  m_Layer: 20
+  m_Layer: 0
   m_Name: SnowWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
