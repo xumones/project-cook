@@ -7,6 +7,9 @@ namespace ProjectCook.Inventory
 
         bool CanAccept(InventoryItem item);
 
+        /// <summary>รับของจากมือที่ปกติเก็บไม่ได้ (เช่นจาน) ด้วยไหม</summary>
+        bool AcceptsHeldItems { get; }
+
         /// <summary>ราคาที่ต้องจ่ายถ้าเอาของชิ้นนี้ออก 0 = ฟรี</summary>
         int PriceOf(InventoryItem item);
 

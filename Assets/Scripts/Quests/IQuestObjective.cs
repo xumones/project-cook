@@ -21,12 +21,13 @@ namespace ProjectCook.Quests
         int OnTalkedTo(string speakerId);
     }
 
-    /// <summary>เป้าหมายที่ต้องเอาอาหารไปส่ง ผู้รับเป็นคนเรียก QuestLog.Deliver ตอนผู้เล่นยื่นจาน</summary>
-    public interface IDeliveryObjective : IQuestObjective
+    /// <summary>เป้าหมายที่ต้องเสิร์ฟอาหารให้ผู้รับ ผู้รับเป็นคนเรียก QuestLog.TryServe ตอนผู้เล่นให้ของ</summary>
+    public interface IServeObjective : IQuestObjective
     {
         /// <summary>รหัสผู้รับ ว่าง = ผู้ให้เควส</summary>
         string RecipientId { get; }
 
-        DishScore Evaluate(IReadOnlyList<IngredientSnapshot> dish);
+        /// <summary>ให้คะแนนอาหารทุกจานที่ส่งมาในครั้งเดียว จำนวนจานที่ต้องการคือ Required</summary>
+        DishScore Evaluate(IReadOnlyList<IReadOnlyList<IngredientSnapshot>> dishes);
     }
 }

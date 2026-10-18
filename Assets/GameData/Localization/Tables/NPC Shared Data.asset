@@ -207,10 +207,6 @@ MonoBehaviour:
     m_Key: ui.label.reminder
     m_Metadata:
       m_Items: []
-  - m_Id: 4224772546617
-    m_Key: ui.label.deliver
-    m_Metadata:
-      m_Items: []
   - m_Id: 4224772546619
     m_Key: ui.label.farewell
     m_Metadata:
@@ -337,6 +333,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4722079082553344
     m_Key: ui.quest.bagfull
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9806713550086144
+    m_Key: ui.label.give
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9806713667526656
+    m_Key: npc.gift.thanks
     m_Metadata:
       m_Items: []
   m_Metadata:

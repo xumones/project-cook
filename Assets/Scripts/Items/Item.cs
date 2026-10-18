@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ProjectCook.Core;
 
 namespace ProjectCook.Items
@@ -8,7 +9,10 @@ namespace ProjectCook.Items
     public enum ItemLocation
     {
         World,
-        Hand
+        Hand,
+
+        /// <summary>อยู่ในภาชนะที่เป็นเจ้าของ (จาน) ภาชนะเป็นคน save และพาไปด้วย</summary>
+        Contained
     }
 
     /// <summary>ร่างในโลกของไอเทมหนึ่งชิ้น ถือ ItemInstance ที่เป็นตัวตนของมัน และจด/คืนสถานะของ component ให้ตัวตนนั้น</summary>
@@ -44,10 +48,24 @@ namespace ProjectCook.Items
             return created;
         }
 
-        /// <summary>เรียกจาก EquippableItem เท่านั้น เมื่อไอเทมย้ายที่อยู่</summary>
+        /// <summary>เรียกจากผู้ที่ย้ายไอเทม (มือ ภาชนะ) เท่านั้น</summary>
         public void SetLocation(ItemLocation next)
         {
             Location = next;
+        }
+
+        /// <summary>เอาไอเทมพร้อมของข้างในออกจากฉาก ใช้หลังไอเทมกลายเป็นข้อมูลแล้ว</summary>
+        public void Despawn()
+        {
+            GetComponentInChildren<IItemContents>(true)?.DestroyContents();
+            Destroy(gameObject);
+        }
+
+        /// <summary>ย้ายไอเทมพร้อมของข้างในไปอีกฉาก ไอเทมต้องเป็น root</summary>
+        public void MoveToScene(Scene scene)
+        {
+            SceneManager.MoveGameObjectToScene(gameObject, scene);
+            GetComponentInChildren<IItemContents>(true)?.MoveToScene(scene);
         }
 
         /// <summary>สร้างวัตถุของไอเทมชิ้นนี้จาก prefab ของชนิดมัน แล้วคืนตัวตนกับสถานะที่จดไว้ให้ null ถ้าชนิดนี้ไม่มี prefab</summary>

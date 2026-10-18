@@ -97,8 +97,7 @@ namespace ProjectCook.Items
             transform.SetPositionAndRotation(worldPosition, worldRotation);
 
             // หลุดจากมือแล้วยังค้างอยู่ใน Core ต้องย้ายลงพื้นที่ปัจจุบัน ไม่งั้นจะตามผู้เล่นไปทุกพื้นที่
-            SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
-            contents?.MoveToScene(gameObject.scene);
+            item.MoveToScene(SceneManager.GetActiveScene());
 
             heldState.Restore();
 

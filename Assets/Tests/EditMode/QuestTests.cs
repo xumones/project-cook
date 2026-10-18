@@ -63,25 +63,51 @@ namespace ProjectCook.Tests
         }
 
         [Test]
-        public void Delivery_WithoutRecipient_GoesToTheGiver()
+        public void Serve_WithoutRecipient_GoesToTheGiver()
         {
-            var quest = new ActiveQuest(new FakeQuest(new FakeDelivery(string.Empty)), "giver", null);
+            var quest = new ActiveQuest(new FakeQuest(new FakeServe(string.Empty)), "giver", null);
 
-            Assert.IsTrue(quest.TryGetPendingDelivery("giver", out int index));
-            Assert.IsFalse(quest.TryGetPendingDelivery("someone_else", out _));
+            Assert.IsTrue(quest.TryGetPendingServe("giver", out int index));
+            Assert.IsFalse(quest.TryGetPendingServe("someone_else", out _));
 
             quest.CompleteObjective(index);
-            Assert.IsFalse(quest.TryGetPendingDelivery("giver", out _));
+            Assert.IsFalse(quest.TryGetPendingServe("giver", out _));
             Assert.IsTrue(quest.IsComplete);
         }
 
         [Test]
-        public void Delivery_WithRecipient_GoesOnlyToThatRecipient()
+        public void Serve_WithRecipient_GoesOnlyToThatRecipient()
         {
-            var quest = new ActiveQuest(new FakeQuest(new FakeDelivery("baker")), "giver", null);
+            var quest = new ActiveQuest(new FakeQuest(new FakeServe("baker")), "giver", null);
 
-            Assert.IsFalse(quest.TryGetPendingDelivery("giver", out _));
-            Assert.IsTrue(quest.TryGetPendingDelivery("baker", out _));
+            Assert.IsFalse(quest.TryGetPendingServe("giver", out _));
+            Assert.IsTrue(quest.TryGetPendingServe("baker", out _));
+        }
+
+        [Test]
+        public void EvaluateBest_UsesTheBestDishAndIgnoresExtras()
+        {
+            var steak = Create<IngredientDataSO>();
+            var requirements = new[] { new IngredientRequirement { ingredient = steak, idealState = CookingState.Cooked } };
+            var burnt = new[] { new IngredientSnapshot(steak, CookingState.Burnt, 1f) };
+            var perfect = new[] { new IngredientSnapshot(steak, CookingState.Cooked, 1f) };
+
+            DishScore score = DishEvaluator.EvaluateBest(requirements, new IReadOnlyList<IngredientSnapshot>[] { burnt, perfect }, 1);
+
+            Assert.AreEqual(QualityGrade.S, score.Grade);
+        }
+
+        [Test]
+        public void EvaluateBest_MissingDishesCountAsZero()
+        {
+            var steak = Create<IngredientDataSO>();
+            var requirements = new[] { new IngredientRequirement { ingredient = steak, idealState = CookingState.Cooked } };
+            var perfect = new[] { new IngredientSnapshot(steak, CookingState.Cooked, 1f) };
+
+            DishScore score = DishEvaluator.EvaluateBest(requirements, new IReadOnlyList<IngredientSnapshot>[] { perfect }, 2);
+
+            Assert.AreEqual(0.5f, score.Score, 0.0001f);
+            Assert.AreEqual(QualityGrade.C, score.Grade);
         }
 
         [Test]
@@ -113,14 +139,14 @@ namespace ProjectCook.Tests
             public string SaveDefinition() => string.Empty;
         }
 
-        private class FakeDelivery : IDeliveryObjective
+        private class FakeServe : IServeObjective
         {
-            public FakeDelivery(string recipientId) => RecipientId = recipientId;
+            public FakeServe(string recipientId) => RecipientId = recipientId;
 
             public string RecipientId { get; }
             public int Required => 1;
             public string Describe() => "dish";
-            public DishScore Evaluate(IReadOnlyList<IngredientSnapshot> dish) => new DishScore(1f, QualityGrade.S);
+            public DishScore Evaluate(IReadOnlyList<IReadOnlyList<IngredientSnapshot>> dishes) => new DishScore(1f, QualityGrade.S);
             public int OnItemCollected(ItemInstance item) => 0;
             public int OnWorldEvent(string eventId) => 0;
             public int OnTalkedTo(string speakerId) => 0;

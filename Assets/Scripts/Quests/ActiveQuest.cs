@@ -70,15 +70,15 @@ namespace ProjectCook.Quests
             return changed;
         }
 
-        /// <summary>เป้าหมายส่งอาหารข้อแรกที่ยังไม่ครบ และผู้รับคือคนนี้</summary>
-        public bool TryGetPendingDelivery(string recipientId, out int objectiveIndex)
+        /// <summary>เป้าหมายเสิร์ฟอาหารข้อแรกที่ยังไม่ครบ และผู้รับคือคนนี้</summary>
+        public bool TryGetPendingServe(string recipientId, out int objectiveIndex)
         {
             for (int i = 0; i < progress.Length; i++)
             {
                 if (progress[i] >= Definition.Objectives[i].Required) continue;
-                if (!(Definition.Objectives[i] is IDeliveryObjective delivery)) continue;
+                if (!(Definition.Objectives[i] is IServeObjective serve)) continue;
 
-                string recipient = string.IsNullOrEmpty(delivery.RecipientId) ? GiverId : delivery.RecipientId;
+                string recipient = string.IsNullOrEmpty(serve.RecipientId) ? GiverId : serve.RecipientId;
                 if (recipient != recipientId) continue;
 
                 objectiveIndex = i;

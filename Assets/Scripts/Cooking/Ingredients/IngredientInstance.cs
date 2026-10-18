@@ -16,13 +16,8 @@ namespace ProjectCook.Cooking
         // หันเกินมุมนี้จากแนวผิวกระทะถือว่าด้านนั้นแตะผิว น้อยกว่านี้ = ตะแคง ทอดสองด้านพร้อมกัน
         private const float SideContactDot = 0.35f;
 
-        [Serializable]
-        private struct SavedCookTimes
-        {
-            public float omni;
-            public float sideA;
-            public float sideB;
-        }
+        /// <summary>รหัสสถานะเวลาทอดในตัวตนของไอเทม ห้ามเปลี่ยนหลังมี save</summary>
+        public const string CookTimesKey = "cook_times";
 
         // มาจาก Definition ของ Item จะได้ตั้งข้อมูลวัตถุดิบไว้ที่เดียว
         private IngredientDataSO data;
@@ -38,6 +33,9 @@ namespace ProjectCook.Cooking
         /// <summary>สถานะความสุกเปลี่ยน (Raw -> Cooking -> Cooked -> Burnt)</summary>
         public event Action<CookingState> OnStateChanged;
 
+        /// <summary>ร่างไอเทมของวัตถุดิบนี้ ใช้จดตัวตนและบอกว่ามันอยู่ที่ไหน</summary>
+        public Item Item { get; private set; }
+
         public IngredientDataSO Data => data;
         public CookingState CurrentCookingState => progress != null ? progress.State : CookingState.Raw;
         public float CookProgress => progress != null ? progress.Progress : 0f;
@@ -48,7 +46,8 @@ namespace ProjectCook.Cooking
 
         private void Awake()
         {
-            data = GetComponent<Item>().Definition as IngredientDataSO;
+            Item = GetComponent<Item>();
+            data = Item.Definition as IngredientDataSO;
             if (data == null)
             {
                 Debug.LogError($"[IngredientInstance] {name} ต้องตั้ง Definition ของ Item เป็น IngredientDataSO", this);
@@ -114,23 +113,16 @@ namespace ProjectCook.Cooking
             return CookingSide.Omni;
         }
 
-        public string StateKey => "cook_times";
+        public string StateKey => CookTimesKey;
 
-        // สถานะความสุกและภาพคำนวณจากเวลาทอดได้ทั้งหมด จึงจดแค่เวลา
-        public string CaptureState() => progress == null ? string.Empty : JsonUtility.ToJson(new SavedCookTimes
-        {
-            omni = progress.OmniTime,
-            sideA = progress.SideATime,
-            sideB = progress.SideBTime
-        });
+        public string CaptureState() => progress == null ? string.Empty : progress.Capture();
 
         public void RestoreState(string state)
         {
             if (progress == null || string.IsNullOrEmpty(state)) return;
 
-            SavedCookTimes saved = JsonUtility.FromJson<SavedCookTimes>(state);
             CookingState before = progress.State;
-            progress.Restore(saved.omni, saved.sideA, saved.sideB);
+            progress.Restore(state);
             if (progress.State != before) HandleStateChanged();
             visualsComponent.ApplyVisuals(data, progress.SideATime, progress.SideBTime, progress.OmniTime);
         }

@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using ProjectCook.Core;
 using ProjectCook.Cooking;
+using ProjectCook.Items;
 
 namespace ProjectCook.Tests
 {
@@ -91,6 +92,46 @@ namespace ProjectCook.Tests
             progress.Restore(0f, 6f, 5f);
 
             Assert.AreEqual(CookingState.Cooked, progress.State);
+        }
+
+        [Test]
+        public void CaptureThenRestore_KeepsTimesAndState()
+        {
+            IngredientDataSO steak = Ingredient(5f, 5f, true);
+            var source = new CookingProgress(steak);
+            source.AddHeat(5f, CookingSide.SideA);
+            source.AddHeat(5f, CookingSide.SideB);
+
+            var copy = new CookingProgress(steak);
+            copy.Restore(source.Capture());
+
+            Assert.AreEqual(5f, copy.SideATime, 0.0001f);
+            Assert.AreEqual(5f, copy.SideBTime, 0.0001f);
+            Assert.AreEqual(CookingState.Cooked, copy.State);
+        }
+
+        [Test]
+        public void Snapshot_FromItemData_ReadsCookTimes()
+        {
+            IngredientDataSO steak = Ingredient(5f, 5f, false);
+            var cooked = new CookingProgress(steak);
+            cooked.AddHeat(5f, CookingSide.Omni);
+            var item = new ItemInstance(steak);
+            item.SetState(IngredientInstance.CookTimesKey, cooked.Capture());
+
+            Assert.IsTrue(IngredientSnapshot.TryFrom(item, out IngredientSnapshot snapshot));
+            Assert.AreSame(steak, snapshot.Data);
+            Assert.AreEqual(CookingState.Cooked, snapshot.State);
+            Assert.AreEqual(1f, snapshot.Progress, 0.0001f);
+        }
+
+        [Test]
+        public void Snapshot_FromNonIngredient_Fails()
+        {
+            var plate = ScriptableObject.CreateInstance<ItemDefinitionSO>();
+            assets.Add(plate);
+
+            Assert.IsFalse(IngredientSnapshot.TryFrom(new ItemInstance(plate), out _));
         }
 
         [Test]

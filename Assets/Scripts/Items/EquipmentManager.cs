@@ -4,7 +4,7 @@ using ProjectCook.Core;
 
 namespace ProjectCook.Items
 {
-    /// <summary>มือทั้งสองของผู้เล่น: ยกไอเทมเข้ามือ และปล่อยไอเทมออกจากมือไปวางที่จุดที่กำหนด</summary>
+    /// <summary>มือทั้งสองของผู้เล่น: ยกไอเทมเข้ามือ ปล่อยไปวางที่จุดที่กำหนด หรือเอาออกตอนไอเทมกลายเป็นข้อมูล</summary>
     public class EquipmentManager : SceneSingleton<EquipmentManager>, ISaveSection
     {
         [Serializable]
@@ -55,10 +55,28 @@ namespace ProjectCook.Items
         {
             // JsonUtility เขียนช่องว่างเป็น object เปล่า ไม่ใช่ null
             ItemInstance instance = saved != null && !string.IsNullOrEmpty(saved.itemId) ? saved.ToInstance() : null;
-            if (instance == null) return;
+            if (instance != null && !TrySpawnInHand(instance, side))
+            {
+                Debug.LogWarning($"[EquipmentManager] คืน {instance.Definition.ItemId} เข้ามือ {side} ไม่ได้", this);
+            }
+        }
 
-            Item spawned = Item.Spawn(instance, AnchorOf(side).position, AnchorOf(side).rotation);
-            if (spawned != null) TryEquip(spawned.GetComponent<EquippableItem>(), side);
+        /// <summary>มือที่ว่าง ลองมือซ้ายก่อน false = เต็มทั้งสองมือ</summary>
+        public bool TryGetFreeHand(out HandSide side)
+        {
+            side = leftItem == null ? HandSide.Left : HandSide.Right;
+            return GetHeld(side) == null;
+        }
+
+        /// <summary>สร้างวัตถุของไอเทมที่เป็นข้อมูลแล้วใส่มือที่ระบุ false = มือไม่ว่างหรือไอเทมนี้ถือไม่ได้ ซึ่งจะไม่มีอะไรถูกสร้าง</summary>
+        public bool TrySpawnInHand(ItemInstance instance, HandSide side)
+        {
+            GameObject prefab = instance.Definition.Prefab;
+            Transform anchor = AnchorOf(side);
+            if (GetHeld(side) != null || anchor == null || prefab == null || !prefab.TryGetComponent(out EquippableItem _)) return false;
+
+            Item spawned = Item.Spawn(instance, anchor.position, anchor.rotation);
+            return spawned != null && TryEquip(spawned.GetComponent<EquippableItem>(), side);
         }
 
         /// <summary>มีของอยู่ในมือข้างใดข้างหนึ่งหรือไม่</summary>
@@ -84,11 +102,17 @@ namespace ProjectCook.Items
             return false;
         }
 
-        /// <summary>สวมไอเทมเข้ามือที่ว่าง โดยลองมือซ้ายก่อน</summary>
-        public bool TryEquip(EquippableItem equippable) =>
-            TryEquip(equippable, leftItem == null ? HandSide.Left : HandSide.Right);
+        /// <summary>ยกไอเทมเข้ามือที่ว่าง โดยลองมือซ้ายก่อน</summary>
+        public bool TryEquip(EquippableItem equippable)
+        {
+            if (TryGetFreeHand(out HandSide side)) return TryEquip(equippable, side);
 
-        private bool TryEquip(EquippableItem equippable, HandSide side)
+            Debug.Log($"[EquipmentManager] มือไม่ว่างทั้งสองข้าง ยก {(equippable != null ? equippable.name : "ไอเทม")} ไม่ได้");
+            return false;
+        }
+
+        /// <summary>ยกไอเทมเข้ามือที่ระบุ มือนั้นต้องว่าง</summary>
+        public bool TryEquip(EquippableItem equippable, HandSide side)
         {
             if (equippable == null) return false;
 
@@ -100,7 +124,7 @@ namespace ProjectCook.Items
 
             if (GetHeld(side) != null)
             {
-                Debug.Log($"[EquipmentManager] มือไม่ว่างทั้งสองข้าง ยก {equippable.name} ไม่ได้");
+                Debug.Log($"[EquipmentManager] มือ {side} ไม่ว่าง ยก {equippable.name} ไม่ได้");
                 return false;
             }
 
@@ -119,6 +143,15 @@ namespace ProjectCook.Items
         /// <summary>ปล่อยไอเทมที่ถืออยู่ไปวางที่จุดที่กำหนด คืน false ถ้าไม่ได้ถือชิ้นนั้น</summary>
         public bool Release(EquippableItem equippable, Vector3 position, Quaternion rotation)
         {
+            if (!RemoveHeld(equippable)) return false;
+
+            equippable.NotifyPlaced(position, rotation);
+            return true;
+        }
+
+        /// <summary>เอาของออกจากมือโดยไม่วางลงฉาก ใช้ตอนของกลายเป็นข้อมูล ผู้เรียกเป็นคนเก็บวัตถุออกจากฉาก</summary>
+        public bool RemoveHeld(EquippableItem equippable)
+        {
             if (equippable == null) return false;
 
             if (leftItem == equippable)
@@ -133,8 +166,6 @@ namespace ProjectCook.Items
             {
                 return false;
             }
-
-            equippable.NotifyPlaced(position, rotation);
             return true;
         }
 

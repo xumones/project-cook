@@ -1,14 +1,40 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ProjectCook.Core;
+using ProjectCook.Items;
+using Random = UnityEngine.Random;
 
 namespace ProjectCook.Cooking
 {
-    /// <summary>ภาชนะเสิร์ฟที่ไม่ให้ความร้อน ยึดของข้างในให้ติดไปด้วยตอนถูกยกขึ้นถือ (จาน ชาม ถาด)</summary>
+    /// <summary>ภาชนะเสิร์ฟที่ไม่ให้ความร้อน เป็นเจ้าของอาหารข้างใน (จดลงตัวตนของภาชนะ) และยึดไว้ตอนถูกยกขึ้นถือ (จาน ชาม ถาด)</summary>
     // ต้องรันหลัง HeadBob ที่ขยับหัวใน LateUpdate เพื่อให้เราเป็นฝ่ายเขียนตำแหน่งทีหลังสุดก่อนเรนเดอร์
     [DefaultExecutionOrder(100)]
-    public class ServingFoodContainer : FoodContainer
+    public class ServingFoodContainer : FoodContainer, ISavableState
     {
+        [Serializable]
+        private struct SavedPiece
+        {
+            public Vector3 localPosition;
+            public Quaternion localRotation;
+        }
+
+        [Serializable]
+        private class SavedIngredient
+        {
+            public ItemSaveData item;
+
+            // เรียงตาม IngredientInstance.Bodies ตำแหน่งเทียบกับภาชนะ
+            public List<SavedPiece> pieces = new List<SavedPiece>();
+        }
+
+        [Serializable]
+        private class SavedContents
+        {
+            public List<SavedIngredient> ingredients = new List<SavedIngredient>();
+        }
+
         [Header("Content Placement")]
         [Tooltip("จุดศูนย์กลางผิวที่วางของ เว้นว่าง = เหนือจุดศูนย์กลางภาชนะเล็กน้อย")]
         [SerializeField] private Transform contentAnchor;
@@ -32,6 +58,103 @@ namespace ProjectCook.Cooking
         private readonly Dictionary<Rigidbody, FrozenState> frozenStates = new Dictionary<Rigidbody, FrozenState>();
         private readonly List<Rigidbody> placementBuffer = new List<Rigidbody>();
         private bool isFrozen;
+
+        // รหัสสถานะอาหารบนภาชนะในตัวตนของไอเทม ห้ามเปลี่ยนหลังมี save
+        private const string ContentsKey = "dish_contents";
+
+        protected override bool OwnsContents => true;
+
+        public string StateKey => ContentsKey;
+
+        /// <summary>เอาอาหารออกจากภาชนะที่เป็นข้อมูลอยู่ (ไม่มีวัตถุในฉาก) ใส่ลง food ภาชนะเหลือว่าง false = ไอเทมนี้ไม่ใช่ภาชนะเสิร์ฟ</summary>
+        public static bool TryTakeContents(ItemInstance dish, List<ItemInstance> food)
+        {
+            food.Clear();
+            GameObject prefab = dish.Definition.Prefab;
+            if (prefab == null || prefab.GetComponentInChildren<ServingFoodContainer>(true) == null) return false;
+
+            if (dish.TryGetState(ContentsKey, out string state) && !string.IsNullOrEmpty(state))
+            {
+                foreach (SavedIngredient saved in JsonUtility.FromJson<SavedContents>(state).ingredients)
+                {
+                    ItemInstance ingredient = saved.item.ToInstance();
+                    if (ingredient != null) food.Add(ingredient);
+                }
+            }
+
+            dish.SetState(ContentsKey, string.Empty);
+            return true;
+        }
+
+        public string CaptureState()
+        {
+            if (contents.Count == 0) return string.Empty;
+
+            var saved = new SavedContents();
+            foreach (ContainedIngredient entry in contents)
+            {
+                if (entry.Ingredient == null) continue;
+
+                var ingredient = new SavedIngredient { item = ItemSaveData.From(entry.Ingredient.Item.Capture()) };
+                foreach (Rigidbody body in entry.Ingredient.Bodies)
+                {
+                    ingredient.pieces.Add(LocalPoseOf(body));
+                }
+                saved.ingredients.Add(ingredient);
+            }
+            return JsonUtility.ToJson(saved);
+        }
+
+        // ชิ้นที่ยึดอยู่ใช้ท่าที่ยึดไว้ ตำแหน่งจริงของมันตามภาชนะทันก็ต่อเมื่อถึง LateUpdate (เช่นเฟรมที่เพิ่งถูกยก)
+        private SavedPiece LocalPoseOf(Rigidbody body)
+        {
+            if (frozenStates.TryGetValue(body, out FrozenState frozen))
+            {
+                return new SavedPiece { localPosition = frozen.LocalPosition, localRotation = frozen.LocalRotation };
+            }
+
+            Transform piece = body.transform;
+            return new SavedPiece
+            {
+                localPosition = transform.InverseTransformPoint(piece.position),
+                localRotation = Quaternion.Inverse(transform.rotation) * piece.rotation
+            };
+        }
+
+        /// <summary>สร้างอาหารที่จดไว้กลับขึ้นมาบนภาชนะ ของเดิมที่อยู่ข้างในถูกแทนที่</summary>
+        public void RestoreState(string state)
+        {
+            DestroyContents();
+            if (string.IsNullOrEmpty(state)) return;
+
+            foreach (SavedIngredient saved in JsonUtility.FromJson<SavedContents>(state).ingredients)
+            {
+                ItemInstance instance = saved.item.ToInstance();
+                Item spawned = instance != null ? Item.Spawn(instance, transform.position, transform.rotation) : null;
+                if (spawned == null) continue;
+
+                if (!spawned.TryGetComponent(out IngredientInstance ingredient))
+                {
+                    Debug.LogWarning($"[ServingFoodContainer] {instance.Definition.ItemId} ไม่ใช่วัตถุดิบ ข้ามชิ้นนี้", this);
+                    spawned.Despawn();
+                    continue;
+                }
+
+                SceneManager.MoveGameObjectToScene(spawned.gameObject, gameObject.scene);
+                PlaceSavedPieces(Find(ingredient) ?? Register(ingredient), saved.pieces);
+            }
+        }
+
+        private void PlaceSavedPieces(ContainedIngredient entry, List<SavedPiece> pieces)
+        {
+            IReadOnlyList<Rigidbody> bodies = entry.Ingredient.Bodies;
+            for (int i = 0; i < bodies.Count && i < pieces.Count; i++)
+            {
+                SetPose(bodies[i], transform.TransformPoint(pieces[i].localPosition), transform.rotation * pieces[i].localRotation);
+                entry.BodiesInside.Add(bodies[i]);
+                if (isFrozen) Freeze(bodies[i]);
+            }
+        }
 
         /// <summary>เรียกจาก EquippableItem ตอนภาชนะถูกยกขึ้นถือและตอนวางลง</summary>
         public override void SetFrozen(bool frozen)
@@ -240,7 +363,7 @@ namespace ProjectCook.Cooking
             }
         }
 
-        public override void OnTriggerExit(Collider other)
+        protected override void OnTriggerExit(Collider other)
         {
             // การสลับ isKinematic ทั้งของภาชนะและของอาหาร ทำให้ PhysX สร้าง actor ใหม่แล้วยิง Exit หลอก
             // ถ้าปล่อยผ่าน ของที่ยึดอยู่จะถูกถอดออกจากรายการแล้วร่วงตอนยกจานพอดี

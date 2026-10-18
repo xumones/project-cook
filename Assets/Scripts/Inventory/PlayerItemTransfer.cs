@@ -89,6 +89,46 @@ namespace ProjectCook.Inventory
             return true;
         }
 
+        /// <summary>ย้ายของในมือเข้าที่เก็บตรงช่องที่ระบุ ของกลายเป็นข้อมูลพร้อมของข้างใน แล้ววัตถุถูกเก็บออกจากฉาก</summary>
+        public bool StoreFromHand(HandSide side, ItemStorage storage, ItemGrid grid, Vector2Int position, bool rotated)
+        {
+            EquipmentManager equipment = EquipmentManager.Instance;
+            EquippableItem held = equipment != null ? equipment.GetHeld(side) : null;
+            if (held == null) return false;
+
+            Item item = held.GetComponent<Item>();
+            var stored = new InventoryItem(item.Instance);
+            if (!storage.CanAcceptFromHand(stored) || !grid.CanPlace(stored, position, rotated)) return false;
+
+            // จดตอนยังถืออยู่ ของข้างในยังถูกยึดกับภาชนะ ถ้าวางลงก่อน ฟิสิกส์อาจพาของหลุดออกจากรายการ
+            item.Capture();
+            if (!storage.TryPlace(stored, grid, position, rotated)) return false;
+
+            equipment.RemoveHeld(held);
+            item.Despawn();
+            return true;
+        }
+
+        /// <summary>คืนไอเทมที่เป็นข้อมูลให้ผู้เล่น: เข้ากระเป๋าถ้าเก็บได้ ไม่งั้นเข้ามือที่ว่าง ไม่งั้นวางลงฉากตรงหน้า</summary>
+        public void GiveBack(ItemInstance instance)
+        {
+            if (instance.Definition.IsStorable && PlayerInventory.Instance.Storage.TryAdd(new InventoryItem(instance))) return;
+
+            EquipmentManager equipment = EquipmentManager.Instance;
+            if (equipment != null && equipment.TryGetFreeHand(out HandSide side) && equipment.TrySpawnInHand(instance, side)) return;
+
+            if (!HasPrefab(instance.Definition) || PlayerAiming.Instance == null) return;
+
+            if (TryGetPlacePose(instance.Definition.Prefab, out Vector3 position, out Quaternion rotation, out RaycastHit surface))
+            {
+                FinishPlacing(Spawn(instance, position, rotation), surface);
+                return;
+            }
+
+            // ตรงหน้าไม่มีที่ว่าง ปล่อยจากระดับตาให้ตกลงพื้นเอง ของที่วางไม่ชนตัวผู้เล่นอยู่แล้ว (ดู GameLayers)
+            Spawn(instance, PlayerAiming.Instance.AimRay.origin, Quaternion.identity);
+        }
+
         private bool TryStore(StorableItem storable)
         {
             Item item = storable.Item;
@@ -104,7 +144,7 @@ namespace ProjectCook.Inventory
                 return false;
             }
 
-            Destroy(storable.gameObject);
+            item.Despawn();
             return true;
         }
 
@@ -127,8 +167,9 @@ namespace ProjectCook.Inventory
 
             // เอาตารางออกก่อนจดสถานะ ตัวตนของกระเป๋าที่สวมจะได้ไม่พกสำเนาของข้างในที่ PlayerInventory ดูแลอยู่แล้ว
             List<ItemGrid> contents = bag.TakeGrids();
-            inventory.WearBag(bag.GetComponent<Item>().Capture(), contents);
-            Destroy(bag.gameObject);
+            Item item = bag.GetComponent<Item>();
+            inventory.WearBag(item.Capture(), contents);
+            item.Despawn();
             return true;
         }
 

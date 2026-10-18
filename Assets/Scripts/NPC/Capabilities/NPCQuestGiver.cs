@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
-using ProjectCook.Core;
 using ProjectCook.Cooking;
 using ProjectCook.Dialogue;
 using ProjectCook.Inventory;
@@ -10,7 +9,7 @@ using ProjectCook.Quests;
 
 namespace ProjectCook.NPC.Capabilities
 {
-    /// <summary>ทางเข้าเควสในบทสนทนา: ให้เควสทีละอันต่อ NPC (เนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มจากวัตถุดิบ) และรับจานที่ผู้เล่นถือมาส่ง</summary>
+    /// <summary>ทางเข้าเควสในบทสนทนา: ให้เควสทีละอันต่อ NPC (เนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มจากวัตถุดิบ) การรับอาหารอยู่ที่ NPCHandover</summary>
     // ความคืบหน้า การจบเควส และรางวัลเป็นของ QuestLog ตัวนี้แค่แปลงเป็นตัวเลือกในเมนูคุย
     public class NPCQuestGiver : NPCCapability
     {
@@ -30,9 +29,6 @@ namespace ProjectCook.NPC.Capabilities
         [Header("Labels")]
         [SerializeField] private LocalizedString askLabel;
         [SerializeField] private LocalizedString reminderLabel;
-        [SerializeField] private LocalizedString deliverLabel;
-
-        private readonly List<IngredientSnapshot> dishBuffer = new List<IngredientSnapshot>();
 
         private string NpcId => Npc.Profile.NpcId;
 
@@ -73,16 +69,6 @@ namespace ProjectCook.NPC.Capabilities
             {
                 options.Add(new DialogueOption { Label = reminderLabel, Response = given.Definition.ReminderText });
             }
-
-            // ส่งได้ทั้งเควสของตัวเองและเควสของคนอื่นที่ระบุให้มาส่งที่นี่
-            if (log.TryFindDelivery(NpcId, out ActiveQuest delivery)
-                && EquipmentManager.TryGetHeld(out ServingFoodContainer dish) && dish.HasContents)
-            {
-                // คำตอบขึ้นกับผลประเมิน จึงตั้งตอนกดเลือก
-                var option = new DialogueOption { Label = deliverLabel };
-                option.OnSelected = () => option.Response = Deliver(log, delivery, dish);
-                options.Add(option);
-            }
         }
 
         private IQuestDefinition NextRequest(QuestLog log)
@@ -106,16 +92,6 @@ namespace ProjectCook.NPC.Capabilities
 
             log.Begin(quest);
             return request.OfferText;
-        }
-
-        // ไม่ผ่าน = จานยังอยู่กับผู้เล่น แก้แล้วส่งใหม่ได้
-        private LocalizedString Deliver(QuestLog log, ActiveQuest quest, ServingFoodContainer dish)
-        {
-            dish.GetSnapshot(dishBuffer);
-            QualityGrade grade = log.Deliver(quest, NpcId, dishBuffer).Grade;
-            if (grade != QualityGrade.F) dish.ConsumeAll();
-
-            return quest.Definition.ResultText(grade);
         }
     }
 }

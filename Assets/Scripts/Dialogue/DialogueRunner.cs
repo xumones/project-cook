@@ -64,7 +64,10 @@ namespace ProjectCook.Dialogue
             }
         }
 
-        public void Begin(IDialogueSpeaker newSpeaker)
+        public void Begin(IDialogueSpeaker newSpeaker) => Begin(newSpeaker, null);
+
+        /// <summary>เริ่มคุยโดยผู้พูดเปิดด้วยประโยคนี้แทนคำทักทาย (เช่น ตอบของที่เพิ่งได้รับ) แล้วเข้าเมนูตามปกติ null = ทักทายตามปกติ</summary>
+        public void Begin(IDialogueSpeaker newSpeaker, LocalizedString opening)
         {
             if (newSpeaker == null || phase != Phase.Idle || lineMode) return;
 
@@ -76,7 +79,12 @@ namespace ProjectCook.Dialogue
             dialogueUI.SetTextStyle(speaker.TextStyle);
             dialogueUI.SetSpeakerInfo(Resolve(speaker.DisplayName), speaker.Portrait);
 
-            if (speaker.TryGetGreeting(out LocalizedString greeting))
+            if (opening != null && !opening.IsEmpty)
+            {
+                PublishBeat(DialogueBeat.Response);
+                Say(opening, endAfter: false);
+            }
+            else if (speaker.TryGetGreeting(out LocalizedString greeting))
             {
                 PublishBeat(DialogueBeat.Greeting);
                 Say(greeting, endAfter: false);

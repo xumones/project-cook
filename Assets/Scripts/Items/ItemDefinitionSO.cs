@@ -33,6 +33,9 @@ namespace ProjectCook.Items
         public Vector2Int GridSize => gridSize;
         public int Price => price;
 
+        /// <summary>เก็บเข้าที่เก็บทั่วไปได้ (prefab มี StorableItem) ของที่ถือได้อย่างเดียว เช่นจาน เป็น false</summary>
+        public bool IsStorable => prefab != null && prefab.TryGetComponent(out StorableItem _);
+
         /// <summary>ชื่อตามภาษาที่เลือกอยู่ ยังไม่ได้ตั้งชื่อ = ใช้รหัสแทน</summary>
         public string GetDisplayName() =>
             displayName != null && !displayName.IsEmpty ? displayName.GetLocalizedString() : itemId;

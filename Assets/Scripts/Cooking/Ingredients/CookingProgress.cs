@@ -1,9 +1,20 @@
+using System;
+using UnityEngine;
+
 namespace ProjectCook.Cooking
 {
     /// <summary>ความสุกของวัตถุดิบหนึ่งชิ้น: สะสมเวลาทอดแต่ละด้านแล้วตัดสินสถานะ ไม่รู้จักวัตถุในฉาก</summary>
     // อ่านเวลาจาก data ทุกครั้ง ปรับค่าใน Inspector ระหว่างกด Play แล้วมีผลทันที
     public class CookingProgress
     {
+        [Serializable]
+        private struct SavedTimes
+        {
+            public float omni;
+            public float sideA;
+            public float sideB;
+        }
+
         private readonly IngredientDataSO data;
 
         public CookingState State { get; private set; } = CookingState.Raw;
@@ -45,7 +56,19 @@ namespace ProjectCook.Cooking
             return Evaluate();
         }
 
-        /// <summary>คืนเวลาทอดจาก save สถานะคำนวณจากเวลาได้ทั้งหมด</summary>
+        /// <summary>เวลาทอดในรูปข้อความ สถานะคำนวณจากเวลาได้ทั้งหมดจึงจดแค่เวลา</summary>
+        public string Capture() => JsonUtility.ToJson(new SavedTimes { omni = OmniTime, sideA = SideATime, sideB = SideBTime });
+
+        /// <summary>คืนเวลาทอดจากข้อความที่ Capture จดไว้ ข้อความว่าง = ไม่เปลี่ยน</summary>
+        public void Restore(string saved)
+        {
+            if (string.IsNullOrEmpty(saved)) return;
+
+            SavedTimes times = JsonUtility.FromJson<SavedTimes>(saved);
+            Restore(times.omni, times.sideA, times.sideB);
+        }
+
+        /// <summary>ตั้งเวลาทอดใหม่ทั้งหมด แล้วคำนวณสถานะจากเวลานั้น</summary>
         public void Restore(float omni, float sideA, float sideB)
         {
             OmniTime = omni;

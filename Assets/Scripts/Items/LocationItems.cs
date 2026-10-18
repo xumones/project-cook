@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using ProjectCook.Core;
 
 namespace ProjectCook.Items
@@ -82,13 +81,13 @@ namespace ProjectCook.Items
                 }
 
                 Item spawned = Item.Spawn(instance, placed.position, placed.rotation);
-                if (spawned != null) SceneManager.MoveGameObjectToScene(spawned.gameObject, gameObject.scene);
+                if (spawned != null) spawned.MoveToScene(gameObject.scene);
             }
 
-            // ของที่วางไว้ตั้งแต่แรกแต่ไม่อยู่ใน save = ผู้เล่นเอาไปแล้ว
+            // ของที่วางไว้ตั้งแต่แรกแต่ไม่อยู่ใน save = ผู้เล่นเอาไปแล้ว หรืออยู่ในภาชนะที่ save แทนมัน
             foreach (Item taken in authored.Values)
             {
-                Destroy(taken.gameObject);
+                taken.Despawn();
             }
         }
 

@@ -14,13 +14,19 @@ namespace ProjectCook.Cooking
         /// <summary>วัตถุดิบหนึ่งตัวตนที่อยู่ในภาชนะ วัตถุดิบหั่นจะมีหลายชิ้นแต่เป็นรายการเดียว</summary>
         public class ContainedIngredient
         {
-            public IngredientInstance Ingredient;
+            public readonly IngredientInstance Ingredient;
 
             /// <summary>ชิ้นที่ยังอยู่ใน trigger ตอนนี้ ว่างเมื่อไหร่ถือว่าวัตถุดิบออกจากภาชนะแล้ว</summary>
             public readonly HashSet<Rigidbody> BodiesInside = new HashSet<Rigidbody>();
 
             // เก็บ delegate ไว้เพื่อถอน subscription ได้ตอนวัตถุดิบออกจากภาชนะ
-            public System.Action<CookingState> StateChangedHandler;
+            public readonly System.Action<CookingState> StateChangedHandler;
+
+            public ContainedIngredient(IngredientInstance ingredient, System.Action<CookingState> stateChangedHandler)
+            {
+                Ingredient = ingredient;
+                StateChangedHandler = stateChangedHandler;
+            }
         }
 
         protected readonly List<ContainedIngredient> contents = new List<ContainedIngredient>();
@@ -35,21 +41,11 @@ namespace ProjectCook.Cooking
 
         public bool HasContents => contents.Count > 0;
 
-        /// <summary>เติมภาพนิ่งของวัตถุดิบข้างในลง list ที่ผู้เรียกเตรียมมา</summary>
-        public void GetSnapshot(List<IngredientSnapshot> buffer)
-        {
-            buffer.Clear();
-            for (int i = 0; i < contents.Count; i++)
-            {
-                IngredientInstance ingredient = contents[i].Ingredient;
-                if (ingredient == null) continue;
+        /// <summary>ภาชนะเป็นเจ้าของของข้างใน (save และพาไปด้วย) ระบบอื่นจะไม่ดูแลของเหล่านั้นแยก</summary>
+        protected virtual bool OwnsContents => false;
 
-                buffer.Add(new IngredientSnapshot(ingredient.Data, ingredient.CurrentCookingState, ingredient.CookProgress));
-            }
-        }
-
-        /// <summary>เอาวัตถุดิบออกจากภาชนะทั้งหมดแล้วทำลายทิ้ง ใช้ตอนส่งมอบ</summary>
-        public void ConsumeAll()
+        /// <summary>เอาวัตถุดิบออกจากภาชนะทั้งหมดแล้วทำลายทิ้ง</summary>
+        public void DestroyContents()
         {
             for (int i = contents.Count - 1; i >= 0; i--)
             {
@@ -108,7 +104,7 @@ namespace ProjectCook.Cooking
             return (TriggerCollider.ClosestPoint(point) - point).sqrMagnitude <= 1e-6f;
         }
 
-        public virtual void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
             Rigidbody body = other.attachedRigidbody;
             if (body == null || body.isKinematic) return;
@@ -120,7 +116,7 @@ namespace ProjectCook.Cooking
             entry.BodiesInside.Add(body);
         }
 
-        public virtual void OnTriggerExit(Collider other)
+        protected virtual void OnTriggerExit(Collider other)
         {
             Rigidbody body = other.attachedRigidbody;
             if (body == null) return;
@@ -150,10 +146,10 @@ namespace ProjectCook.Cooking
         /// <summary>ลงทะเบียนวัตถุดิบเข้าภาชนะ ผู้เรียกต้องเช็คก่อนว่ายังไม่มี</summary>
         protected ContainedIngredient Register(IngredientInstance ingredient)
         {
-            var entry = new ContainedIngredient { Ingredient = ingredient };
-            entry.StateChangedHandler = state => HandleIngredientStateChanged(ingredient, state);
+            var entry = new ContainedIngredient(ingredient, state => HandleIngredientStateChanged(ingredient, state));
             ingredient.OnStateChanged += entry.StateChangedHandler;
             contents.Add(entry);
+            if (OwnsContents) ingredient.Item.SetLocation(ItemLocation.Contained);
 
             if (ingredient.Data != null)
             {
@@ -183,9 +179,10 @@ namespace ProjectCook.Cooking
             if (index < 0 || index >= contents.Count) return;
 
             ContainedIngredient entry = contents[index];
-            if (entry.Ingredient != null && entry.StateChangedHandler != null)
+            if (entry.Ingredient != null)
             {
                 entry.Ingredient.OnStateChanged -= entry.StateChangedHandler;
+                if (OwnsContents) entry.Ingredient.Item.SetLocation(ItemLocation.World);
             }
 
             contents.RemoveAt(index);

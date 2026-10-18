@@ -4790,6 +4790,8 @@ GameObject:
   - component: {fileID: 595181175}
   - component: {fileID: 595181177}
   - component: {fileID: 595181178}
+  - component: {fileID: 595181180}
+  - component: {fileID: 595181179}
   m_Layer: 6
   m_Name: NPC#1
   m_TagString: Npc
@@ -4884,15 +4886,6 @@ MonoBehaviour:
     m_TableEntryReference:
       m_KeyId: 0
       m_Key: ui.label.reminder
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  deliverLabel:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: ui.label.deliver
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -5010,6 +5003,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCFacing
   turnSpeed: 120
+--- !u!114 &595181179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e9fb39f375bc7148ae4a2b82b4fd541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCHandover
+  giveLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.give
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  defaultThanks:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: npc.gift.thanks
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &595181180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb59b545b2c417458d5b5c26b2b06e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Inventory::ProjectCook.Inventory.HandoverBox
+  title: GIVE
+  compartments:
+  - size: {x: 4, y: 4}
+    position: {x: 0, y: 0}
 --- !u!1 &632295758
 GameObject:
   m_ObjectHideFlags: 0
@@ -5793,6 +5835,8 @@ GameObject:
   - component: {fileID: 731846106}
   - component: {fileID: 731846105}
   - component: {fileID: 731846108}
+  - component: {fileID: 731846110}
+  - component: {fileID: 731846109}
   m_Layer: 6
   m_Name: NPC#2
   m_TagString: Untagged
@@ -5869,15 +5913,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  deliverLabel:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: ui.label.deliver
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   references:
     version: 2
     RefIds: []
@@ -5939,6 +5974,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.7404703, y: 2.1540084, z: 0.9797927}
   m_Center: {x: -0.20318532, y: 0.5770047, z: -0.12930053}
+--- !u!114 &731846109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731846097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e9fb39f375bc7148ae4a2b82b4fd541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCHandover
+  giveLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.give
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  defaultThanks:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: npc.gift.thanks
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &731846110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731846097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb59b545b2c417458d5b5c26b2b06e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Inventory::ProjectCook.Inventory.HandoverBox
+  title: GIVE
+  compartments:
+  - size: {x: 4, y: 4}
+    position: {x: 0, y: 0}
 --- !u!1 &735045327
 GameObject:
   m_ObjectHideFlags: 0
@@ -6027,6 +6111,8 @@ GameObject:
   - component: {fileID: 750200601}
   - component: {fileID: 750200600}
   - component: {fileID: 750200603}
+  - component: {fileID: 750200605}
+  - component: {fileID: 750200604}
   m_Layer: 6
   m_Name: NPC#3
   m_TagString: Untagged
@@ -6101,15 +6187,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  deliverLabel:
-    m_TableReference:
-      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
-    m_TableEntryReference:
-      m_KeyId: 0
-      m_Key: ui.label.deliver
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   references:
     version: 2
     RefIds: []
@@ -6171,6 +6248,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.5071111, z: 0.73233205}
   m_Center: {x: 5.9370314e-10, y: 0.24644446, z: 0.029237567}
+--- !u!114 &750200604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750200592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e9fb39f375bc7148ae4a2b82b4fd541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.Capabilities.NPCHandover
+  giveLabel:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: ui.label.give
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  defaultThanks:
+    m_TableReference:
+      m_TableCollectionName: GUID:67d75f3915da58d41a1d291f85b93990
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: npc.gift.thanks
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &750200605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750200592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb59b545b2c417458d5b5c26b2b06e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.Inventory::ProjectCook.Inventory.HandoverBox
+  title: GIVE
+  compartments:
+  - size: {x: 4, y: 4}
+    position: {x: 0, y: 0}
 --- !u!1 &750913706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1155482338569503706, guid: 587c4549e25bb0246b1a348bd2c819bc, type: 3}
@@ -20214,13 +20340,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1928919371}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.143, y: 0.85, z: 1.494}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.121, y: 0.95, z: 1.564}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 563566694}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1928919373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20259,11 +20385,11 @@ Light:
   m_GameObject: {fileID: 1928919371}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 2
+  m_Type: 0
   m_Color: {r: 1, g: 0.79104316, b: 0.5566037, a: 1}
   m_Intensity: 5
-  m_Range: 1.3786895
-  m_SpotAngle: 30
+  m_Range: 1.4514173
+  m_SpotAngle: 133.74261
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:

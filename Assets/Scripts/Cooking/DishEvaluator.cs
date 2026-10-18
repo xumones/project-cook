@@ -34,6 +34,23 @@ namespace ProjectCook.Cooking
         private const float CookingWhenRawWanted = 0.5f;
 
         private static readonly List<bool> usedBuffer = new List<bool>();
+        private static readonly List<float> dishScoreBuffer = new List<float>();
+
+        /// <summary>ให้คะแนนจานที่ส่งมาพร้อมกัน: เอาจานที่ได้คะแนนสูงสุด count ใบมาเฉลี่ย จานที่ขาดนับเป็น 0 จานที่เกินไม่มีผล</summary>
+        public static DishScore EvaluateBest(IReadOnlyList<IngredientRequirement> requirements, IReadOnlyList<IReadOnlyList<IngredientSnapshot>> dishes, int count)
+        {
+            if (count <= 0) return new DishScore(0f, QualityGrade.F);
+
+            dishScoreBuffer.Clear();
+            for (int i = 0; i < dishes.Count; i++) dishScoreBuffer.Add(Evaluate(requirements, dishes[i]).Score);
+            dishScoreBuffer.Sort((a, b) => b.CompareTo(a));
+
+            float total = 0f;
+            for (int i = 0; i < count && i < dishScoreBuffer.Count; i++) total += dishScoreBuffer[i];
+
+            float average = total / count;
+            return new DishScore(average, ToGrade(average));
+        }
 
         public static DishScore Evaluate(IReadOnlyList<IngredientRequirement> requirements, IReadOnlyList<IngredientSnapshot> ingredients)
         {

@@ -13,7 +13,7 @@ namespace ProjectCook.UI
         Bag
     }
 
-    /// <summary>ช่องของที่ติดตัว (มือ กระเป๋าที่สวม): แสดงชื่อของในช่อง ลากออกนอกหน้าต่างเพื่อวางลงฉาก และช่องกระเป๋ารับกระเป๋าที่ลากมาเพื่อสวม</summary>
+    /// <summary>ช่องของที่ติดตัว (มือ กระเป๋าที่สวม): แสดงชื่อของในช่อง ลากออกนอกหน้าต่างเพื่อวางลงฉาก ของในมือลากลงที่เก็บที่รับได้ และช่องกระเป๋ารับกระเป๋าที่ลากมาเพื่อสวม</summary>
     // ต้องมี Graphic ที่ Raycast Target ไม่งั้นเริ่มลากจากช่องนี้ไม่ได้
     public class ItemSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
@@ -50,7 +50,22 @@ namespace ProjectCook.UI
             string itemName = CurrentItemName();
             if (itemName == null) return;
 
-            dragController.BeginDropOnlyDrag(itemName, ((RectTransform)transform).rect.size, Drop, eventData);
+            Vector2 size = ((RectTransform)transform).rect.size;
+            if (slot == EquipSlot.Bag)
+            {
+                dragController.BeginDropOnlyDrag(itemName, size, () => PlayerItemTransfer.Instance.DropBag(), eventData);
+                return;
+            }
+
+            // ของที่ยังไม่ได้ตั้ง Definition ไม่มีขนาดในตาราง ลากได้แค่วางลงฉาก
+            Item held = EquipmentManager.Instance.GetHeld(Hand).GetComponent<Item>();
+            if (held.Definition == null)
+            {
+                dragController.BeginDropOnlyDrag(itemName, size, () => PlayerItemTransfer.Instance.DropFromHand(Hand), eventData);
+                return;
+            }
+
+            dragController.BeginHeldDrag(Hand, new InventoryItem(held.Instance), size, eventData);
         }
 
         public void OnDrag(PointerEventData eventData) => dragController.Drag(eventData);
@@ -72,18 +87,6 @@ namespace ProjectCook.UI
             // ของที่ยังไม่ได้ตั้ง Definition แสดงชื่อ GameObject แทน จะได้ยังเห็นว่าถืออะไรอยู่
             ItemDefinitionSO definition = held.GetComponent<Item>().Definition;
             return definition != null ? definition.GetDisplayName() : held.name;
-        }
-
-        private void Drop()
-        {
-            if (slot == EquipSlot.Bag)
-            {
-                PlayerItemTransfer.Instance.DropBag();
-            }
-            else
-            {
-                PlayerItemTransfer.Instance.DropFromHand(Hand);
-            }
         }
     }
 }

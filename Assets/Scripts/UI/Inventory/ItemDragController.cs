@@ -5,10 +5,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using ProjectCook.Core;
 using ProjectCook.Inventory;
+using ProjectCook.Items;
 
 namespace ProjectCook.UI
 {
-    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงช่องติดตัว วางลงฉาก) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
+    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงช่องติดตัว วางลงฉาก ย้ายของในมือลงที่เก็บ) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
     public class ItemDragController : MonoBehaviour
     {
         [Header("Input")]
@@ -36,7 +37,12 @@ namespace ProjectCook.UI
         // ที่เก็บที่เปิดคู่กับผู้เล่นอยู่ null = เปิดแค่กระเป๋า
         private ItemStorage openContainer;
 
+        // null = ของที่ลากไม่ได้มาจากตาราง (มาจากช่องติดตัว)
         private ItemGridView source;
+
+        // มือที่ของที่ลากอยู่มาจาก null = ไม่ได้ลากจากมือ
+        private HandSide? heldSide;
+        private Vector2 heldSlotSize;
 
         // null = ของที่ลากวางลงตารางไม่ได้ (เช่น กระเป๋าที่สวมอยู่) ปล่อยได้แค่นอกหน้าต่าง
         private InventoryItem item;
@@ -86,6 +92,18 @@ namespace ProjectCook.UI
             ShowGhost(source.SpanOf(item.Size), item.Definition.GetDisplayName(), eventData);
         }
 
+        /// <summary>ลากของในมือ ปล่อยลงตารางของที่เก็บที่รับได้ หรือนอกหน้าต่างเพื่อวางลงฉาก</summary>
+        public void BeginHeldDrag(HandSide side, InventoryItem held, Vector2 slotSize, PointerEventData eventData)
+        {
+            heldSide = side;
+            heldSlotSize = slotSize;
+            item = held;
+            rotated = false;
+            grabOffset = slotSize * 0.5f;
+            dropOutside = () => PlayerItemTransfer.Instance.DropFromHand(side);
+            ShowGhost(slotSize, held.Definition.GetDisplayName(), eventData);
+        }
+
         /// <summary>ลากของที่วางลงตารางไม่ได้ ปล่อยนอกหน้าต่างแล้วเรียก drop</summary>
         public void BeginDropOnlyDrag(string label, Vector2 size, Action drop, PointerEventData eventData)
         {
@@ -102,7 +120,7 @@ namespace ProjectCook.UI
             eventCamera = eventData.pressEventCamera;
             GameObject hovered = eventData.pointerCurrentRaycast.gameObject;
             target = item != null && hovered != null ? hovered.GetComponentInParent<ItemGridView>() : null;
-            slotTarget = item != null && hovered != null && target == null ? hovered.GetComponentInParent<ItemSlotView>() : null;
+            slotTarget = source != null && hovered != null && target == null ? hovered.GetComponentInParent<ItemSlotView>() : null;
             UpdateGhost();
         }
 
@@ -113,7 +131,8 @@ namespace ProjectCook.UI
             Drag(eventData);
             if (target != null)
             {
-                if (canPlace) ItemStorage.TryMove(item, source.Storage, target.Storage, target.Grid, targetCell, rotated);
+                if (canPlace && heldSide.HasValue) PlayerItemTransfer.Instance.StoreFromHand(heldSide.Value, target.Storage, target.Grid, targetCell, rotated);
+                else if (canPlace) ItemStorage.TryMove(item, source.Storage, target.Storage, target.Grid, targetCell, rotated);
             }
             else if (slotTarget != null)
             {
@@ -130,6 +149,7 @@ namespace ProjectCook.UI
         {
             item = null;
             source = null;
+            heldSide = null;
             target = null;
             slotTarget = null;
             dropOutside = null;
@@ -145,9 +165,13 @@ namespace ProjectCook.UI
         {
             rotated = !rotated;
             grabOffset = new Vector2(grabOffset.y, grabOffset.x);
-            ghost.rectTransform.sizeDelta = source.SpanOf(item.SizeWhen(rotated));
+            if (source != null) ghost.rectTransform.sizeDelta = source.SpanOf(item.SizeWhen(rotated));
             UpdateGhost();
         }
+
+        // ของจากมือเข้าได้เฉพาะที่เก็บที่รับของถือ ส่วนของจากตารางต้องผ่านกฎของทั้งสองที่เก็บ
+        private bool CanMoveTo(ItemStorage to) =>
+            heldSide.HasValue ? to.CanAcceptFromHand(item) : ItemStorage.CanMove(item, source.Storage, to);
 
         private void ShowGhost(Vector2 size, string label, PointerEventData eventData)
         {
@@ -174,10 +198,17 @@ namespace ProjectCook.UI
         {
             RectTransform ghostRect = ghost.rectTransform;
 
+            // ของจากมือไม่มีตารางต้นทาง เงาจึงเปลี่ยนขนาดตามตารางที่ชี้อยู่ และจับที่กลางเงาเสมอ
+            if (heldSide.HasValue)
+            {
+                ghostRect.sizeDelta = target != null ? target.SpanOf(item.SizeWhen(rotated)) : heldSlotSize;
+                grabOffset = ghostRect.sizeDelta * 0.5f;
+            }
+
             if (target != null && target.TryGetCell(pointer, eventCamera, out Vector2Int pointerCell))
             {
                 targetCell = pointerCell - Vector2Int.FloorToInt(grabOffset / target.Step);
-                canPlace = target.Grid.CanPlace(item, targetCell, rotated) && ItemStorage.CanMove(item, source.Storage, target.Storage);
+                canPlace = target.Grid.CanPlace(item, targetCell, rotated) && CanMoveTo(target.Storage);
                 ghostRect.position = target.CellToWorld(targetCell);
                 ghost.color = canPlace ? placeableColor : blockedColor;
                 return;
@@ -194,8 +225,8 @@ namespace ProjectCook.UI
                 return;
             }
 
-            // ของที่ไม่ได้มาจากตาราง (item เป็น null) ไม่มีกฎที่เก็บมาบังคับ
-            bool canDrop = IsOutsidePanel && (item == null || source.Storage.CanRelease(item));
+            // ของที่ไม่ได้มาจากตารางไม่มีกฎที่เก็บมาบังคับ
+            bool canDrop = IsOutsidePanel && (source == null || source.Storage.CanRelease(item));
             ghost.color = canDrop ? dropColor : blockedColor;
         }
     }

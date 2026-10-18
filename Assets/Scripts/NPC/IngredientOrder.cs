@@ -10,7 +10,7 @@ namespace ProjectCook.NPC
 {
     /// <summary>เควสสุ่มหนึ่งรายการ: ส่งจานที่มีวัตถุดิบไม่ซ้ำกันซึ่งราคารวมน้อยกว่างบของผู้เล่น ทำซ้ำได้ ประโยคมาจาก NPC ที่ให้</summary>
     // เป็นทั้งเนื้อหาเควสและเป้าหมายข้อเดียวของมันเอง
-    public class IngredientOrder : IQuestDefinition, IDeliveryObjective
+    public class IngredientOrder : IQuestDefinition, IServeObjective
     {
         private const int MinIngredients = 2;
         private const int MaxIngredients = 4;
@@ -121,7 +121,7 @@ namespace ProjectCook.NPC
 
         public string RecipientId => string.Empty;
 
-        public DishScore Evaluate(IReadOnlyList<IngredientSnapshot> dish) => DishEvaluator.Evaluate(requirements, dish);
+        public DishScore Evaluate(IReadOnlyList<IReadOnlyList<IngredientSnapshot>> dishes) => DishEvaluator.EvaluateBest(requirements, dishes, Required);
 
         public string Describe() => IngredientRequirement.Describe(requirements);
 

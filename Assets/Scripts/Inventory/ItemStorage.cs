@@ -4,6 +4,27 @@ using UnityEngine;
 
 namespace ProjectCook.Inventory
 {
+    /// <summary>คำขอเปิดหน้าต่างของที่เก็บหนึ่งชุดคู่กับกระเป๋าผู้เล่น</summary>
+    public readonly struct StorageWindow
+    {
+        public readonly ItemStorage Storage;
+        public readonly string Title;
+
+        /// <summary>ปุ่มยืนยันของหน้าต่าง null = ไม่มีปุ่ม (ตู้เย็น ร้าน)</summary>
+        public readonly Action Confirm;
+
+        /// <summary>หลังหน้าต่างปิดแล้ว ไม่ว่าจะยืนยันหรือไม่</summary>
+        public readonly Action Closed;
+
+        public StorageWindow(ItemStorage storage, string title, Action confirm, Action closed)
+        {
+            Storage = storage;
+            Title = title;
+            Confirm = confirm;
+            Closed = closed;
+        }
+    }
+
     /// <summary>ที่เก็บของหนึ่งชุด (ตัวผู้เล่น ตู้เย็น ร้านค้า) ถือตารางย่อยหลายตาราง และเป็นทางเดียวที่ใส่ เอาออก หรือย้ายของระหว่างที่เก็บ</summary>
     public class ItemStorage
     {
@@ -18,8 +39,8 @@ namespace ProjectCook.Inventory
         /// <summary>ของในตารางใดตารางหนึ่งเปลี่ยน หรือชุดตารางถูกเปลี่ยน</summary>
         public event Action Changed;
 
-        /// <summary>มีคนขอเปิดหน้าต่างของที่เก็บนี้คู่กับกระเป๋าผู้เล่น (ตู้เย็น ร้าน) UI เป็นคนเปิด ส่งชื่อหัวหน้าต่างมาด้วย</summary>
-        public static event Action<ItemStorage, string> OpenRequested;
+        /// <summary>มีคนขอเปิดหน้าต่างของที่เก็บคู่กับกระเป๋าผู้เล่น (ตู้เย็น ร้าน กล่องให้ของ) UI เป็นคนเปิด</summary>
+        public static event Action<StorageWindow> OpenRequested;
 
         public ItemStorage(IEnumerable<ItemGrid> initial, IStorageRules rules = null)
         {
@@ -27,7 +48,8 @@ namespace ProjectCook.Inventory
             this.rules = rules;
         }
 
-        public void RequestOpen(string title) => OpenRequested?.Invoke(this, title);
+        public void RequestOpen(string title, Action confirm = null, Action closed = null) =>
+            OpenRequested?.Invoke(new StorageWindow(this, title, confirm, closed));
 
         public bool Owns(ItemGrid grid) => grids.Contains(grid);
 
@@ -36,6 +58,10 @@ namespace ProjectCook.Inventory
 
         /// <summary>ราคาที่ต้องจ่ายถ้าเอาของชิ้นนี้ออก 0 = ฟรี</summary>
         public int PriceOf(InventoryItem item) => rules != null ? rules.PriceOf(item) : 0;
+
+        /// <summary>รับของจากมือชิ้นนี้ได้ไหม ของที่เก็บได้ตามปกติเข้าได้ทุกที่ ที่เหลือต้องเป็นที่เก็บที่รับของถือ ไม่ได้เช็คที่ว่าง</summary>
+        public bool CanAcceptFromHand(InventoryItem item) =>
+            rules == null ? item.Definition.IsStorable : rules.CanAccept(item) && (item.Definition.IsStorable || rules.AcceptsHeldItems);
 
         /// <summary>กฎของทั้งสองที่เก็บยอมให้ย้ายของชิ้นนี้ไหม ไม่ได้เช็คที่ว่าง</summary>
         public static bool CanMove(InventoryItem item, ItemStorage from, ItemStorage to) =>
@@ -60,6 +86,15 @@ namespace ProjectCook.Inventory
                 return true;
             }
             return false;
+        }
+
+        /// <summary>วางของที่ยังไม่อยู่ในที่เก็บไหนลงตำแหน่งที่ระบุ ผู้เรียกเช็คกฎของที่เก็บเอง</summary>
+        public bool TryPlace(InventoryItem item, ItemGrid grid, Vector2Int position, bool rotated)
+        {
+            if (!Owns(grid) || !grid.TryPlace(item, position, rotated)) return false;
+
+            Changed?.Invoke();
+            return true;
         }
 
         /// <summary>เอาของออกไปที่ที่ไม่ใช่ที่เก็บ (ลงฉาก สวมกระเป๋า) ต้องผ่านกฎของที่เก็บ</summary>

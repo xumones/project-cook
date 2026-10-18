@@ -131,32 +131,24 @@ namespace ProjectCook.Quests
             MessageBus<QuestStarted>.Publish(new QuestStarted(quest.Definition.QuestId));
         }
 
-        /// <summary>เควสแรกที่รอให้ผู้รับคนนี้รับอาหาร</summary>
-        public bool TryFindDelivery(string recipientId, out ActiveQuest quest)
+        /// <summary>เสิร์ฟอาหารทุกจานที่ผู้เล่นให้ผู้รับคนนี้ไปให้เควสอาหารที่รอเขาอยู่ (ผู้รับหนึ่งคนรอได้ทีละเรื่อง)
+        /// ผ่าน (ไม่ใช่ F) = เป้าหมายข้อนั้นครบ false = ไม่มีเควสอาหารรอผู้รับคนนี้</summary>
+        public bool TryServe(string recipientId, IReadOnlyList<IReadOnlyList<IngredientSnapshot>> dishes, out ActiveQuest quest, out DishScore score)
         {
-            foreach (ActiveQuest candidate in active)
+            quest = active.Find(candidate => candidate.TryGetPendingServe(recipientId, out _));
+            if (quest == null)
             {
-                if (!candidate.TryGetPendingDelivery(recipientId, out _)) continue;
-
-                quest = candidate;
-                return true;
+                score = default;
+                return false;
             }
 
-            quest = null;
-            return false;
-        }
-
-        /// <summary>ส่งอาหารให้ผู้รับ ผ่าน (ไม่ใช่ F) = เป้าหมายส่งอาหารข้อนั้นครบ ผู้เรียกเป็นคนเอาอาหารออกจากจาน</summary>
-        public DishScore Deliver(ActiveQuest quest, string recipientId, IReadOnlyList<IngredientSnapshot> dish)
-        {
-            if (!quest.TryGetPendingDelivery(recipientId, out int index)) return new DishScore(0f, QualityGrade.F);
-
-            DishScore score = ((IDeliveryObjective)quest.Definition.Objectives[index]).Evaluate(dish);
-            if (score.Grade == QualityGrade.F) return score;
+            quest.TryGetPendingServe(recipientId, out int index);
+            score = ((IServeObjective)quest.Definition.Objectives[index]).Evaluate(dishes);
+            if (score.Grade == QualityGrade.F) return true;
 
             quest.CompleteObjective(index);
             OnProgress(quest);
-            return score;
+            return true;
         }
 
         private void HandleItemCollected(ItemCollected message)

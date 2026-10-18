@@ -34,6 +34,8 @@ namespace ProjectCook.Inventory
 
         public bool CanAccept(InventoryItem item) => false;
 
+        public bool AcceptsHeldItems => false;
+
         public int PriceOf(InventoryItem item) => item.Definition.Price;
 
         public void OnReleased(InventoryItem item)

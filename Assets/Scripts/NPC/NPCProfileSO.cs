@@ -38,6 +38,9 @@ namespace ProjectCook.NPC
         [Tooltip("คุยเล่น ใช้โดย NPCChat")]
         [SerializeField] private LineSet chat;
 
+        [Tooltip("ขอบคุณเมื่อได้ของที่ไม่เกี่ยวกับเควส ว่างไว้ = ใช้ประโยคกลางของ NPCHandover")]
+        [SerializeField] private LineSet giftThanks;
+
         [Header("Random Orders")]
         [Tooltip("ประโยคของเควสสุ่ม ใส่ {0:list:{}|, | and } ตรงที่จะแทรกรายชื่อวัตถุดิบ และต้องเปิด Smart ใน String Table")]
         [SerializeField] private LineSet orderOffer;
@@ -63,6 +66,7 @@ namespace ProjectCook.NPC
         Sprite ISpeakerIdentity.Portrait => characterSprite;
         public LineSet Greeting => greeting;
         public LineSet Chat => chat;
+        public LineSet GiftThanks => giftThanks;
         public LineSet OrderOffer => orderOffer;
         public LineSet OrderReminder => orderReminder;
         public LineSet OrderFail => orderFail;
