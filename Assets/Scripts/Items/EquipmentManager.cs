@@ -149,6 +149,23 @@ namespace ProjectCook.Items
             return true;
         }
 
+        /// <summary>สลับของในมือซ้ายกับขวา มือที่ว่างก็สลับได้ (= ย้ายของไปอีกมือ)</summary>
+        public void SwapHands()
+        {
+            if (leftItem == null && rightItem == null) return;
+
+            if (leftHandAnchor == null || rightHandAnchor == null)
+            {
+                Debug.LogWarning("[EquipmentManager] ยังไม่ได้ตั้ง Hand Anchor ครบสองมือ สลับมือไม่ได้", this);
+                return;
+            }
+
+            (leftItem, rightItem) = (rightItem, leftItem);
+            if (leftItem != null) leftItem.NotifyMovedTo(leftHandAnchor);
+            if (rightItem != null) rightItem.NotifyMovedTo(rightHandAnchor);
+            HandsChanged?.Invoke();
+        }
+
         /// <summary>เอาของออกจากมือโดยไม่วางลงฉาก ใช้ตอนของกลายเป็นข้อมูล ผู้เรียกเป็นคนเก็บวัตถุออกจากฉาก</summary>
         public bool RemoveHeld(EquippableItem equippable)
         {

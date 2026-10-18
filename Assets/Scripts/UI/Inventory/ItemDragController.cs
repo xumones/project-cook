@@ -9,7 +9,7 @@ using ProjectCook.Items;
 
 namespace ProjectCook.UI
 {
-    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงช่องติดตัว วางลงฉาก ย้ายของในมือลงที่เก็บ) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
+    /// <summary>คุมการย้ายของด้วยเมาส์ในหน้าต่างกระเป๋า: ลาก (เงาตามเมาส์ หมุน ย้าย วางลงช่องติดตัว วางลงฉาก ย้ายของในมือลงที่เก็บหรือไปอีกมือ) และกดค้างคลิกเพื่อย้ายไปอีกฝั่ง</summary>
     public class ItemDragController : MonoBehaviour
     {
         [Header("Input")]
@@ -120,7 +120,7 @@ namespace ProjectCook.UI
             eventCamera = eventData.pressEventCamera;
             GameObject hovered = eventData.pointerCurrentRaycast.gameObject;
             target = item != null && hovered != null ? hovered.GetComponentInParent<ItemGridView>() : null;
-            slotTarget = source != null && hovered != null && target == null ? hovered.GetComponentInParent<ItemSlotView>() : null;
+            slotTarget = item != null && hovered != null && target == null ? hovered.GetComponentInParent<ItemSlotView>() : null;
             UpdateGhost();
         }
 
@@ -136,7 +136,8 @@ namespace ProjectCook.UI
             }
             else if (slotTarget != null)
             {
-                slotTarget.TryTake(source.Storage, item);
+                if (heldSide.HasValue) slotTarget.TakeFromHand(heldSide.Value);
+                else slotTarget.TryTake(source.Storage, item);
             }
             else if (IsOutsidePanel)
             {
@@ -221,7 +222,8 @@ namespace ProjectCook.UI
 
             if (slotTarget != null)
             {
-                ghost.color = slotTarget.CanTake(source.Storage, item) ? placeableColor : blockedColor;
+                bool accepts = heldSide.HasValue ? slotTarget.CanTakeFromHand(heldSide.Value) : slotTarget.CanTake(source.Storage, item);
+                ghost.color = accepts ? placeableColor : blockedColor;
                 return;
             }
 

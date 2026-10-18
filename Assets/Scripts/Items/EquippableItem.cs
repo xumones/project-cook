@@ -79,15 +79,22 @@ namespace ProjectCook.Items
             }
 
             heldState = HeldState.Capture(transform, cachedRigidbody);
-
-            transform.SetParent(anchor, false);
-            transform.localPosition = holdPose.localPosition;
-            transform.localRotation = Quaternion.Euler(holdPose.localEulerAngles);
+            AttachTo(anchor);
 
             // มือผู้เล่นอยู่ใน Core ของที่ถือจึงย้ายมาด้วย ของข้างในต้องตามมาไม่งั้นหายตอนเปลี่ยนพื้นที่
             contents?.MoveToScene(gameObject.scene);
 
             item.SetLocation(ItemLocation.Hand);
+        }
+
+        /// <summary>เรียกจาก EquipmentManager เท่านั้น: ย้ายไปอีกมือ สถานะตอนถือ (ฟิสิกส์ Layer ของข้างใน) คงเดิม</summary>
+        public void NotifyMovedTo(Transform anchor) => AttachTo(anchor);
+
+        private void AttachTo(Transform anchor)
+        {
+            transform.SetParent(anchor, false);
+            transform.localPosition = holdPose.localPosition;
+            transform.localRotation = Quaternion.Euler(holdPose.localEulerAngles);
         }
 
         /// <summary>เรียกจาก EquipmentManager เท่านั้น: หลุด parent ไปวางที่จุดที่กำหนด + คืนฟิสิกส์และ Layer เดิม</summary>

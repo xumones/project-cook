@@ -38,7 +38,6 @@ namespace ProjectCook.Cooking
 
         public IngredientDataSO Data => data;
         public CookingState CurrentCookingState => progress != null ? progress.State : CookingState.Raw;
-        public float CookProgress => progress != null ? progress.Progress : 0f;
         public bool IsBurnt => CurrentCookingState == CookingState.Burnt;
 
         /// <summary>ชิ้นที่คีมกำลังจับอยู่ null = ไม่ได้ถูกจับ ชิ้นอื่นยังเป็นอิสระตามฟิสิกส์</summary>

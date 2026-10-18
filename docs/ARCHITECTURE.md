@@ -66,18 +66,23 @@ Editor             (เครื่องมือใน Editor เท่าน�
 ### ไอเทม
 - `ItemDefinitionSO` = ข้อมูลประจำชนิด ส่วน `ItemInstance` = **ตัวตนของไอเทมหนึ่งชิ้น** ที่ติดตัวไปทุกที่ (บนพื้น / ในมือ / ในที่เก็บ) เก็บ Flags (เช่น FoundOutside) และสถานะของ component ด้วยรหัสคงที่
 - `Item` (บน prefab) เป็นร่างในโลกของตัวตน ทำหน้าที่จดสถานะ (`Capture`) และคืนสถานะ (`Restore`) ให้ component ที่ implement `ISavableState`
-- ความสามารถของไอเทมมาจาก component: `StorableItem` (เก็บเข้ากระเป๋าได้), `EquippableItem` (ถือได้), `BagItem` (สวมได้)
-- `PlayerItemTransfer` เป็นทางเดียวที่ของย้ายระหว่างโลกกับตัวผู้เล่น
+- ความสามารถของไอเทมมาจาก component: `StorableItem` (เก็บเข้ากระเป๋าได้), `EquippableItem` (ถือได้), `BagItem` (สวมได้) ส่วน `ItemDefinitionSO.IsStorable` บอกจากข้อมูลว่าชนิดนี้เก็บได้ไหม
+- ไอเทมอยู่ได้ 3 ที่ (`ItemLocation`): บนพื้น / ในมือ / ในภาชนะที่เป็นเจ้าของ (ภาชนะเป็นคน save และพาไปด้วย)
+- เอาไอเทมออกจากฉากผ่าน `Item.Despawn` และย้ายฉากผ่าน `Item.MoveToScene` เท่านั้น ทั้งสองพาของข้างในไปด้วย
+- `PlayerItemTransfer` เป็นทางเดียวที่ของย้ายระหว่างโลกกับตัวผู้เล่น รวมถึงย้ายของในมือเข้าที่เก็บ (`StoreFromHand`) และคืนของให้ผู้เล่น (`GiveBack`: กระเป๋า → มือที่ว่าง → พื้นตรงหน้า)
+- `EquipmentManager` ถือของสองมือ เลือกมือได้ และสลับมือได้ (`SwapHands`) ตอนย้ายมือไม่เริ่มสถานะถือใหม่ ค่าฟิสิกส์และ Layer เดิมจึงไม่ถูกจดทับ
 
 ### ที่เก็บ (Grid inventory)
 - `ItemStorage` → `ItemGrid` → `InventoryItem` (ตำแหน่ง + ตัวตน) เป็น class ธรรมดาทั้งหมด ส่วน UI แค่ฟัง event `Changed`
-- กฎพิเศษของที่เก็บแต่ละแบบ (เช่น ร้านค้า) ใส่ผ่าน `IStorageRules`
+- กฎพิเศษของที่เก็บแต่ละแบบ (เช่น ร้านค้า) ใส่ผ่าน `IStorageRules` ของจากมือเข้าที่เก็บทั่วไปได้เฉพาะของที่เก็บได้ ของที่ถือได้อย่างเดียว (จาน) เข้าได้เฉพาะที่เก็บที่ตั้ง `AcceptsHeldItems`
+- เปิดหน้าต่างที่เก็บผ่าน `ItemStorage.RequestOpen` ใส่ปุ่มยืนยันและสิ่งที่ทำตอนปิดหน้าต่างได้ (กล่องให้ของใช้ทั้งสองอย่าง)
 
 ### การทำอาหาร
 - `CookingProgress` (class ธรรมดา) เก็บเวลาทอดแต่ละด้าน แล้วตัดสินสถานะ ดิบ → กำลังสุก → สุก → ไหม้
 - `IngredientInstance` หาว่าด้านไหนแตะกระทะ แล้วส่งความร้อนต่อให้ `CookingProgress`
-- ภาชนะ (`FoodContainer` และลูก) ส่งความร้อนให้วัตถุดิบที่อยู่ข้างใน
-- `DishEvaluator` ให้คะแนนจาก `IngredientSnapshot` (ข้อมูลสรุปของวัตถุดิบ) จึง test ได้โดยไม่ต้องมีวัตถุในฉาก
+- ภาชนะ (`FoodContainer` และลูก) ส่งความร้อนให้วัตถุดิบที่อยู่ข้างใน trigger เป็นแค่ตัวแจ้งว่ามีของเข้าหรือออก รายการในภาชนะคือความจริงหนึ่งเดียว
+- **ภาชนะเสิร์ฟ (`ServingFoodContainer`) เป็นเจ้าของอาหาร:** จดอาหารทุกชิ้น (ตัวตน + ตำแหน่งบนภาชนะ) ลงตัวตนของภาชนะ แล้วสร้างคืนเมื่อภาชนะถูกสร้างคืน ตอนถือ อาหารถูกยึดไว้ และจดตำแหน่งจากท่าที่ยึดไว้ ภาชนะที่เป็นข้อมูลอยู่ (เช่นในกล่องให้ของ) อ่านอาหารออกได้ด้วย `TryTakeContents`
+- `DishEvaluator` ให้คะแนนจาก `IngredientSnapshot` (ข้อมูลสรุปของวัตถุดิบ สร้างจากข้อมูลได้ด้วย `TryFrom`) จึง test ได้โดยไม่ต้องมีวัตถุในฉาก ส่งหลายจานพร้อมกัน `EvaluateBest` เอาจานที่ดีที่สุดตามจำนวนที่ขอมาเฉลี่ย จานที่ขาดนับเป็น 0
 
 **โครง prefab ของวัตถุดิบ:** วัตถุดิบหนึ่งหน่วย (นับ / สุก / เข้าสูตร) = `IngredientInstance` หนึ่งตัวที่ root มีชิ้นฟิสิกส์ได้ 1..N ชิ้น ทุกระบบอ่านชิ้นจาก `IngredientInstance.Bodies` ห้ามหา `Rigidbody` เอง
 
@@ -104,8 +109,14 @@ Editor             (เครื่องมือใน Editor เท่าน�
 ### เควส
 - `QuestLog` (Core) เป็นเจ้าของเควสทั้งหมด: รับข่าวเพื่อเดินความคืบหน้า จ่ายรางวัล และเริ่มเควสที่ตั้ง Start Item / Start Event ไว้ให้เอง
 - เนื้อหาเควสมาจาก `IQuestDefinition` ได้สองแบบ: `QuestSO` (เนื้อเรื่อง ทำครั้งเดียว) และ `IngredientOrder` (เควสสุ่มของ NPC ทำซ้ำได้)
-- เป้าหมาย 4 แบบ: `DeliverDishObjectiveSO`, `CollectItemObjectiveSO`, `ReachLocationObjectiveSO`, `TalkToObjectiveSO` ความคืบหน้าเก็บใน `ActiveQuest` ไม่เก็บใน asset
+- เป้าหมาย 4 แบบ: `ServeDishObjectiveSO`, `CollectItemObjectiveSO`, `ReachLocationObjectiveSO`, `TalkToObjectiveSO` ความคืบหน้าเก็บใน `ActiveQuest` ไม่เก็บใน asset
 - `NPCQuestGiver` เป็นแค่ทางเข้าในบทสนทนา ส่วน `QuestNote` คือโน้ตที่ผูกกับเควสด้วยรหัสของ `ActiveQuest`
+- **เสิร์ฟอาหาร:** ผู้รับหนึ่งคนรอเควสอาหารได้ทีละเรื่อง `QuestLog.TryServe` ให้คะแนนอาหารทุกจานที่ส่งมาในครั้งเดียว (`Dish Count` = จำนวนจานที่ต้องส่งพร้อมกัน) ได้ F แล้ว NPC รับของไปแต่เควสยังค้าง
+
+### การให้ของ
+- NPC ที่เกี่ยวกับเควสมี `NPCHandover` (มากับ `HandoverBox`) NPC ที่แค่พูดในฉากไม่ต้องใส่ ตัวเลือก "ให้ของ" เปิดกล่อง 4×4 คู่กับกระเป๋า ผู้เล่นลากของใส่ (รวมของในมือ) แล้วกดยืนยัน ปิดโดยไม่ยืนยัน = ของกลับไปหาผู้เล่น
+- ยืนยันแล้ว: ภาชนะกลับไปหาผู้เล่น อาหารข้างในไปให้เควสอาหารของ NPC คนนั้น ของอื่น (รวมวัตถุดิบที่ไม่ได้ใส่ภาชนะ) เป็นของขวัญ แล้วกลับเข้าบทสนทนาโดย NPC พูดตามผล (`DialogueRunner.Begin` แบบมีประโยคเปิด)
+- ประโยคขอบคุณตั้งใน `NPCProfileSO` ช่อง Gift Thanks ว่างไว้ = ใช้ประโยคกลางของ `NPCHandover`
 
 ### Cutscene
 แยก 3 หน้าที่ไม่ปนกัน (วิธีทำฉากทีละขั้นอยู่ที่ `docs/CUTSCENE_GUIDE.md`)
@@ -137,6 +148,10 @@ Editor             (เครื่องมือใน Editor เท่าน�
 | ไอเทมที่วางไว้ในพื้นที่ที่ save ได้ | ใส่ `PersistentId` ที่ตัวในฉาก (ห้ามใส่ใน prefab) |
 | เควสเนื้อเรื่อง | `QuestSO` + เป้าหมาย → ใส่ในรายการ `Quests` ของ QuestLog → ใส่ใน `storyQuests` ของ NPC (หรือตั้ง Start Item / Start Event) |
 | เป้าหมายเควสแบบใหม่ | subclass ของ `QuestObjectiveSO` แล้ว override `On...` ของข่าวที่สนใจ (ถ้าต้องใช้ข่าวใหม่ ให้เพิ่ม struct ข่าวในกล่องของผู้ส่ง) |
+| เควสเสิร์ฟอาหาร | `ServeDishObjectiveSO` (วัตถุดิบหลัก + Dish Count + ผู้รับ) ใส่ใน `QuestSO` ผู้รับต้องมี `NPCHandover` |
+| NPC ที่รับของได้ | ใส่ `NPCHandover` ตั้ง Give Label กับ Default Thanks (`HandoverBox` ถูกใส่ให้เอง ปรับขนาดกล่องได้ที่นั่น) |
+| ภาชนะเสิร์ฟใหม่ (ชาม ถาด) | prefab ที่มี `Item` + `EquippableItem` (Contents = Freeze) + `ServingFoodContainer` + ลูกที่มี trigger collider |
+| ที่เก็บที่รับของจากมือ | `IStorageRules` ที่ `AcceptsHeldItems = true` |
 | สถานีใหม่ | subclass หรือใช้ `Station` ตรงๆ ของที่เปิด/ปิดตามการเข้าออกทำเป็น `IStationModule` แล้ววางเป็นลูกของสถานี |
 | ปุ่มใหม่ | ใส่ใน action map ของสถานการณ์ที่ใช้ แล้วอ้างผ่าน `InputActionReference` |
 | ระบบที่ต้อง save | `ISaveSection` + `SaveService.Instance.Register(this)` ใน Start |
@@ -148,11 +163,13 @@ Editor             (เครื่องมือใน Editor เท่าน�
 - `GameData/Dev/DevSettings` → **Dev Locations Enabled**: เปิดหรือปิดประตูไปพื้นที่ทดสอบ
 - `GameData/Dev/DevSettings` → **Skip Cutscenes**: ข้ามทุก cutscene ทันที (ผลตอนจบยังถูกใส่ครบ)
 - `DynamicFontSaveCleaner`: ล้างตัวอักษรที่ฟอนต์ TMP แบบ Dynamic สร้างระหว่างใช้งานก่อนบันทึก ไฟล์ฟอนต์จึงไม่เปลี่ยนใน git
-- test: Window → General → Test Runner → EditMode (ครอบคลุม grid, สถานะไอเทม, เควส, save, การทำอาหาร, คิว cutscene)
+- test: Window → General → Test Runner → EditMode (ครอบคลุม grid, กฎที่เก็บ, สถานะไอเทม, เควส, save, การทำอาหาร, คิว cutscene)
+- **ไฟล์ `.asset` แบบ binary** (เช่น TerrainData ซึ่งเป็น binary แม้ตั้ง Force Text) ต้องอยู่ในรายการ `binary` ของ `.gitattributes` ไม่งั้น git แปลงตัวขึ้นบรรทัดใหม่จนไฟล์พัง ตอนนี้มี `LightingData.asset` กับ `*Terrain*.asset` ไฟล์ binary ชื่ออื่นต้องเพิ่มเอง
 
 ## 6. ที่ยังไม่ทำ (ตั้งใจเลื่อนไว้)
 
-- ของซ้อนในของ (กล่องในกระเป๋า, อาหารบนจานที่ถืออยู่ตอน save)
+- ของซ้อนในของ (กล่องในกระเป๋า) และเก็บจานเข้ากระเป๋า (ข้อมูลรองรับแล้ว เหลือใส่ `StorableItem` ให้ภาชนะ)
+- เควสส่งของทั่วไปแบบ Tarkov (จับคู่ของกับหลายเควสพร้อมกัน), ของขวัญเพิ่มความสนิท, เควสหลายจานที่ทยอยส่ง, กฎห้ามมีเควสอาหารรอผู้รับคนเดียวกันสองเรื่อง
 - สถานะของเครื่องในบ้าน (ระดับไฟลูกบิด, ตำแหน่งกระทะ, เพลงที่เล่น) ยังไม่ถูก save
 - ระบบตายแล้วเสียของ / หนีออก, ช่องอุปกรณ์และชุด build, อาวุธ, ตัวสร้างแมพจากห้อง, บทสนทนาแตกเส้นเรื่อง
 
@@ -161,6 +178,7 @@ Editor             (เครื่องมือใน Editor เท่าน�
 - Unity Open Project "Chop Chop": [Game architecture overview](https://github.com/UnityTechnologies/open-project-1/wiki/Game-architecture-overview) (โครงฉากแบบ persistent + พื้นที่, InputReader สลับชุดปุ่มตามบริบท, save เป็นก้อนเดียวอ้างด้วยรหัส)
 - Unity Boss Room: [Architecture](https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@2.4/manual/samples/bossroom/architecture.html) (แยก assembly ตามระบบของเกม, pub/sub แบบมีชนิด)
 - Unreal Subsystems และ Lyra (ระบุอายุของ service ให้ชัด, ส่งข้อความระหว่างระบบ)
-- Zero Sievert (save เฉพาะในฐาน), Escape from Tarkov ("Found in raid")
+- Zero Sievert (save เฉพาะในฐาน), Escape from Tarkov ("Found in raid", ส่งของเควสผ่านหน้าต่างให้ผู้เล่นเลือกเอง)
+- ภาชนะเป็นเจ้าของอาหาร: Unity [OnTriggerExit](https://docs.unity3d.com/ScriptReference/Collider.OnTriggerExit.html) ไม่ถูกเรียกเมื่อวัตถุใน trigger ถูกปิดหรือลบ บัญชีจากเหตุการณ์ trigger อย่างเดียวจึงเชื่อไม่ได้, Stardew Valley [Quests](https://stardewvalleywiki.com/Quests) (เควสส่งของต้องยื่นของให้เอง)
 - Robert Nystrom, [Game Programming Patterns: Singleton](https://gameprogrammingpatterns.com/singleton.html)
 - Cutscene: Chop Chop [Scripts/Cutscenes](https://github.com/UnityTechnologies/open-project-1/tree/main/UOP1_Project/Assets/Scripts/Cutscenes) (ผูก Timeline ตอนเล่น, ค้างไทม์ไลน์ด้วยความเร็ว 0), Pixel Crushers [Cutscene Sequences](https://www.pixelcrushers.com/dialogue_system/manual2x/html/cutscene_sequences.html) (คำสั่ง `required` = ผลที่ต้องเกิดแม้กดข้าม), [Cinemachine 3.1 + Timeline](https://docs.unity3d.com/Packages/com.unity.cinemachine@3.1/manual/concept-timeline.html), Witcher 3 GDC 2016 (cutscene ทำมือเฉพาะจุดสำคัญ ที่เหลือเป็นบทสนทนาแบบระบบ)

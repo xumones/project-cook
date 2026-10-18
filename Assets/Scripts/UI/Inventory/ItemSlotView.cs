@@ -13,7 +13,7 @@ namespace ProjectCook.UI
         Bag
     }
 
-    /// <summary>ช่องของที่ติดตัว (มือ กระเป๋าที่สวม): แสดงชื่อของในช่อง ลากออกนอกหน้าต่างเพื่อวางลงฉาก ของในมือลากลงที่เก็บที่รับได้ และช่องกระเป๋ารับกระเป๋าที่ลากมาเพื่อสวม</summary>
+    /// <summary>ช่องของที่ติดตัว (มือ กระเป๋าที่สวม): แสดงชื่อของในช่อง ลากออกนอกหน้าต่างเพื่อวางลงฉาก ของในมือลากลงที่เก็บที่รับได้หรือไปอีกมือ และช่องกระเป๋ารับกระเป๋าที่ลากมาเพื่อสวม</summary>
     // ต้องมี Graphic ที่ Raycast Target ไม่งั้นเริ่มลากจากช่องนี้ไม่ได้
     public class ItemSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
@@ -42,6 +42,14 @@ namespace ProjectCook.UI
 
         public bool TryTake(ItemStorage from, InventoryItem item) =>
             slot == EquipSlot.Bag && PlayerItemTransfer.Instance.TryWearFromStorage(from, item);
+
+        /// <summary>รับของที่ลากมาจากมือได้ไหม เฉพาะช่องมืออีกข้าง (ย้ายหรือสลับมือ)</summary>
+        public bool CanTakeFromHand(HandSide from) => slot != EquipSlot.Bag && Hand != from;
+
+        public void TakeFromHand(HandSide from)
+        {
+            if (CanTakeFromHand(from)) EquipmentManager.Instance.SwapHands();
+        }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
