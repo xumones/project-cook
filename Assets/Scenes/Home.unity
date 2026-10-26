@@ -1569,6 +1569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56571e6f6c0d24a48a3c80ae3d013028, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.SmartObject
+  label: "\u0E42\u0E0B\u0E1F\u0E32"
   useSpot: {fileID: 991753150}
   useSeconds: 20
   advertisements:
@@ -1579,6 +1580,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8178893906c179842802e070f4d26327, type: 3}
   m_PrefabInstance: {fileID: 1465487932}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &256742107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 256742108}
+  m_Layer: 0
+  m_Name: NPC#1 HomeSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &256742108
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256742107}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.41396555, z: 0, w: -0.91029257}
+  m_LocalPosition: {x: 2.057, y: 0.26, z: -6.826}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &263198161
 GameObject:
   m_ObjectHideFlags: 0
@@ -4878,6 +4910,7 @@ GameObject:
   - component: {fileID: 595181181}
   - component: {fileID: 595181185}
   - component: {fileID: 595181184}
+  - component: {fileID: 595181186}
   m_Layer: 6
   m_Name: NPC#1
   m_TagString: Npc
@@ -5232,6 +5265,21 @@ MonoBehaviour:
     baseValue: 60
     risePerMinute: 20
     fallPerMinute: 10
+--- !u!114 &595181186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eddf1901945b1f46976e365d46359a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCBrain
+  profile: {fileID: 11400000, guid: 9d8b534a87f99014ca6d03014e44ef28, type: 2}
+  homeSpot: {fileID: 256742108}
+  seed: 0
 --- !u!1 &632295758
 GameObject:
   m_ObjectHideFlags: 0
@@ -8665,6 +8713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56571e6f6c0d24a48a3c80ae3d013028, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.SmartObject
+  label: "\u0E40\u0E04\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E40\u0E25\u0E48\u0E19\u0E41\u0E1C\u0E48\u0E19"
   useSpot: {fileID: 961343739}
   useSeconds: 15
   advertisements:
@@ -22801,6 +22850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56571e6f6c0d24a48a3c80ae3d013028, type: 3}
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.SmartObject
+  label: "\u0E15\u0E39\u0E49\u0E40\u0E22\u0E47\u0E19"
   useSpot: {fileID: 1661048835}
   useSeconds: 15
   advertisements:
@@ -23225,6 +23275,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 832575519}
   - {fileID: 595181169}
+  - {fileID: 256742108}
   - {fileID: 731846103}
   - {fileID: 750200598}
   - {fileID: 2091241470}

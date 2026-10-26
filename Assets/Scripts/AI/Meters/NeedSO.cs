@@ -35,5 +35,14 @@ namespace ProjectCook.AI
             if (value < lowBelow) return -lowPenalty * (1f - value / lowBelow);
             return value > highAbove ? highBonus : 0f;
         }
+
+        // ยิ่งพร่องยิ่งกดดัน
+        public override float Pressure(float value) => 1f - value / Max;
+
+        public override string Describe(float value)
+        {
+            if (value < lowBelow) return "ต่ำ";
+            return value > highAbove ? "สูง" : "ปกติ";
+        }
     }
 }

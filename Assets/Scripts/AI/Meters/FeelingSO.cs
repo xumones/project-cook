@@ -16,5 +16,11 @@ namespace ProjectCook.AI
         public override float Advance(float value, float minutes) => Mathf.Clamp(value - fadePerMinute * minutes, 0f, Max);
 
         public override float WellbeingOffset(float value) => value * wellbeingPerPoint;
+
+        public override string Describe(float value)
+        {
+            if (value <= 0f) return "ไม่มี";
+            return value < Max * 0.5f ? "เล็กน้อย" : "แรง";
+        }
     }
 }

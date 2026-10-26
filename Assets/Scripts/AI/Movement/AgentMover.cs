@@ -24,6 +24,10 @@ namespace ProjectCook.AI
         private NavMeshAgent agent;
         private NavMeshPath path;
         private bool hasDestination;
+        private float baseSpeed;
+
+        /// <summary>คูณความเร็วเดินจากที่ตั้งใน NavMeshAgent เช่น รีบ = มากกว่า 1</summary>
+        public void SetSpeedMultiplier(float multiplier) => agent.speed = baseSpeed * multiplier;
 
         public MoveStatus Status
         {
@@ -43,6 +47,7 @@ namespace ProjectCook.AI
         {
             agent = GetComponent<NavMeshAgent>();
             path = new NavMeshPath();
+            baseSpeed = agent.speed;
         }
 
         // ฉากถูกซ่อน (เช่น ผู้เล่นออกไปข้างนอก) ทางที่ค้างไว้หายไปกับ agent

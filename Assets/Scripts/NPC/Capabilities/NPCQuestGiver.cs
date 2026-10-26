@@ -9,7 +9,7 @@ using ProjectCook.Quests;
 
 namespace ProjectCook.NPC.Capabilities
 {
-    /// <summary>ทางเข้าเควสในบทสนทนา: ให้เควสทีละอันต่อ NPC (เนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มจากวัตถุดิบ) การรับอาหารอยู่ที่ NPCHandover</summary>
+    /// <summary>ทางเข้าเควสในบทสนทนา: ให้เควสทีละอันต่อ NPC (เนื้อเรื่องตามลำดับก่อน หมดแล้วสุ่มจากวัตถุดิบเมื่อ NPC อยาก) การรับอาหารอยู่ที่ NPCHandover</summary>
     // ความคืบหน้า การจบเควส และรางวัลเป็นของ QuestLog ตัวนี้แค่แปลงเป็นตัวเลือกในเมนูคุย
     public class NPCQuestGiver : NPCCapability
     {
@@ -34,6 +34,15 @@ namespace ProjectCook.NPC.Capabilities
 
         // แคชไว้ตอนลงทะเบียน จะได้ถอนได้แม้ QuestLog ถูกทำลายก่อน
         private QuestLog log;
+
+        // null = NPC ไม่มีสมอง เควสสุ่มมีให้ตลอดแบบเดิม
+        private INPCMind mind;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            mind = GetComponent<INPCMind>();
+        }
 
         // เควสสุ่มสร้างจากประโยคของ NPC ตัวนี้ จึงต้องให้ NPC เป็นคนสร้างคืนจาก save
         private void Start()
@@ -78,7 +87,9 @@ namespace ProjectCook.NPC.Capabilities
                 if (quest != null && log.CanStart(quest)) return quest;
             }
 
-            // ขอได้เฉพาะเควสที่เงินตอนนี้พอซื้อวัตถุดิบ
+            // เควสสุ่มมาจากความอยากของ NPC และขอได้เฉพาะเควสที่เงินตอนนี้พอซื้อวัตถุดิบ
+            if (mind != null && !mind.IsCraving) return null;
+
             return PlayerWallet.Instance != null
                 ? IngredientOrder.TryCreate(orderIngredients, PlayerWallet.Instance.Money, Npc.Profile, Npc.Lines)
                 : null;

@@ -21,5 +21,11 @@ namespace ProjectCook.AI
 
         /// <summary>ค่านี้ดึงเป้าหมายความมั่นคงขึ้นหรือลงเท่าไหร่ 0 = ไม่มีผล</summary>
         public virtual float WellbeingOffset(float value) => 0f;
+
+        /// <summary>ค่านี้กดดันให้ทำอะไรสักอย่างแค่ไหน 0–1 ค่าตั้งต้น: ยิ่งสูงยิ่งกดดัน</summary>
+        public virtual float Pressure(float value) => value / Max;
+
+        /// <summary>คำบอกระดับสำหรับหน้า debug เช่น "ต่ำ"</summary>
+        public abstract string Describe(float value);
     }
 }

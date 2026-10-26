@@ -202,7 +202,7 @@ namespace ProjectCook.Quests
             if (PlayerWallet.Instance != null) PlayerWallet.Instance.Earn(quest.Definition.Reward);
             QuestNote.Discard(quest.Id);
             Changed?.Invoke();
-            MessageBus<QuestCompleted>.Publish(new QuestCompleted(quest.Definition.QuestId));
+            MessageBus<QuestCompleted>.Publish(new QuestCompleted(quest.Definition.QuestId, quest.GiverId));
         }
     }
 }

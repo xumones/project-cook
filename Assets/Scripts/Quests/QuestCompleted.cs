@@ -5,9 +5,13 @@ namespace ProjectCook.Quests
     {
         public readonly string QuestId;
 
-        public QuestCompleted(string questId)
+        /// <summary>รหัส NPC ที่ให้เควสนี้</summary>
+        public readonly string GiverId;
+
+        public QuestCompleted(string questId, string giverId)
         {
             QuestId = questId;
+            GiverId = giverId;
         }
     }
 }

@@ -17,6 +17,9 @@ namespace ProjectCook.AI
     // ตัวละครไม่ต้องรู้ว่าของคืออะไร รู้แค่ที่ประกาศ ของใหม่จึงใช้ได้ทันทีโดยไม่แก้โค้ด AI
     public class SmartObject : MonoBehaviour
     {
+        [Tooltip("ชื่อที่แสดงในหน้า debug ว่าง = ชื่อ GameObject")]
+        [SerializeField] private string label;
+
         [Tooltip("จุดที่ตัวละครยืนใช้ หันตามแกนหน้าของจุดนี้ ว่าง = ตัวมันเอง")]
         [SerializeField] private Transform useSpot;
 
@@ -32,6 +35,7 @@ namespace ProjectCook.AI
 
         private Transform Spot => useSpot != null ? useSpot : transform;
 
+        public string Label => string.IsNullOrEmpty(label) ? name : label;
         public Vector3 UsePosition => Spot.position;
         public Quaternion UseRotation => Spot.rotation;
         public float UseSeconds => useSeconds;
@@ -71,11 +75,15 @@ namespace ProjectCook.AI
             return total;
         }
 
-        public bool IsAvailableTo(object user) => !IsOccupied && (reservedBy == null || reservedBy == user);
+        public bool IsAvailableTo(object user) => !IsOccupied && !IsReservedByOther(user);
 
+        /// <summary>ตัวละคร AI ตัวอื่นจองไว้ (ทุกตัวรู้ได้ทันทีเพราะเป็นการตกลงกันเอง ต่างจาก IsOccupied ที่ต้องเห็นถึงจะรู้)</summary>
+        public bool IsReservedByOther(object user) => reservedBy != null && reservedBy != user;
+
+        /// <summary>จองไว้ใช้ เช็คแค่ตัวละคร AI ด้วยกัน ไม่เช็คว่ามีคนอื่นใช้อยู่ ตัวละครต้องไปเห็นเองถึงจะรู้</summary>
         public bool TryReserve(object user)
         {
-            if (!IsAvailableTo(user)) return false;
+            if (IsReservedByOther(user)) return false;
 
             reservedBy = user;
             return true;

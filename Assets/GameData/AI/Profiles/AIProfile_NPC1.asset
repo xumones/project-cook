@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bccfeecbc53fe154bbceb7e1ea6f6999, type: 3}
+  m_Name: AIProfile_NPC1
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AIProfileSO
+  goals:
+  - {fileID: 11400000, guid: 52d716257d27cc448812156d3c9705bf, type: 2}
+  - {fileID: 11400000, guid: 625bab4accb82954994b1c92ab68c899, type: 2}
+  - {fileID: 11400000, guid: 9cd181c04e6f9c642b3d23212eff1fbb, type: 2}
+  - {fileID: 11400000, guid: 464153f03fec6304eba175a30caae33d, type: 2}
+  actions:
+  - {fileID: 11400000, guid: b185562cee98e4742aaad33a716aa6fd, type: 2}
+  - {fileID: 11400000, guid: bad9217ecc8d34847bfd23af6204198f, type: 2}
+  - {fileID: 11400000, guid: 3277a1dcb3cbacc45abd333b753bb85b, type: 2}
+  atTargetFact: {fileID: 11400000, guid: cdfe6222f608d7f4aa45daf0b84ed356, type: 2}
+  atHomeFact: {fileID: 11400000, guid: b10358b60e474ad49bca2de4ed3069fb, type: 2}
+  inertia: 0.1
+  thinkInterval: 0.5
+  hurriedSpeed: 1.2
+  relaxedSpeed: 0.9
+  hurriedUseTime: 0.8
+  relaxedUseTime: 1.3
+  frustration: {fileID: 11400000, guid: 0bb9c560bd87b32468fbdcce6f6fd26c, type: 2}
+  frustrationPerFailure: 15
+  unmetWantFrustrationPerMinute: 2
+  unmetWantFrustrationCap: 40
+  fulfilledWantRelief: 20
+  failureMemorySeconds: 30
+  imperfection:
+    baseValue: 0.2
+    lowWellbeingMultiplier: 2
+    highWellbeingMultiplier: 0.5
+    maxScoreBand: 0.3
+    missChance: 0.5
+    missCooldownSeconds: 30
+    lapsesPerMinute: 0.5
+    lapseCooldownSeconds: 120
+  lapsePauseSeconds: 3

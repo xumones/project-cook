@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e9ad5bc483a0c24c82cc38282b974b9, type: 3}
+  m_Name: Action_GoToTarget
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.GoToTargetActionSO
+  preconditions: []
+  effects:
+  - fact: {fileID: 11400000, guid: cdfe6222f608d7f4aa45daf0b84ed356, type: 2}
+    value: 1
+  - fact: {fileID: 11400000, guid: b10358b60e474ad49bca2de4ed3069fb, type: 2}
+    value: 0
+  baseCost: 1

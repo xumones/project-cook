@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f82a8a1e6e9ec47ad4308863944eb8, type: 3}
+  m_Name: Goal_Rest
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AIGoalSO
+  label: "\u0E1E\u0E31\u0E01"
+  rank: 0
+  weight: 1
+  considerations:
+  - meter: {fileID: 11400000, guid: eb837c8db2cbe7948baa952284427236, type: 2}
+    power: 3
+  targetMeter: {fileID: 11400000, guid: eb837c8db2cbe7948baa952284427236, type: 2}
+  desiredState:
+  - fact: {fileID: 11400000, guid: 4b38444404c01274b89d47820a599e1d, type: 2}
+    value: 1

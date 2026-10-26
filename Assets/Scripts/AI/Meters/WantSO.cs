@@ -17,5 +17,7 @@ namespace ProjectCook.AI
         public bool IsActive(float value) => value >= threshold;
 
         public override float Advance(float value, float minutes) => Mathf.Clamp(value + risePerMinute * minutes, 0f, Max);
+
+        public override string Describe(float value) => IsActive(value) ? "อยาก" : "ยังไม่อยาก";
     }
 }
