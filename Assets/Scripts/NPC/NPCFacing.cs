@@ -1,12 +1,14 @@
 using UnityEngine;
+using ProjectCook.AI;
 using ProjectCook.Core;
 using ProjectCook.Dialogue;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>หันทั้งตัวมาหาผู้เล่นตอนเริ่มคุย แล้วหันกลับท่าเดิมเมื่อผู้เล่นกลับไปเดินสำรวจ</summary>
+    /// <summary>หันทั้งตัวมาหาผู้เล่นตอนเริ่มคุย แล้วหันกลับท่าเดิมเมื่อผู้เล่นกลับไปเดินสำรวจ NPC ที่เดินเองได้ไม่หันกลับ</summary>
     // หันกลับตอนกลับโหมด Exploring ไม่ใช่ตอนคุยจบ สิ่งที่เปิดต่อจากบทสนทนา (เช่นร้านค้า) จึงยังเห็น NPC หันหาอยู่
     // กล้องมุมบทสนทนาเป็นลูกของ NPC พอ NPC หันหาผู้เล่น ทุกมุมจึงอยู่ฝั่งผู้เล่นตามกฎ 180 องศาเอง
+    // หมุนตัวเฉพาะตอนกำลังหัน นอกนั้นปล่อยให้ AgentMover หมุนตามทางเดิน
     [RequireComponent(typeof(NPCCharacter))]
     public class NPCFacing : MonoBehaviour
     {
@@ -18,6 +20,8 @@ namespace ProjectCook.NPC
         private Quaternion restRotation;
         private Quaternion targetRotation;
         private bool facingPlayer;
+        private bool turning;
+        private bool returnsToRest;
 
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance อาจคืน null ก่อน OnDestroy
         private GameModeManager gameMode;
@@ -25,7 +29,7 @@ namespace ProjectCook.NPC
         private void Awake()
         {
             character = GetComponent<NPCCharacter>();
-            targetRotation = transform.rotation;
+            returnsToRest = !TryGetComponent(out AgentMover _);
         }
 
         private void OnEnable() => MessageBus<DialogueStarted>.Subscribe(HandleStarted);
@@ -45,9 +49,10 @@ namespace ProjectCook.NPC
 
         private void Update()
         {
-            if (transform.rotation == targetRotation) return;
+            if (!turning) return;
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            turning = transform.rotation != targetRotation;
         }
 
         private void HandleStarted(DialogueStarted message)
@@ -62,6 +67,7 @@ namespace ProjectCook.NPC
             if (!facingPlayer) restRotation = transform.rotation;
             targetRotation = Quaternion.LookRotation(toPlayer);
             facingPlayer = true;
+            turning = true;
         }
 
         private void HandleModeChanged(GameMode mode)
@@ -70,6 +76,7 @@ namespace ProjectCook.NPC
 
             facingPlayer = false;
             targetRotation = restRotation;
+            turning = returnsToRest;
         }
     }
 }

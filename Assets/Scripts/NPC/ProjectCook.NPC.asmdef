@@ -2,6 +2,7 @@
     "name": "ProjectCook.NPC",
     "rootNamespace": "ProjectCook.NPC",
     "references": [
+        "ProjectCook.AI",
         "ProjectCook.Core",
         "ProjectCook.Dialogue",
         "ProjectCook.Items",

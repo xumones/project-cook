@@ -171,3 +171,5 @@ Packages/packages-lock.json linguist-generated
 LightingData.asset     binary
 # TerrainData stays binary even under Force Text; eol conversion corrupts it
 *Terrain*.asset        binary
+# NavMeshSurface bakes NavMeshData as binary too
+NavMesh-*.asset        binary

@@ -2,6 +2,7 @@
     "name": "ProjectCook.Stations",
     "rootNamespace": "ProjectCook.Stations",
     "references": [
+        "ProjectCook.AI",
         "ProjectCook.Core",
         "ProjectCook.Items",
         "ProjectCook.Player",

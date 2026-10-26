@@ -439,8 +439,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 47977ab112376e14db9c8d7fc9d18b2d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 991753150}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 47977ab112376e14db9c8d7fc9d18b2d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 235270468}
   m_SourcePrefab: {fileID: 100100000, guid: 47977ab112376e14db9c8d7fc9d18b2d, type: 3}
 --- !u!4 &28498995 stripped
 Transform:
@@ -1546,6 +1552,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcd31bcf7dbf47c4bb266230522b1ce9, type: 3}
   m_PrefabInstance: {fileID: 1663567389}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &235270465 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 47977ab112376e14db9c8d7fc9d18b2d, type: 3}
+  m_PrefabInstance: {fileID: 28498994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &235270468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 235270465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56571e6f6c0d24a48a3c80ae3d013028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.SmartObject
+  useSpot: {fileID: 991753150}
+  useSeconds: 20
+  advertisements:
+  - meter: {fileID: 11400000, guid: eb837c8db2cbe7948baa952284427236, type: 2}
+    amount: 50
 --- !u!4 &251564244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8178893906c179842802e070f4d26327, type: 3}
@@ -3001,6 +3029,59 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e75df397ee2dde54fbf524af12e42f2b, type: 3}
+--- !u!1 &421819849
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 421819850}
+  - component: {fileID: 421819851}
+  m_Layer: 0
+  m_Name: bedroom-interior-6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &421819850
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421819849}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.49, y: 0.928, z: -0.783}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1394372256}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &421819851
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421819849}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.842118, y: 0.7159803, z: 0.8382027}
+  m_Center: {x: 0.965948, y: -0.14200985, z: -0.9062568}
 --- !u!4 &421976385 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 47b49bc80a9b58b42aa56ad85b01db01, type: 3}
@@ -4792,6 +4873,11 @@ GameObject:
   - component: {fileID: 595181178}
   - component: {fileID: 595181180}
   - component: {fileID: 595181179}
+  - component: {fileID: 595181183}
+  - component: {fileID: 595181182}
+  - component: {fileID: 595181181}
+  - component: {fileID: 595181185}
+  - component: {fileID: 595181184}
   m_Layer: 6
   m_Name: NPC#1
   m_TagString: Npc
@@ -5052,6 +5138,100 @@ MonoBehaviour:
   compartments:
   - size: {x: 4, y: 4}
     position: {x: 0, y: 0}
+--- !u!114 &595181181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c37d21620393ea409906ad25ef2b30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AgentMover
+  sampleRadius: 1
+--- !u!195 &595181182
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.25
+  m_Speed: 1.4
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 360
+  m_StoppingDistance: 0.1
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.8
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 2
+--- !u!114 &595181183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
+--- !u!114 &595181184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c258869f3f6f1a042a48f82f54c40687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.NPC::ProjectCook.NPC.NPCLifeSave
+--- !u!114 &595181185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595181164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 800fc436b8b166a4c8a7451fcc3133d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AgentVitals
+  meters:
+  - meter: {fileID: 11400000, guid: e962a10dc6377954c853fbe829a9891c, type: 2}
+    startValue: 80
+  - meter: {fileID: 11400000, guid: eb837c8db2cbe7948baa952284427236, type: 2}
+    startValue: 80
+  - meter: {fileID: 11400000, guid: c60aa3c14e5ce92468d6f320fce55e3a, type: 2}
+    startValue: 70
+  - meter: {fileID: 11400000, guid: 3d6c207d231504940ac782be8cbddab6, type: 2}
+    startValue: 60
+  - meter: {fileID: 11400000, guid: 0bb9c560bd87b32468fbdcce6f6fd26c, type: 2}
+    startValue: 0
+  wellbeing:
+    baseValue: 60
+    risePerMinute: 20
+    fallPerMinute: 10
 --- !u!1 &632295758
 GameObject:
   m_ObjectHideFlags: 0
@@ -7376,6 +7556,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 88a90b2704762ae459bab8d558c91293, type: 3}
   m_PrefabInstance: {fileID: 954867009}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &961343738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 961343739}
+  m_Layer: 0
+  m_Name: UseSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &961343739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 961343738}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.53499997, y: -1.4350001, z: -0.007999897}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1063095467}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &975978522 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6580239747827487796, guid: afe7e393406e65146bd68da82d863457, type: 3}
@@ -7526,6 +7737,37 @@ MonoBehaviour:
   useInDialogue: 1
   closeUp: {fileID: 909608644}
   medium: {fileID: 1074661290}
+--- !u!1 &991753149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 991753150}
+  m_Layer: 0
+  m_Name: UseSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &991753150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991753149}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.3900001, y: -0.523, z: -1.745}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 28498995}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &996798311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8173,6 +8415,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d40c694683368d469c2677df455ae5b, type: 3}
+--- !u!1 &1059464600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1059464602}
+  - component: {fileID: 1059464601}
+  m_Layer: 0
+  m_Name: Anti-NavMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1059464601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059464600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 12.989682, y: 1.5940938, z: 18.459116}
+  m_Center: {x: -3.8717895, y: 0.29704702, z: -2.063096}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
+--- !u!4 &1059464602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059464600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.12153, y: 0.87, z: -0.37315}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1063095465
 GameObject:
   m_ObjectHideFlags: 0
@@ -8186,6 +8477,7 @@ GameObject:
   - component: {fileID: 1063095466}
   - component: {fileID: 1063095469}
   - component: {fileID: 1063095468}
+  - component: {fileID: 1063095471}
   m_Layer: 6
   m_Name: Discplayer
   m_TagString: Station
@@ -8305,6 +8597,7 @@ Transform:
   m_Children:
   - {fileID: 2121374920}
   - {fileID: 1840265144}
+  - {fileID: 961343739}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1063095468
@@ -8360,6 +8653,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3784833, y: 0.16073024, z: 0.42764497}
   m_Center: {x: 0.01938641, y: -0.06467539, z: -0.049138665}
+--- !u!114 &1063095471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063095465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56571e6f6c0d24a48a3c80ae3d013028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.SmartObject
+  useSpot: {fileID: 961343739}
+  useSeconds: 15
+  advertisements:
+  - meter: {fileID: 11400000, guid: c60aa3c14e5ce92468d6f320fce55e3a, type: 2}
+    amount: 50
 --- !u!1 &1073818088
 GameObject:
   m_ObjectHideFlags: 0
@@ -8728,8 +9038,8 @@ Transform:
   m_GameObject: {fileID: 1132598909}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.49, y: 0.928, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4.49, y: 0.928, z: 0.234}
+  m_LocalScale: {x: 1, y: 1, z: 0.48163766}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1394372256}
@@ -8753,8 +9063,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7666025, y: 0.9759662, z: 2.5640593}
-  m_Center: {x: 1.5050018, y: -0.012016892, z: -0.83626914}
+  m_Size: {x: 0.7666025, y: 0.47714227, z: 2.568869}
+  m_Center: {x: 1.5050018, y: -0.26142886, z: -0.8386747}
 --- !u!1 &1136049962 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8093986772388234996, guid: afe7e393406e65146bd68da82d863457, type: 3}
@@ -11102,6 +11412,7 @@ Transform:
   - {fileID: 1448401339}
   - {fileID: 1630911504}
   - {fileID: 1240866238}
+  - {fileID: 421819850}
   - {fileID: 570066992}
   - {fileID: 1340750240}
   - {fileID: 1419138319}
@@ -11538,8 +11849,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.82548094, y: 0.7159803, z: 3.5608053}
-  m_Center: {x: 0.45762944, y: -0.14200985, z: -0.3159001}
+  m_Size: {x: 0.82548094, y: 0.7159803, z: 2.7362387}
+  m_Center: {x: 0.45762944, y: -0.14200985, z: 0.096383214}
 --- !u!1001 &1453134590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18352,6 +18663,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2185471, y: 4.5069823, z: 0.2660942}
   m_Center: {x: -0.4552604, y: 1.5419881, z: -5.6265745}
+--- !u!1 &1661048834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1661048835}
+  m_Layer: 0
+  m_Name: UseSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1661048835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661048834}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.72800016, y: -1.07, z: 0.020999908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 543450653663726899}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1663567389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18497,6 +18839,70 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bc2521560d7d0414bbfd408c9288354e, type: 3}
   m_PrefabInstance: {fileID: 813948011}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1694932140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694932142}
+  - component: {fileID: 1694932141}
+  m_Layer: 0
+  m_Name: NavMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &1694932141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694932140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 1
+  m_Size: {x: 13, y: 2.6870337, z: 18.5}
+  m_Center: {x: -1.7399998, y: 2.808517, z: -2.4300003}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 65
+  m_UseGeometry: 1
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.083333336
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: f4be652dd16640f40862d12106ae6688, type: 2}
+  m_BuildHeightMesh: 0
+--- !u!4 &1694932142
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694932140}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2.15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1696953667 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a845ac1ff3eff154c8680be6bd7e314e, type: 3}
@@ -22101,7 +22507,8 @@ Transform:
   m_LocalPosition: {x: 3.328, y: 1.33, z: -1.279}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1661048835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &919132148863779141
@@ -22152,6 +22559,7 @@ GameObject:
   - component: {fileID: 2014248718}
   - component: {fileID: 3469287837514039959}
   - component: {fileID: 3469287837514039960}
+  - component: {fileID: 3469287837514039961}
   m_Layer: 6
   m_Name: fridge
   m_TagString: Untagged
@@ -22381,6 +22789,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ProjectCook.Core::ProjectCook.Core.PersistentId
   id: 2db9eaeabb1947a6a372b51884a185b0
+--- !u!114 &3469287837514039961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149190547337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56571e6f6c0d24a48a3c80ae3d013028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.SmartObject
+  useSpot: {fileID: 1661048835}
+  useSeconds: 15
+  advertisements:
+  - meter: {fileID: 11400000, guid: e962a10dc6377954c853fbe829a9891c, type: 2}
+    amount: 60
 --- !u!1 &3808761937992352631
 GameObject:
   m_ObjectHideFlags: 0
@@ -22816,3 +23241,5 @@ SceneRoots:
   - {fileID: 1492357974}
   - {fileID: 1442778781}
   - {fileID: 1540103891}
+  - {fileID: 1694932142}
+  - {fileID: 1059464602}

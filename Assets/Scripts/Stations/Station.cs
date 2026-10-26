@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ProjectCook.AI;
 using ProjectCook.Core;
 using ProjectCook.Items;
 using ProjectCook.Player;
@@ -8,7 +9,7 @@ using Unity.Cinemachine;
 namespace ProjectCook.Stations
 {
     /// <summary>จุดที่ผู้เล่นเข้าไป "ใช้งาน" แล้วกล้องล็อกอยู่กับที่ (สถานีทำอาหาร เครื่องเล่นแผ่น ฯลฯ) จัดการกล้อง โหมดเกม เคอร์เซอร์ ปุ่มออก และเปิด/ปิดโมดูล</summary>
-    public class Station : MonoBehaviour, IInteractable, IAimHintProvider, IStationModuleOwner
+    public class Station : MonoBehaviour, IInteractable, IAimHintProvider, IStationModuleOwner, IOccupancy
     {
         [Header("Camera Settings")]
         [Tooltip("Cinemachine Virtual Camera ประจำสถานีนี้ ไม่ต้องมี PanTilt/InputAxisController ถ้าไม่อยากให้ผู้เล่นหันกล้องระหว่างใช้งาน")]
@@ -27,6 +28,9 @@ namespace ProjectCook.Stations
         private readonly StationModuleGroup modules = new StationModuleGroup();
 
         protected bool isActive;
+
+        /// <summary>ผู้เล่นกำลังใช้สถานีนี้ ตัวละคร AI จะไม่เข้ามาใช้ซ้อน</summary>
+        public bool IsOccupied => isActive;
 
         protected virtual void Awake()
         {
