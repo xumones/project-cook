@@ -19,8 +19,8 @@ namespace ProjectCook.AI
 
         public override string Describe(float value)
         {
-            if (value <= 0f) return "ไม่มี";
-            return value < Max * 0.5f ? "เล็กน้อย" : "แรง";
+            if (value <= 0f) return "None";
+            return value < Max * 0.5f ? "Mild" : "Strong";
         }
     }
 }

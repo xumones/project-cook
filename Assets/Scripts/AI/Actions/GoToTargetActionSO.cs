@@ -37,7 +37,7 @@ namespace ProjectCook.AI
 
             public override void Stop() => context.Mover.Stop();
 
-            public override string Describe() => "เดินไป" + (target != null ? target.Label : "?");
+            public override string Describe() => "Walking to " + (target != null ? target.Label : "?");
         }
     }
 }

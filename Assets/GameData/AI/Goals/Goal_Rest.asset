@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f82a8a1e6e9ec47ad4308863944eb8, type: 3}
   m_Name: Goal_Rest
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AIGoalSO
-  label: "\u0E1E\u0E31\u0E01"
+  label: Rest
   rank: 0
   weight: 1
   considerations:

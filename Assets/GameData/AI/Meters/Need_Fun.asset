@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Need_Fun
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.NeedSO
   meterId: fun
-  label: "\u0E2A\u0E19\u0E38\u0E01"
-  decayPerMinute: 20
+  label: Fun
+  decayPerMinute: 7
   lowBelow: 30
   highAbove: 85
   lowPenalty: 20

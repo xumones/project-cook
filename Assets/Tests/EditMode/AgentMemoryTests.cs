@@ -50,17 +50,14 @@ namespace ProjectCook.Tests
         }
 
         [Test]
-        public void Sensor_RunsOnItsInterval_AndImmediatelyWhenPoked()
+        public void Sensor_RunsOnItsInterval()
         {
             var sensor = new TestSensor(2f);
 
             Assert.IsTrue(sensor.Update(0f));
             Assert.IsFalse(sensor.Update(1f));
             Assert.IsTrue(sensor.Update(2f));
-
-            sensor.Poke();
-            Assert.IsTrue(sensor.Update(2.5f));
-            Assert.AreEqual(3, sensor.Runs);
+            Assert.AreEqual(2, sensor.Runs);
         }
     }
 }

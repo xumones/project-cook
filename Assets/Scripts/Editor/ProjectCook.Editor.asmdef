@@ -2,8 +2,8 @@
     "name": "ProjectCook.Editor",
     "rootNamespace": "ProjectCook.Editor",
     "references": [
+        "ProjectCook.AI",
         "ProjectCook.Core",
-        "ProjectCook.NPC",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [

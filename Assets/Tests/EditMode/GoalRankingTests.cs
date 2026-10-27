@@ -23,7 +23,7 @@ namespace ProjectCook.Tests
             roller = new ImperfectionRoller(new ImperfectionSettings(), 7);
         }
 
-        private static AIGoalSO Goal(string label, int rank, float weight, MeterSO meter)
+        public static AIGoalSO Goal(string label, int rank, float weight, MeterSO meter)
         {
             var goal = ScriptableObject.CreateInstance<AIGoalSO>();
             var so = new SerializedObject(goal);
@@ -96,6 +96,7 @@ namespace ProjectCook.Tests
         [Test]
         public void Satisficing_SometimesPicksAGoalInsideTheBand_ButNeverOutside()
         {
+            // eat 0.6, rest 0.55, idle 0.05 ช่วง 10% = ได้ 0.54 ขึ้นไป
             var eat = Goal("eat", 0, 1f, satiety);
             var rest = Goal("rest", 0, 1f, energy);
             var idle = Goal("idle", 0, 0.05f, null);
@@ -111,6 +112,23 @@ namespace ProjectCook.Tests
             }
 
             CollectionAssert.AreEquivalent(new[] { eat, rest }, firsts);
+        }
+
+        [Test]
+        public void SatisficingBand_IsRelative_SoItScalesWithTheTopScore()
+        {
+            // eat 0.2, rest 0.15 ห่างกัน 0.05 เท่าเทสต์ก่อน แต่เกิน 10% ของอันดับหนึ่ง จึงไม่ถูกสุ่ม
+            var eat = Goal("eat", 0, 0.2f, satiety);
+            var rest = Goal("rest", 0, 0.2f, energy);
+            meters.Set(satiety, 0f);
+            meters.Set(energy, 25f);
+            var result = new List<GoalChoice>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                GoalRanking.Rank(new[] { eat, rest }, meters, null, 0f, 0.1f, roller, result);
+                Assert.AreSame(eat, result[0].Goal);
+            }
         }
     }
 }

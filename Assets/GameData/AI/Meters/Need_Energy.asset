@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Need_Energy
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.NeedSO
   meterId: energy
-  label: "\u0E1E\u0E25\u0E31\u0E07\u0E07\u0E32\u0E19"
-  decayPerMinute: 10
+  label: Energy
+  decayPerMinute: 7
   lowBelow: 30
   highAbove: 85
   lowPenalty: 20

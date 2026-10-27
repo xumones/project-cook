@@ -24,7 +24,7 @@ namespace ProjectCook.AI
         [Min(0f)]
         [SerializeField] private float inertia = 0.1f;
 
-        [Tooltip("คิดใหม่ทุกกี่วินาทีตอนความมั่นคงปกติ")]
+        [Tooltip("คิดใหม่ทุกกี่วินาทีก่อนคูณตามความมั่นคง (ดู Pace)")]
         [Min(0.1f)]
         [SerializeField] private float thinkInterval = 0.5f;
 
@@ -40,6 +40,14 @@ namespace ProjectCook.AI
 
         [Tooltip("ตัวคูณเวลาใช้ของตอนความมั่นคง 100")]
         [SerializeField] private float relaxedUseTime = 1.3f;
+
+        [Tooltip("ตัวคูณรอบคิดตอนความมั่นคง 0 (น้อย = คิดถี่)")]
+        [Min(0.1f)]
+        [SerializeField] private float hurriedThink = 0.6f;
+
+        [Tooltip("ตัวคูณรอบคิดตอนความมั่นคง 100 (มาก = คิดห่าง ประหยัด CPU)")]
+        [Min(0.1f)]
+        [SerializeField] private float relaxedThink = 1.4f;
 
         [Header("Frustration")]
         [SerializeField] private FeelingSO frustration;
@@ -79,7 +87,6 @@ namespace ProjectCook.AI
         public FactSO AtTargetFact => atTargetFact;
         public FactSO AtHomeFact => atHomeFact;
         public float Inertia => inertia;
-        public float ThinkInterval => thinkInterval;
         public FeelingSO Frustration => frustration;
         public float FrustrationPerFailure => frustrationPerFailure;
         public float UnmetWantFrustrationPerMinute => unmetWantFrustrationPerMinute;
@@ -93,7 +100,7 @@ namespace ProjectCook.AI
         public float SpeedMultiplier(float wellbeing) => Mathf.Lerp(hurriedSpeed, relaxedSpeed, wellbeing / MeterSO.Max);
         public float UseTimeMultiplier(float wellbeing) => Mathf.Lerp(hurriedUseTime, relaxedUseTime, wellbeing / MeterSO.Max);
 
-        // ชีวิตแย่ คิดถี่ขึ้น ชีวิตดี คิดช้าลง
-        public float ThinkIntervalAt(float wellbeing) => thinkInterval * Mathf.Lerp(0.6f, 1.4f, wellbeing / MeterSO.Max);
+        // ชีวิตแย่ คิดถี่ขึ้น ชีวิตดี คิดห่างลง
+        public float ThinkIntervalAt(float wellbeing) => thinkInterval * Mathf.Lerp(hurriedThink, relaxedThink, wellbeing / MeterSO.Max);
     }
 }

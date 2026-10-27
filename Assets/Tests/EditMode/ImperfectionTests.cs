@@ -12,7 +12,7 @@ namespace ProjectCook.Tests
 
             Assert.AreEqual(0.4f, roller.Effective(0f), 0.001f);
             Assert.AreEqual(0.1f, roller.Effective(100f), 0.001f);
-            Assert.AreEqual(0.3f * 0.4f, roller.ScoreBand(0f), 0.001f);
+            Assert.AreEqual(0.7f * 0.4f, roller.ScoreBand(0f), 0.001f);
         }
 
         [Test]

@@ -1,7 +1,7 @@
 namespace ProjectCook.AI
 {
     /// <summary>ตัวสำรวจโลกหนึ่งเรื่อง ทำงานตามรอบเวลาของตัวเอง แล้วจดผลลงความจำหรือข้อเท็จจริง ตัววางแผนไม่ต้องทำงานหนักเอง</summary>
-    // รอบ 0 = ทุกครั้งที่ถูกเรียก ตัวที่รอเหตุการณ์อย่างเดียวตั้งรอบเป็น Infinity แล้วเรียก Poke ตอนเกิดเหตุ
+    // รอบ 0 = ทุกครั้งที่ถูกเรียก
     public abstract class Sensor
     {
         private readonly float interval;
@@ -20,9 +20,6 @@ namespace ProjectCook.AI
             nextTime = now + interval;
             return Sense(now);
         }
-
-        /// <summary>ให้ทำงานในรอบถัดไปทันทีโดยไม่รอรอบเวลา</summary>
-        public void Poke() => nextTime = float.NegativeInfinity;
 
         protected abstract bool Sense(float now);
     }

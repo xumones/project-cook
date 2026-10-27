@@ -19,7 +19,7 @@ namespace ProjectCook.AI
         /// <summary>ถูกหยุดกลางคัน (หยุดคุยกับผู้เล่น ลืม หรือเปลี่ยนใจ) ต้องปล่อยทุกอย่างที่จับไว้</summary>
         public virtual void Stop() { }
 
-        /// <summary>บอกสั้น ๆ ว่ากำลังทำอะไร เช่น "เดินไปโซฟา"</summary>
+        /// <summary>บอกสั้น ๆ ว่ากำลังทำอะไร เช่น "Walking to Sofa"</summary>
         public abstract string Describe();
 
         /// <summary>หันตัวเข้าหาทิศเป้าหมายเฉพาะแนวนอน true = หันครบแล้ว</summary>

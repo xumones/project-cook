@@ -12,11 +12,11 @@ namespace ProjectCook.AI
         [SerializeField] private float decayPerMinute = 8f;
 
         [Header("Wellbeing")]
-        [Tooltip("ต่ำกว่านี้ถือว่า \"ต่ำ\" และเริ่มดึงความมั่นคงลง")]
+        [Tooltip("ต่ำกว่านี้ถือว่า \"Low\" และเริ่มดึงความมั่นคงลง")]
         [Range(0f, Max)]
         [SerializeField] private float lowBelow = 30f;
 
-        [Tooltip("สูงกว่านี้ถือว่า \"สูง\" และได้โบนัสความมั่นคง")]
+        [Tooltip("สูงกว่านี้ถือว่า \"High\" และได้โบนัสความมั่นคง")]
         [Range(0f, Max)]
         [SerializeField] private float highAbove = 85f;
 
@@ -41,8 +41,8 @@ namespace ProjectCook.AI
 
         public override string Describe(float value)
         {
-            if (value < lowBelow) return "ต่ำ";
-            return value > highAbove ? "สูง" : "ปกติ";
+            if (value < lowBelow) return "Low";
+            return value > highAbove ? "High" : "Normal";
         }
     }
 }

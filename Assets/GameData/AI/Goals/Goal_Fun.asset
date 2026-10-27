@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f82a8a1e6e9ec47ad4308863944eb8, type: 3}
   m_Name: Goal_Fun
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AIGoalSO
-  label: "\u0E2B\u0E32\u0E2D\u0E30\u0E44\u0E23\u0E2A\u0E19\u0E38\u0E01 \u0E46 \u0E17\u0E33"
+  label: Have fun
   rank: 0
   weight: 1
   considerations:

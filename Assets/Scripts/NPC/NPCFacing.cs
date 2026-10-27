@@ -5,10 +5,10 @@ using ProjectCook.Dialogue;
 
 namespace ProjectCook.NPC
 {
-    /// <summary>หันทั้งตัวมาหาผู้เล่นตอนเริ่มคุย แล้วหันกลับท่าเดิมเมื่อผู้เล่นกลับไปเดินสำรวจ NPC ที่เดินเองได้ไม่หันกลับ</summary>
+    /// <summary>หันทั้งตัวมาหาผู้เล่นตอนเริ่มคุย แล้วหันกลับท่าเดิมเมื่อผู้เล่นกลับไปเดินสำรวจ</summary>
     // หันกลับตอนกลับโหมด Exploring ไม่ใช่ตอนคุยจบ สิ่งที่เปิดต่อจากบทสนทนา (เช่นร้านค้า) จึงยังเห็น NPC หันหาอยู่
     // กล้องมุมบทสนทนาเป็นลูกของ NPC พอ NPC หันหาผู้เล่น ทุกมุมจึงอยู่ฝั่งผู้เล่นตามกฎ 180 องศาเอง
-    // หมุนตัวเฉพาะตอนกำลังหัน นอกนั้นปล่อยให้ AgentMover หมุนตามทางเดิน
+    // NPC ที่เดินเองได้ ถ้าออกเดินระหว่างหันกลับ ให้ AgentMover หมุนตามทางเดินแทน
     [RequireComponent(typeof(NPCCharacter))]
     public class NPCFacing : MonoBehaviour
     {
@@ -17,11 +17,11 @@ namespace ProjectCook.NPC
         [SerializeField] private float turnSpeed = 360f;
 
         private NPCCharacter character;
+        private AgentMover mover;
         private Quaternion restRotation;
         private Quaternion targetRotation;
         private bool facingPlayer;
         private bool turning;
-        private bool returnsToRest;
 
         // แคชไว้ตอน subscribe เพราะตอนหยุดเกม Instance อาจคืน null ก่อน OnDestroy
         private GameModeManager gameMode;
@@ -29,7 +29,7 @@ namespace ProjectCook.NPC
         private void Awake()
         {
             character = GetComponent<NPCCharacter>();
-            returnsToRest = !TryGetComponent(out AgentMover _);
+            mover = GetComponent<AgentMover>();
         }
 
         private void OnEnable() => MessageBus<DialogueStarted>.Subscribe(HandleStarted);
@@ -50,6 +50,12 @@ namespace ProjectCook.NPC
         private void Update()
         {
             if (!turning) return;
+
+            if (!facingPlayer && mover != null && mover.Status == MoveStatus.Moving)
+            {
+                turning = false;
+                return;
+            }
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
             turning = transform.rotation != targetRotation;
@@ -76,7 +82,7 @@ namespace ProjectCook.NPC
 
             facingPlayer = false;
             targetRotation = restRotation;
-            turning = returnsToRest;
+            turning = true;
         }
     }
 }

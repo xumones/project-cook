@@ -26,7 +26,7 @@ namespace ProjectCook.AI
             return Mathf.Clamp01(settings.baseValue * multiplier);
         }
 
-        /// <summary>เป้าหมายที่คะแนนห่างจากอันดับหนึ่งไม่เกินค่านี้ยังถูกเลือกได้ (เลือกแค่พอใช้ได้)</summary>
+        /// <summary>เป้าหมายที่คะแนนต่ำกว่าอันดับหนึ่งไม่เกินสัดส่วนนี้ยังถูกเลือกได้ (เลือกแค่พอใช้ได้)</summary>
         public float ScoreBand(float wellbeing) => settings.maxScoreBand * Effective(wellbeing);
 
         /// <summary>เลข 0 ถึงน้อยกว่า count สำหรับสุ่มเลือกในกลุ่ม</summary>

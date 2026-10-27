@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f82a8a1e6e9ec47ad4308863944eb8, type: 3}
   m_Name: Goal_Eat
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.AIGoalSO
-  label: "\u0E01\u0E34\u0E19"
+  label: Eat
   rank: 0
   weight: 1
   considerations:

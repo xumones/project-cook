@@ -28,18 +28,21 @@ MonoBehaviour:
   hurriedSpeed: 1.2
   relaxedSpeed: 0.9
   hurriedUseTime: 0.8
-  relaxedUseTime: 1.3
+  relaxedUseTime: 1.13
+  hurriedThink: 0.6
+  relaxedThink: 1.4
   frustration: {fileID: 11400000, guid: 0bb9c560bd87b32468fbdcce6f6fd26c, type: 2}
   frustrationPerFailure: 15
   unmetWantFrustrationPerMinute: 2
   unmetWantFrustrationCap: 40
   fulfilledWantRelief: 20
   failureMemorySeconds: 30
+  recheckBusySeconds: 30
   imperfection:
     baseValue: 0.2
     lowWellbeingMultiplier: 2
     highWellbeingMultiplier: 0.5
-    maxScoreBand: 0.3
+    maxScoreBand: 0.7
     missChance: 0.5
     missCooldownSeconds: 30
     lapsesPerMinute: 0.5

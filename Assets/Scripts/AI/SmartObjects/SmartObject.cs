@@ -39,7 +39,6 @@ namespace ProjectCook.AI
         public Vector3 UsePosition => Spot.position;
         public Quaternion UseRotation => Spot.rotation;
         public float UseSeconds => useSeconds;
-        public IReadOnlyList<Advertisement> Advertisements => advertisements;
 
         /// <summary>มีคนอื่นที่ไม่ใช่ตัวละคร AI ใช้อยู่ เช่น ผู้เล่นกำลังใช้เครื่องเล่นแผ่น</summary>
         public bool IsOccupied

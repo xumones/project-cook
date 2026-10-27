@@ -38,7 +38,7 @@ namespace ProjectCook.AI
                 return elapsed >= duration ? ActionStatus.Succeeded : ActionStatus.Running;
             }
 
-            public override string Describe() => "ใช้" + (target != null ? target.Label : "?");
+            public override string Describe() => "Using " + (target != null ? target.Label : "?");
         }
     }
 }

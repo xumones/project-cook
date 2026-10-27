@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Want_Craving
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.WantSO
   meterId: craving
-  label: "\u0E04\u0E27\u0E32\u0E21\u0E2D\u0E22\u0E32\u0E01"
+  label: Craving
   risePerMinute: 5
   threshold: 60

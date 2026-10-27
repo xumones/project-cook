@@ -16,7 +16,8 @@ namespace ProjectCook.AI
 
     /// <summary>เรียงเป้าหมายตามที่ควรลองวางแผนก่อน: ชั้นสูงก่อน แล้วคะแนนสูงก่อน (แบบ Dual Utility)</summary>
     // เป้าหมายที่ทำอยู่ได้แต้มต่อ จะได้ไม่สลับไปมาตอนคะแนนสูสี
-    // ความไม่สมบูรณ์ "เลือกแค่พอใช้ได้": ตัวที่คะแนนห่างอันดับหนึ่งไม่เกิน band ในชั้นเดียวกันถูกสุ่มขึ้นมาเป็นอันดับหนึ่งได้
+    // ความไม่สมบูรณ์ "เลือกแค่พอใช้ได้": ตัวในชั้นเดียวกันที่ได้คะแนนอย่างน้อย (1 - band) เท่าของอันดับหนึ่ง ถูกสุ่มขึ้นมาเป็นอันดับหนึ่งได้
+    // เทียบเป็นสัดส่วน ช่วงสุ่มจึงกว้างเท่ากันทุกระดับคะแนน ไม่ว่าจะยังไม่ค่อยอยากหรือเร่งด่วน
     public static class GoalRanking
     {
         public static void Rank(IReadOnlyList<AIGoalSO> goals, MeterSet meters, AIGoalSO current, float inertia,
@@ -46,8 +47,9 @@ namespace ProjectCook.AI
 
             if (result.Count < 2 || band <= 0f) return;
 
+            float floor = result[0].Score * (1f - band);
             int close = 1;
-            while (close < result.Count && result[close].Goal.Rank == result[0].Goal.Rank && result[0].Score - result[close].Score <= band)
+            while (close < result.Count && result[close].Goal.Rank == result[0].Goal.Rank && result[close].Score >= floor)
             {
                 close++;
             }

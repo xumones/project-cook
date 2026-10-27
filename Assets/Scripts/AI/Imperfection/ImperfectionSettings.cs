@@ -20,9 +20,9 @@ namespace ProjectCook.AI
         public float highWellbeingMultiplier = 0.5f;
 
         [Header("Satisficing")]
-        [Tooltip("ช่วงคะแนนจากอันดับหนึ่งที่ยังถูกสุ่มเลือกได้ (คะแนนเต็ม 1)")]
+        [Tooltip("สัดส่วนที่คะแนนต่ำกว่าอันดับหนึ่งได้แล้วยังถูกสุ่มเลือก (0.7 = ตัวที่ได้ 30% ขึ้นไปของอันดับหนึ่ง)")]
         [Range(0f, 1f)]
-        public float maxScoreBand = 0.3f;
+        public float maxScoreBand = 0.7f;
 
         [Header("Mistaken Belief")]
         [Tooltip("โอกาสที่เห็นแล้วไม่ทันสังเกตว่าเปลี่ยนไป ความเชื่อเดิมจึงค้างอยู่")]

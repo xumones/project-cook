@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Feeling_Frustration
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.FeelingSO
   meterId: frustration
-  label: "\u0E2B\u0E07\u0E38\u0E14\u0E2B\u0E07\u0E34\u0E14"
+  label: Frustration
   fadePerMinute: 33
   wellbeingPerPoint: -0.3

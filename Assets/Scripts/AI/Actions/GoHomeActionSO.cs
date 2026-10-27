@@ -38,7 +38,7 @@ namespace ProjectCook.AI
 
             public override void Stop() => context.Mover.Stop();
 
-            public override string Describe() => "กลับจุดประจำ";
+            public override string Describe() => "Going home";
         }
     }
 }

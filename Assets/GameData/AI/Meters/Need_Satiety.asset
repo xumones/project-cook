@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Need_Satiety
   m_EditorClassIdentifier: ProjectCook.AI::ProjectCook.AI.NeedSO
   meterId: satiety
-  label: "\u0E2D\u0E34\u0E48\u0E21"
-  decayPerMinute: 8
+  label: Satiety
+  decayPerMinute: 6
   lowBelow: 30
   highAbove: 85
   lowPenalty: 20
